@@ -27,3 +27,51 @@ exports.accueil = (request,response) =>{
         });
     });
 }
+
+// Permet de charger la page formations
+exports.formations = (request,response) =>{
+    Catégorie.avoirNomCatégories((nom) =>{
+        var compteur = 0;
+        var contient = [];    
+        Catégorie.avoirNombresCatégories(nom,(num) =>{
+            contient[compteur] = {nom : nom[compteur].LibelléCatégorie, num : num[0].ite};
+            compteur++;
+            if (compteur == nom.length){
+                for(var k = contient.length - 1;k>0;k--){
+                    for(var j = 0;j<k-1;j++){
+                        if(contient[j+1].num>contient[j].num){
+                            var intermediaire = contient[j];
+                            contient[j] = contient[j+1];
+                            contient[j+1] = intermediaire;
+                        }
+                    }
+                }
+                response.render('pages/HC/formationsHC', {contient : contient});
+            }
+        });
+    });
+}
+
+// Permet de charger la page qui suis-je ?
+exports.contact = (request,response) =>{
+    Catégorie.avoirNomCatégories((nom) =>{
+        var compteur = 0;
+        var contient = [];    
+        Catégorie.avoirNombresCatégories(nom,(num) =>{
+            contient[compteur] = {nom : nom[compteur].LibelléCatégorie, num : num[0].ite};
+            compteur++;
+            if (compteur == nom.length){
+                for(var k = contient.length - 1;k>0;k--){
+                    for(var j = 0;j<k-1;j++){
+                        if(contient[j+1].num>contient[j].num){
+                            var intermediaire = contient[j];
+                            contient[j] = contient[j+1];
+                            contient[j+1] = intermediaire;
+                        }
+                    }
+                }
+                response.render('pages/HC/contactHC', {contient : contient});
+            }
+        });
+    });
+}

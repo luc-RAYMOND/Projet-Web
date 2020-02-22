@@ -8,6 +8,9 @@ var HC = require('../controllers/HCController.js');
 route.get('/Accueil',HC.accueil);
 route.get('/Formations',HC.formations);
 route.get('/Qui-suis-je',HC.contact);
+route.get('/Services/ServicesPeinture',HC.servicesPeinture);
+route.get('/Services/ServicesDecors',HC.servicesDécors);
+route.get('/Services/ServicesAnnexes',HC.servicesAnnexes);
 
 // On exporte nos routes
 module.exports = route;

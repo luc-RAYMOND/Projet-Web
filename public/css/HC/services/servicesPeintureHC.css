@@ -1,0 +1,48 @@
+/* Style du main */
+
+#conteneur{
+    overflow: auto;
+    border-color: darkgray;
+}
+#content{
+    overflow: hidden;
+    background-color: lightgray;
+    border-color: darkgray;
+}
+h3{
+    font-size: 200%;
+    font-family: "SDA";
+    font-style: italic;
+    color: black;
+    margin-bottom: 5%;
+    text-decoration: underline;
+}
+p{
+    font-size: larger;
+    color: black;
+    text-align: justify;
+}
+h5{
+    font-size: 200%;
+    font-weight: bold;
+    color: black;
+    text-decoration: underline;
+    text-align: center;
+}
+#lien{
+    color: black;
+    font-style: italic;
+    font-weight: bold;
+}
+#finParagraphe{
+    color: black;
+    font-style: italic;
+    font-weight: bold;
+}
+#retourAccueil{
+    color: lightblue;
+    text-align: center;
+    font-weight: bolder;
+    font-size: larger;
+    text-decoration: underline;
+}

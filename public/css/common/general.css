@@ -1,0 +1,12 @@
+/* Du CSS général à tous les fichiers.*/
+@font-face {
+	font-family: "SDA";
+	src: url('../../police/RINGM___.TTF');
+}
+body{
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 3%;
+    font-family: 'Times New Roman', Times, serif;
+    background-color: grey;
+}

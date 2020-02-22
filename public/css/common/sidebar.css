@@ -1,0 +1,26 @@
+/* Style de la sidebar */
+#sidebar{
+    float: right;
+    background-color: #1a1a1a ;
+    width: 30%;
+    margin-left: 1%;
+    border-color: darkgray;
+    padding: 1%;
+}
+h2{
+    color: white;
+    font-style: italic;
+    font-family: "SDA";
+    font-size: 300%;
+    margin-bottom: 10%;
+}
+#contenantCatégorie{
+    background-color: darkgray;
+}
+#texteCatégorie{
+    color: black;
+    font-weight: bold;
+}
+#nombreCatégorie{
+    background-color: #6666ff;
+}

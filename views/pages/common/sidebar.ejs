@@ -1,0 +1,13 @@
+<aside id="sidebar" class="well well-lg">
+    <h2>
+        Catégories
+    </h2>
+    <ul class="list-group">
+        <% for (var i = 0; i < contient.length; i++) { %>
+            <li id="contenantCatégorie" class="list-group-item d-flex justify-content-between align-items-center">
+                <a id="texteCatégorie" href="/Accueil"> <%= contient[i].nom %></a>
+                <span id="nombreCatégorie" class="badge badge-primary badge-pill"> <%= contient[i].num %></span>
+            </li>
+        <% } %>
+      </ul>
+</aside>

@@ -1,0 +1,16 @@
+/* Style du bas de page */
+footer{
+    text-align: center;
+    font-weight: bold;
+    font-size: small;
+    margin-top: 5%;
+    margin-bottom: 2%;
+    color: black;
+}
+#Remonter{
+    text-decoration: underline;
+    color: black;
+}
+#Copyright{
+    font-style: italic;
+}

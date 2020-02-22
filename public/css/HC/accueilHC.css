@@ -1,0 +1,11 @@
+/* Style du main */
+
+#conteneur{
+    overflow: auto;
+    border-color: darkgray;
+}
+#content{
+    overflow: hidden;
+    background-color: lightgray;
+    border-color: darkgray;
+}

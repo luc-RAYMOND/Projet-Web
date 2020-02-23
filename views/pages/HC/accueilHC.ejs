@@ -9,7 +9,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
     <link rel="stylesheet" href="/css/HC/headerHC.css" type="text/css">
     <link rel="stylesheet" href="/css/common/footer.css" type="text/css">
     <link rel="stylesheet" href="/css/common/sidebar.css" type="text/css">
@@ -22,9 +22,91 @@
     <main id="conteneur" class="well small-lg">
         <%- include('../common/sidebar') -%>
         <div id="content" class="well small-lg">
-
+            <h3>
+                Articles Récents
+            </h3>
+            <% for (var i = 0; i < articles.length; i++) { %>
+            <h5>
+                <%= articles[i].TitreArticle %>
+            </h5>
+            <br>
+            <h6>
+                <%= articles[i].DateArticle %>, Rédigé par Alexandre Raymond
+                <br>
+                Catégories :
+                <% for (var j = 0; j < cat[i].length ; j++) {%>
+                <%= cat[i][j].LibelléCatégorie %>
+                <% if (j < cat[i].length-1) { %>
+                ,
+                <% } %>
+                <% } %>
+            </h6>
+            <br>
+            <div id="texteArticle">
+                <%= articles[i].TexteArticle %>
+            </div>
+            <br>
+            <% for(var k = 0; k < img[i].length; k++) { %>
+            <figure>
+                <% var link1 = 'href=/images/articles/'+img[i][k].LienImage %>
+                <a <%= link1 %> data-fancybox data-caption="">
+                    <% var link2 = 'src=/images/articles/'+img[i][k].LienImage %>
+                    <img id="imgAte" <%= link2 %> alt="Photo de l'article">
+                </a>
+            </figure>
+            <% } %>
+            <% if (i != articles.length-1) { %>
+            <hr>
+            <% } %>
+            <% } %>
         </div>
+
     </main>
+    <div id="center">
+        <ul class="pagination">
+            <% if(pageMax <= 5) { %>
+            <% for (var page = 1; page <= pageMax; page++) { %>
+            <% var link3 = 'href=/Accueil/Page/'+page; %>
+            <% if (page == 1) {link3 = 'href=/Accueil'} %>
+            <li><a <%= link3 %>> <%= page %> </a></li>
+            <% } %>
+            <% } else { %>
+            <% if (pageActuelle <=3) { %>
+            <li><a href="/Accueil"> <%= page %>1</a></li>
+            <% for (var page = 2; page <= 5; page++) { %>
+            <% var link3 = 'href=/Accueil/Page/'+page; %>
+            <li><a <%= link3 %>> <%= page %> </a></li>
+            <% } %>
+            <% var link3 = 'href=/Accueil/Page/'+pageMax; %>
+            <li><a <%= link3 %>> >> </a></li>
+            <% } else { %>
+            <% if(pageActuelle == pageMax - 2) { %>
+            <li><a href="/Accueil"> <%= page %> << </a></li>
+            <% for (var page = pageActuelle-2; page <= pageMax; page++) { %>
+            <% var link3 = 'href=/Accueil/Page/'+page; %>
+            <li><a <%= link3 %>> <%= page %> </a></li>
+            <% } %>
+            <% } else { %>
+            <% if(pageActuelle < pageMax - 2){ %>
+            <li><a href="/Accueil"> << </a></li>
+            <% for (var page = (pageActuelle-2); page<=(2+parseInt(pageActuelle)); page++) { %>
+            <% var link3 = 'href=/Accueil/Page/'+page; %>
+            <li><a <%= link3 %>> <%= page %> </a></li>
+            <% } %>
+            <% var link3 = 'href=/Accueil/Page/'+pageMax; %>
+            <li><a <%= link3 %>> >> </a></li>
+            <% } else { %>
+            <li><a href="/Accueil"> << </a></li>
+            <% for (var page = pageMax-4 ; page <= pageMax; page++) { %>
+            <% var link3 = 'href=/Accueil/Page/'+page; %>
+            <li><a <%= link3 %>> <%= page %> </a></li>
+            <% } %>
+            <% } %>
+            <% } %>
+            <% } %>
+            <% } %>
+        </ul>
+    </div>
     <%- include('../common/footer') -%>
 </body>
 

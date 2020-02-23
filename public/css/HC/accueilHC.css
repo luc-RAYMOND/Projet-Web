@@ -9,3 +9,40 @@
     background-color: lightgray;
     border-color: darkgray;
 }
+h3{
+    font-size: 200%;
+    font-family: "SDA";
+    font-style: italic;
+    color: black;
+    margin-bottom: 5%;
+    text-decoration: underline;
+}
+h5{
+    font-size: 200%;
+    font-weight: bold;
+    color: rgba(88, 16, 16, 0.884);
+    text-decoration: underline;
+    padding-left: 5%;
+}
+h6{
+    color: #6666ff;
+    font-style: italic;
+    font-size: larger;
+}
+#texteArticle{
+    color: black;
+    font-size: larger;
+    text-align: justify;
+
+}
+figure{
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+#imgAte{
+    max-width: 100%;
+    height: auto;
+}
+#center{
+    text-align: center;
+}

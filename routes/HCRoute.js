@@ -6,6 +6,7 @@ var HC = require('../controllers/HCController.js');
  
 // Les différentes routes hors connexion
 route.get('/Accueil',HC.accueil);
+route.get('/Accueil/Page/:numPage',HC.accueilPage);
 route.get('/Formations',HC.formations);
 route.get('/Qui-suis-je',HC.contact);
 route.get('/Services/ServicesPeinture',HC.servicesPeinture);

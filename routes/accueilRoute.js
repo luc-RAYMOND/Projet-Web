@@ -2,11 +2,11 @@ var express = require('express');
 var route = express.Router();
 
 // On importe le controller
-var HC = require('../controllers/HCController');
+var accueil = require('../controllers/accueilController');
 
 // Les différentes routes hors connexion
-route.get('/Formations', HC.formations);
-route.get('/Qui-suis-je', HC.contact);
+route.get('/', accueil.accueil);
+route.get('/Page/:numPage', accueil.accueilPage);
 
 // On exporte nos routes
 module.exports = route;

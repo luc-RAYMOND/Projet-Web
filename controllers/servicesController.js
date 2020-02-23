@@ -31,14 +31,20 @@ var remplirCatégorie = () => {
 
 remplirCatégorie();
 
-// Permet de charger la page formations
-exports.formations = (request, response) => {
+// Permet de charger la page des services de peinture
+exports.servicesPeinture = (request, response) => {
     remplirCatégorie();
-    response.render('pages/HC/formationsHC', { contient: contient });
+    response.render('pages/HC/services/servicesPeintureHC', { contient: contient });
 }
 
-// Permet de charger la page qui suis-je ?
-exports.contact = (request, response) => {
+// Permet de charger la page des services de décors
+exports.servicesDécors = (request, response) => {
     remplirCatégorie();
-    response.render('pages/HC/quiSuisJeHC', { contient: contient });
+    response.render('pages/HC/services/servicesDécorsHC', { contient: contient });
+}
+
+// Permet de charger la page des services annexes
+exports.servicesAnnexes = (request, response) => {
+    remplirCatégorie();
+    response.render('pages/HC/services/servicesAnnexesHC', { contient: contient });
 }

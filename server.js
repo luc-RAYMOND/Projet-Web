@@ -10,6 +10,8 @@ projet.use(express.static('public'));
 
 // On importe les fichiers routes
 var horsConnexionRoute = require('./routes/HCRoute');
+var accueilPage = require('./routes/accueilRoute');
+var servicesPage = require('./routes/servicesRoute');
 
 //
 //// ROUTAGE DU SITE :
@@ -17,7 +19,9 @@ var horsConnexionRoute = require('./routes/HCRoute');
 
 // Tout ce qui est hors connexion
 
-projet.use('/',horsConnexionRoute);
+projet.use('/', horsConnexionRoute);
+projet.use('/Accueil', accueilPage);
+projet.use('/Services', servicesPage);
 
 // On indique le port que l'on va utiliser
 projet.listen(8080);

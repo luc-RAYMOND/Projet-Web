@@ -22,9 +22,15 @@
     <main id="conteneur" class="well small-lg">
         <%- include('../common/sidebar') -%>
         <div id="content" class="well small-lg">
+            <% if(pageActuelle == 1) { %>
             <h3>
                 Articles Récents
             </h3>
+            <% } else { %>
+            <h3>
+                Articles plus Anciens
+            </h3>
+            <% } %>
             <% for (var i = 0; i < articles.length; i++) { %>
             <h5>
                 <%= articles[i].TitreArticle %>
@@ -81,14 +87,17 @@
             <li><a <%= link3 %>> >> </a></li>
             <% } else { %>
             <% if(pageActuelle == pageMax - 2) { %>
-            <li><a href="/Accueil"> <%= page %> << </a></li>
+            <li><a href="/Accueil"> <%= page %> << </a>
+            </li>
             <% for (var page = pageActuelle-2; page <= pageMax; page++) { %>
             <% var link3 = 'href=/Accueil/Page/'+page; %>
             <li><a <%= link3 %>> <%= page %> </a></li>
             <% } %>
             <% } else { %>
             <% if(pageActuelle < pageMax - 2){ %>
-            <li><a href="/Accueil"> << </a></li>
+            <li><a href="/Accueil">
+                    << </a>
+            </li>
             <% for (var page = (pageActuelle-2); page<=(2+parseInt(pageActuelle)); page++) { %>
             <% var link3 = 'href=/Accueil/Page/'+page; %>
             <li><a <%= link3 %>> <%= page %> </a></li>
@@ -96,7 +105,9 @@
             <% var link3 = 'href=/Accueil/Page/'+pageMax; %>
             <li><a <%= link3 %>> >> </a></li>
             <% } else { %>
-            <li><a href="/Accueil"> << </a></li>
+            <li><a href="/Accueil">
+                    << </a>
+            </li>
             <% for (var page = pageMax-4 ; page <= pageMax; page++) { %>
             <% var link3 = 'href=/Accueil/Page/'+page; %>
             <li><a <%= link3 %>> <%= page %> </a></li>

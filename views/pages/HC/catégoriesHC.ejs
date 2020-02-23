@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html id="HautPage" lang="fr">
+
+<head>
+    <title>L'Atelier d'Alegolas 91 : L'Atelier</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+    <link rel="stylesheet" href="/css/HC/headerHC.css" type="text/css">
+    <link rel="stylesheet" href="/css/common/footer.css" type="text/css">
+    <link rel="stylesheet" href="/css/common/sidebar.css" type="text/css">
+    <link rel="stylesheet" href="/css/common/general.css" type="text/css">
+    <link rel="stylesheet" href="/css/HC/accueilHC.css" type="text/css">
+</head>
+
+<body>
+    <%- include('headerHC') -%>
+    <main id="conteneur" class="well small-lg">
+        <%- include('../common/sidebar') -%>
+        <div id="content" class="well small-lg">
+            <% if(data == true) { %>
+            <h3>
+                Articles pour :
+            </h3>
+            <div id="nomCaté">#<%= Lib.LibelléCatégorie %></div>
+            <% } else { %>
+            <h3>
+                Il n'y pas d'articles pour :
+            </h3>
+            <div id="nomCaté">#<%= Lib.LibelléCatégorie %></div>
+            <% } %>
+            <% if(data == true) { %>
+            <% for (var i = 0; i < articles.length; i++) { %>
+            <h5>
+                <%= articles[i].TitreArticle %>
+            </h5>
+            <br>
+            <h6>
+                <%= articles[i].DateArticle %>, Rédigé par Alexandre Raymond
+                <br>
+                Catégories :
+                <% for (var j = 0; j < cat[i].length ; j++) {%>
+                <%= cat[i][j].LibelléCatégorie %>
+                <% if (j < cat[i].length-1) { %>
+                ,
+                <% } %>
+                <% } %>
+            </h6>
+            <br>
+            <div id="texteArticle">
+                <%= articles[i].TexteArticle %>
+            </div>
+            <br>
+            <% for(var k = 0; k < img[i].length; k++) { %>
+            <figure>
+                <% var link1 = 'href=/images/articles/'+img[i][k].LienImage %>
+                <a <%= link1 %> data-fancybox data-caption="">
+                    <% var link2 = 'src=/images/articles/'+img[i][k].LienImage %>
+                    <img id="imgAte" <%= link2 %> alt="Photo de l'article">
+                </a>
+            </figure>
+            <% } %>
+            <% if (i != articles.length-1) { %>
+            <hr>
+            <% } %>
+            <% } %>
+            <% } %>
+        </div>
+        <div id="retourAccueil">
+            <a href="/Accueil">Retour à l'Accueil</a>
+        </div>
+
+    </main>
+    <% if (data == true) { %>
+    <div id="center">
+        <ul class="pagination">
+            <% if(pageMax <= 5) { %>
+            <% for (var page = 1; page <= pageMax; page++) { %>
+            <% var link3 = 'href=/Categories/'+numcategorie+'/Page/'+page; %>
+            <li><a <%= link3 %>> <%= page %> </a></li>
+            <% } %>
+            <% } else { %>
+            <% if (pageActuelle <=3) { %>
+            <% for (var page = 1; page <= 5; page++) { %>
+            <% var link3 ='href=/Categories/'+numcategorie+'/Page/'+page; %>
+            <li><a <%= link3 %>> <%= page %> </a></li>
+            <% } %>
+            <% var link3 = 'href=/Categories/'+numcategorie+'/Page/'+pageMax; %>
+            <li><a <%= link3 %>> >> </a></li>
+            <% } else { %>
+            <% if(pageActuelle == pageMax - 2) { %>
+            <% var link3 = 'href=/Categories/'+numcategorie+'/Page/'+1; %>
+            <li><a <%= link3 %>> <%= page %> << </a>
+            </li>
+            <% for (var page = pageActuelle-2; page <= pageMax; page++) { %>
+            <% var link3 = 'href=/Categories/'+numcategorie+'/Page/'+page; %>
+            <li><a <%= link3 %>> <%= page %> </a></li>
+            <% } %>
+            <% } else { %>
+            <% if(pageActuelle < pageMax - 2){ %>
+            <% var link3 = 'href=/Categories/'+numcategorie+'/Page/'+1; %>
+            <li><a <%= link3 %></a>> <%= page %> << </a>
+                        <% for (var page = (pageActuelle-2); page<=(2+parseInt(pageActuelle)); page++) { %>
+                        <% var link3 = 'href=/Categories/'+numcategorie+'/Page/'+page; %>
+            <li><a <%= link3 %>> <%= page %> </a></li>
+            <% } %>
+            <% var link3 = 'href=/Categories/'+numcategorie+'/Page/'+pageMax; %>
+            <li><a <%= link3 %>> >> </a></li>
+            <% } else { %>
+            <% var link3 = 'href=/Categories/'+numcategorie+'/Page/'+1; %>
+            <li><a <%= link3 %>> <%= page %> << </a>
+                        <% for (var page = pageMax-4 ; page <= pageMax; page++) { %>
+                        <% var link3 = 'href=/Categories/'+numcategorie+'/Page/'+page; %>
+            <li><a <%= link3 %>> <%= page %> </a></li>
+            <% } %>
+            <% } %>
+            <% } %>
+            <% } %>
+            <% } %>
+        </ul>
+    </div>
+    <% } %>
+    <%- include('../common/footer') -%>
+</body>
+
+</html>

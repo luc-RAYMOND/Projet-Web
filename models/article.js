@@ -10,6 +10,14 @@ class Article {
         });
     }
 
+    // Fonction permettant les articles d'une catégorie à partir du numéro de catégorie
+    static avoirArticlesCatégorie(num, cb) {
+        var query = connection.query('SELECT article.NumArticle,TitreArticle,DateArticle,TexteArticle FROM article,avoircatégorie,catégorie WHERE catégorie.NumCatégorie = ? AND article.NumArticle = avoircatégorie.NumArticle AND avoircatégorie.NumCatégorie = catégorie.NumCatégorie ORDER BY DateArticle DESC', num, (error, results) => {
+            if (error) throw error;
+            cb(results);
+        });
+    }
+
     // Fonction permettant de récupérer les catégories d'un article
     static avoirLibellé(num, cb) {
         for (var i = 0; i < num.length; i++) {

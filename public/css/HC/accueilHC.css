@@ -17,6 +17,14 @@ h3{
     margin-bottom: 5%;
     text-decoration: underline;
 }
+#nomCaté{
+    font-size: 150%;
+    font-family: "SDA";
+    font-style: italic;
+    color: blue;
+    padding-left: 5%;
+    margin-bottom: 5%;
+}
 h5{
     font-size: 200%;
     font-weight: bold;
@@ -42,6 +50,13 @@ figure{
 #imgAte{
     max-width: 100%;
     height: auto;
+}
+#retourAccueil{
+    color: lightblue;
+    text-align: center;
+    font-weight: bolder;
+    font-size: larger;
+    text-decoration: underline;
 }
 #center{
     text-align: center;

@@ -1,30 +1,49 @@
 // Les models d'où viennent les fonctions sur la BDD
 var affichage = require('../models/affichage');
 var utilisateur = require('../models/utilisateur');
+var verifConnexion = require('../models/verifConnexion');
+
 // Pour pouvoir faire un token
 var jwt = require('jsonwebtoken');
 var key = require('../config/tokenKey');
+
 // Pour comparer les mots de passe
 var bcrypt = require('bcrypt');
 
 // Permet de charger la page formations
 exports.formations = (request, response) => {
+    var token = request.cookies.token;
     affichage.remplirCatégorie(request, response, (next) => {
-        response.render('pages/HC/formationsHC', { contient: next });
+        verifConnexion.verifConnexion(token, (admin) => {
+            response.render('pages/common/formations', { contient: next, admin: admin });
+        });
     });
 }
 
 // Permet de charger la page qui suis-je ?
 exports.contact = (request, response) => {
+    var token = request.cookies.token;
     affichage.remplirCatégorie(request, response, (next) => {
-        response.render('pages/HC/quiSuisJeHC', { contient: next });
+        verifConnexion.verifConnexion(token, (admin) => {
+            response.render('pages/common/quiSuisJe', { contient: next, admin: admin });
+        });
     });
 }
 
 // Permet de charger la page de connexion
 exports.connexion = (request, response) => {
+    var token = request.cookies.token;
+    // Permet de gérer les cas d'erreur de saisie
     var cas = 5;
-    response.render('pages/HC/connexion', { cas: cas });
+    verifConnexion.verifConnexion(token, (admin) => {
+        if (admin == 1 || admin == 0) {
+            // On est déjà connecté, on est redirigé à l'accueil
+            response.redirect('/Accueil');
+        }
+        else {
+            response.render('pages/common/connexion', { cas: cas });
+        }
+    });
 }
 
 // Permet de vérifier les informations de connexion
@@ -36,7 +55,7 @@ exports.tentativeConnexion = (request, response) => {
         // Cas de mauvais mail
         if (bonMDP[0] == undefined) {
             cas = 0;
-            response.render('pages/HC/connexion', { cas: cas });
+            response.render('pages/common/connexion', { cas: cas });
         }
         else {
             // On compare les 2 mots de passe
@@ -54,9 +73,14 @@ exports.tentativeConnexion = (request, response) => {
                 // Cas de mauvais mot de passe
                 else {
                     cas = 1;
-                    response.render('pages/HC/Connexion', { cas: cas });
+                    response.render('pages/common/connexion', { cas: cas });
                 }
             });
         }
     });
+}
+
+exports.deconnexion = (request, response) => {
+    response.clearCookie('token', request.cookies.token);
+    response.redirect('/Accueil');
 }

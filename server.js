@@ -5,7 +5,7 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser')
 
 // Pour pouvoir récupérer le contenu body des requêtes POST et les cookies
-projet.use(bodyParser.urlencoded({ extended : false}));
+projet.use(bodyParser.urlencoded({ extended: false }));
 projet.use(bodyParser.json());
 projet.use(cookieParser())
 
@@ -16,7 +16,7 @@ projet.set('view engine', 'ejs');
 projet.use(express.static('public'));
 
 // On importe les fichiers routes
-var horsConnexionRoute = require('./routes/HCRoute');
+var horsConnexionRoute = require('./routes/commonRoute');
 var accueilPage = require('./routes/accueilRoute');
 var servicesPage = require('./routes/servicesRoute');
 var catégoriesPage = require('./routes/catégoriesRoute');

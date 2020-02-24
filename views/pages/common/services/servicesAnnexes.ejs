@@ -18,9 +18,17 @@
 </head>
 
 <body>
-    <%- include('../headerHC') -%>
+    <% if (admin == 10) { %>
+    <%- include('../../HC/headerHC') -%>
+    <% } %>
+    <% if (admin == 1) { %>
+    <%- include('../../admin/headerA') -%>
+    <% } %>
+    <% if (admin == 0) { %>
+    <%- include('../../utilisateur/headerU') -%>
+    <% } %>
     <main id="conteneur" class="well small-lg">
-        <%- include('../../common/sidebar') -%>
+        <%- include('../sidebar') -%>
         <div id="content" class="well small-lg">
             <h3>
                 Informations sur les services annexes
@@ -183,7 +191,7 @@
             <a href="/Accueil">Retour à l'Accueil</a>
         </div>
     </main>
-    <%- include('../../common/footer') -%>
+    <%- include('../footer') -%>
 </body>
 
 </html>

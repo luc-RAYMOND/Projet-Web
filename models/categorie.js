@@ -11,8 +11,8 @@ class Categorie {
     }
 
     // Fonction permattant d'avoir le libellé si on a le numéro
-    static avoirLibellé(num,cb) {
-        var query = connection.query('SELECT LibelléCatégorie FROM catégorie WHERE NumCatégorie = ?',num, (error, results) => {
+    static avoirLibellé(num, cb) {
+        var query = connection.query('SELECT LibelléCatégorie FROM catégorie WHERE NumCatégorie = ?', num, (error, results) => {
             if (error) throw error;
             cb(results[0]);
         });

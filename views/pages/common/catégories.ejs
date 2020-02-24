@@ -18,19 +18,30 @@
 </head>
 
 <body>
-    <%- include('headerHC') -%>
+    <% if (admin == 10) { %>
+    <%- include('../HC/headerHC') -%>
+    <% } %>
+    <% if (admin == 1) { %>
+    <%- include('../admin/headerA') -%>
+    <% } %>
+    <% if (admin == 0) { %>
+    <%- include('../utilisateur/headerU') -%>
+    <% } %>
     <main id="conteneur" class="well small-lg">
-        <%- include('../common/sidebar') -%>
+        <%- include('sidebar') -%>
         <div id="content" class="well small-lg">
-            <% if(pageActuelle == 1) { %>
+            <% if(data == true) { %>
             <h3>
-                Articles Récents
+                Articles pour :
             </h3>
+            <div id="nomCaté">#<%= Lib.LibelléCatégorie %></div>
             <% } else { %>
             <h3>
-                Articles plus Anciens
+                Il n'y pas d'articles pour :
             </h3>
+            <div id="nomCaté">#<%= Lib.LibelléCatégorie %></div>
             <% } %>
+            <% if(data == true) { %>
             <% for (var i = 0; i < articles.length; i++) { %>
             <h5>
                 <%= articles[i].TitreArticle %>
@@ -65,51 +76,53 @@
             <hr>
             <% } %>
             <% } %>
+            <% } %>
+        </div>
+        <div id="retourAccueil">
+            <a href="/Accueil">Retour à l'Accueil</a>
         </div>
 
     </main>
+    <% if (data == true) { %>
     <div id="center">
         <ul class="pagination">
             <% if(pageMax <= 5) { %>
             <% for (var page = 1; page <= pageMax; page++) { %>
-            <% var link3 = 'href=/Accueil/Page/'+page; %>
-            <% if (page == 1) {link3 = 'href=/Accueil'} %>
+            <% var link3 = 'href=/Categories/'+numcategorie+'/Page/'+page; %>
             <li><a <%= link3 %>> <%= page %> </a></li>
             <% } %>
             <% } else { %>
             <% if (pageActuelle <=3) { %>
-            <li><a href="/Accueil"> <%= page %>1</a></li>
-            <% for (var page = 2; page <= 5; page++) { %>
-            <% var link3 = 'href=/Accueil/Page/'+page; %>
+            <% for (var page = 1; page <= 5; page++) { %>
+            <% var link3 ='href=/Categories/'+numcategorie+'/Page/'+page; %>
             <li><a <%= link3 %>> <%= page %> </a></li>
             <% } %>
-            <% var link3 = 'href=/Accueil/Page/'+pageMax; %>
+            <% var link3 = 'href=/Categories/'+numcategorie+'/Page/'+pageMax; %>
             <li><a <%= link3 %>> >> </a></li>
             <% } else { %>
             <% if(pageActuelle == pageMax - 2) { %>
-            <li><a href="/Accueil"> <%= page %> << </a>
+            <% var link3 = 'href=/Categories/'+numcategorie+'/Page/'+1; %>
+            <li><a <%= link3 %>> <%= page %> << </a>
             </li>
             <% for (var page = pageActuelle-2; page <= pageMax; page++) { %>
-            <% var link3 = 'href=/Accueil/Page/'+page; %>
+            <% var link3 = 'href=/Categories/'+numcategorie+'/Page/'+page; %>
             <li><a <%= link3 %>> <%= page %> </a></li>
             <% } %>
             <% } else { %>
             <% if(pageActuelle < pageMax - 2){ %>
-            <li><a href="/Accueil">
-                    << </a>
-            </li>
-            <% for (var page = (pageActuelle-2); page<=(2+parseInt(pageActuelle)); page++) { %>
-            <% var link3 = 'href=/Accueil/Page/'+page; %>
+            <% var link3 = 'href=/Categories/'+numcategorie+'/Page/'+1; %>
+            <li><a <%= link3 %></a>> <%= page %> << </a>
+                        <% for (var page = (pageActuelle-2); page<=(2+parseInt(pageActuelle)); page++) { %>
+                        <% var link3 = 'href=/Categories/'+numcategorie+'/Page/'+page; %>
             <li><a <%= link3 %>> <%= page %> </a></li>
             <% } %>
-            <% var link3 = 'href=/Accueil/Page/'+pageMax; %>
+            <% var link3 = 'href=/Categories/'+numcategorie+'/Page/'+pageMax; %>
             <li><a <%= link3 %>> >> </a></li>
             <% } else { %>
-            <li><a href="/Accueil">
-                    << </a>
-            </li>
-            <% for (var page = pageMax-4 ; page <= pageMax; page++) { %>
-            <% var link3 = 'href=/Accueil/Page/'+page; %>
+            <% var link3 = 'href=/Categories/'+numcategorie+'/Page/'+1; %>
+            <li><a <%= link3 %>> <%= page %> << </a>
+                        <% for (var page = pageMax-4 ; page <= pageMax; page++) { %>
+                        <% var link3 = 'href=/Categories/'+numcategorie+'/Page/'+page; %>
             <li><a <%= link3 %>> <%= page %> </a></li>
             <% } %>
             <% } %>
@@ -118,7 +131,8 @@
             <% } %>
         </ul>
     </div>
-    <%- include('../common/footer') -%>
+    <% } %>
+    <%- include('footer') -%>
 </body>
 
 </html>

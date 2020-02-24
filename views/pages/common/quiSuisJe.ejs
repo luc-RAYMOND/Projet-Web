@@ -9,7 +9,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
     <link rel="stylesheet" href="/css/HC/headerHC.css" type="text/css">
     <link rel="stylesheet" href="/css/common/footer.css" type="text/css">
     <link rel="stylesheet" href="/css/common/sidebar.css" type="text/css">
@@ -18,9 +18,17 @@
 </head>
 
 <body>
-    <%- include('headerHC') -%>
+    <% if (admin == 10) { %>
+    <%- include('../HC/headerHC') -%>
+    <% } %>
+    <% if (admin == 1) { %>
+    <%- include('../admin/headerA') -%>
+    <% } %>
+    <% if (admin == 0) { %>
+    <%- include('../utilisateur/headerU') -%>
+    <% } %>
     <main id="conteneur" class="well small-lg">
-        <%- include('../common/sidebar') -%>
+        <%- include('sidebar') -%>
         <div id="content" class="well small-lg">
             <h3>
                 Qui suis-je ?
@@ -135,7 +143,7 @@
             <a href="/Accueil">Retour à l'Accueil</a>
         </div>
     </main>
-    <%- include('../common/footer') -%>
+    <%- include('footer') -%>
 </body>
 
 </html>

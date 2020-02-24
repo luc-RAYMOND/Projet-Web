@@ -30,7 +30,7 @@ exports.verifConnexion = (token, admin) => {
                         ad = 10;
                 }
             }
-            admin(ad);
         });
     }
+    admin(ad);
 }

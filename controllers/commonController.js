@@ -62,13 +62,20 @@ exports.tentativeConnexion = (request, response) => {
             bcrypt.compare(mdp, bonMDP[0].MotDePasseUtilisateur, function (err, result) {
                 // Tout est bon, on se connecte
                 if (result) {
-                    // On créé un token qui contiendra le NumUtilisateur et AdminUtilisateur pour savoir s'il est admin ou non
-                    var token = jwt.sign({ NumUtilisateur: bonMDP[0].NumUtilisateur, AdminUtilisateur: bonMDP[0].AdminUtilisateur }, key.key, { expiresIn: '1h' }, (err, token) => {
-                        if (err) throw err;
-                        // Tout est bon, on est connecté et redirigé à l'accueil
-                        response.cookie('token', token);
-                        response.redirect('/Accueil');
-                    });
+                    // On véifie que le compte est activé
+                    if (bonMDP[0].EtatCompteUtilisateur == 1) {
+                        // On créé un token qui contiendra le NumUtilisateur et AdminUtilisateur pour savoir s'il est admin ou non
+                        var token = jwt.sign({ NumUtilisateur: bonMDP[0].NumUtilisateur, AdminUtilisateur: bonMDP[0].AdminUtilisateur }, key.key, { expiresIn: '1h' }, (err, token) => {
+                            if (err) throw err;
+                            // Tout est bon, on est connecté et redirigé à l'accueil
+                            response.cookie('token', token);
+                            response.redirect('/Accueil');
+                        });
+                    }
+                    else {
+                        cas = 2;
+                        response.render('pages/common/connexion', { cas: cas });
+                    }
                 }
                 // Cas de mauvais mot de passe
                 else {
@@ -83,4 +90,105 @@ exports.tentativeConnexion = (request, response) => {
 exports.deconnexion = (request, response) => {
     response.clearCookie('token', request.cookies.token);
     response.redirect('/Accueil');
+}
+
+exports.inscription = (request, response) => {
+    var cas = 10;
+    var token = request.cookies.token;
+    verifConnexion.verifConnexion(token, (admin) => {
+        if (admin == 1 || admin == 0) {
+            // On est déjà inscrit, on est redirigé à l'accueil
+            response.redirect('/Accueil');
+        }
+        else {
+            response.render('pages/common/inscription', { cas: cas });
+        }
+    });
+}
+
+exports.tentativeInscription = (request, response) => {
+    // On récupère toutes les données du formulaire
+    var mail = request.body.mail;
+    var nom = request.body.Nom;
+    var prenom = request.body.prénom;
+    var pseudo = request.body.pseudo;
+    var mdp = request.body.mdp;
+    var mdpConf = request.body.mdpConf;
+    var tel = request.body.tel;
+    var ville = request.body.ville;
+    var rue = request.body.rue;
+    var cp = request.body.cp;
+    var pays = request.body.pays;
+    var date = request.body.date;
+    var cas = 10;
+    var saltRounds = 10;
+    // On vérifie qu'il n'y a pas déjà de compte avec cette adresse mail
+    utilisateur.mailExiste(mail, (test) => {
+        // Champ vide
+        if (mail == '') {
+            cas = 0
+            response.render('pages/common/inscription', { cas: cas });
+        }
+        else {
+            // Bonne adresse mail
+            if (test[0] == undefined) {
+                // Champs prénom ou nom vide
+                if (nom == '' || prenom == '') {
+                    cas = 2;
+                    response.render('pages/common/inscription', { cas: cas });
+                }
+                else {
+                    // On vérifie que les deux mots de passe sont bien identiques
+                    if (mdp != mdpConf) {
+                        cas = 4;
+                        response.render('pages/common/inscription', { cas: cas });
+                    }
+                    else {
+                        // On regarde si le mdp est assez long
+                        if (mdp.length < 4) {
+                            cas = 5;
+                            response.render('pages/common/inscription', { cas: cas });
+                        }
+                        // Tout est bon, le reste peut être vide, on insère dans la BDD
+                        else {
+                            // On hash le mot de passe
+                            bcrypt.hash(mdp, saltRounds, (err, mdpHash) => {
+                                var mdpH = mdpHash
+                                // S'il a mis un pseudo
+                                if (pseudo != '') {
+                                    utilisateur.pseudoExiste(pseudo, (result) => {
+                                        // S'il existe, il faut alors changer
+                                        if (result[0] != undefined) {
+                                            cas = 3;
+                                            response.render('pages/common/inscription', { cas: cas });
+                                        }
+                                        else {
+                                            // On insère le nouveau user dans la BDD
+                                            utilisateur.newUtilisateur(mail, nom, prenom, pseudo, mdpH, tel, ville, rue, cp, pays, date, (cb) => {
+                                                cas = 6;
+                                                response.render('pages/common/inscription', { cas: cas });
+                                            });
+                                        }
+                                    });
+                                }
+                                else {
+                                    // On insère le nouveau user dans la BDD
+                                    utilisateur.newUtilisateur(mail, nom, prenom, pseudo, mdpH, tel, ville, rue, cp, pays, date, (cb) => {
+                                        cas = 6;
+                                        response.render('pages/common/inscription', { cas: cas });
+                                    });
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+            else {
+                // Un compte a déjà cette adresse
+                cas = 1;
+                response.render('pages/common/inscription', { cas: cas });
+            }
+        }
+
+    })
 }

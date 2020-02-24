@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html id="HautPage" lang="fr">
+
+<head>
+    <title>L'Atelier d'Alegolas 91 : L'Atelier</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+    <link rel="stylesheet" href="/css/common/header.css" type="text/css">
+    <link rel="stylesheet" href="/css/common/footer.css" type="text/css">
+    <link rel="stylesheet" href="/css/common/sidebar.css" type="text/css">
+    <link rel="stylesheet" href="/css/common/general.css" type="text/css">
+    <link rel="stylesheet" href="/css/common/inscription.css" type="text/css">
+</head>
+
+<body>
+    <%- include('../HC/headerHC') -%>
+    <main id="conteneur" class="well small-lg">
+        <div id="content" class="well small-lg">
+            <h3>
+                Inscription
+            </h3>
+            <p>
+                Les champs marqués de "*" sont obligatoirement à remplir.
+            </p>
+            <form action="/TentativeInscriptionAtelier" method="POST">
+                <% if (cas == 6) { %>
+                <div id="al" class="alert alert-success" role="alert">
+                    Compte créé avec succès !
+                    <br>
+                    Votre compte doit maintenant être validé par un administrateur
+                </div>
+                <% } %>
+                <h5>
+                    Informations sur le compte :
+                </h5>
+                <div class="form-group">
+                    <label>Adresse Mail : *</label>
+                    <input type="email" class="form-control" aria-describedby="Mail" name="mail">
+                </div>
+                <% if (cas == 0) { %>
+                <div id="al" class="alert alert-danger" role="alert">
+                    Ce champ est obligatoire
+                </div>
+                <% } %>
+                <% if (cas == 1) { %>
+                <div id="al" class="alert alert-danger" role="alert">
+                    Adresse mail déjà associée à un compte,
+                    <br>
+                    veuillez en choisir une autre
+                </div>
+                <% } %>
+                <div class="form-group">
+                    <label>Nom : *</label>
+                    <input type="text" class="form-control" name="Nom">
+                </div>
+                <div class="form-group">
+                    <label>Prénom : *</label>
+                    <input type="text" class="form-control" name="prénom">
+                </div>
+                <% if (cas == 2) { %>
+                <div id="al" class="alert alert-danger" role="alert">
+                    Les champs précédents sont obligatoires
+                </div>
+                <% } %>
+                <div class="form-group">
+                    <label>Pseudo : </label>
+                    <input type="text" class="form-control" name="pseudo">
+                </div>
+                <% if (cas == 3) { %>
+                <div id="al" class="alert alert-danger" role="alert">
+                    Pseudo déjà pris,
+                    <br>
+                    veuillez en choisir un autre
+                </div>
+                <% } %>
+                <div class="form-group">
+                    <label>Mot de passe : *</label>
+                    <input type="password" class="form-control" name="mdp">
+                    <small id="info" class="form-text text-muted">Choisissez un mot de passe de 4 caractères
+                        minimum</small>
+                </div>
+                <div class="form-group">
+                    <label>Confirmation du mot de passe : *</label>
+                    <input type="password" class="form-control" name="mdpConf">
+                </div>
+                <% if (cas == 4) { %>
+                <div id="al" class="alert alert-danger" role="alert">
+                    Les deux mots de passe doivent être identiques
+                </div>
+                <% } %>
+                <% if (cas == 5) { %>
+                <div id="al" class="alert alert-danger" role="alert">
+                    Mot de passe trop court
+                </div>
+                <% } %>
+                <h5>
+                    Informations de facturation :
+                </h5>
+                <div class="form-group">
+                    <label>Numéro de téléphone : </label>
+                    <input type="text" class="form-control" name="tel">
+                </div>
+                <div class="form-group">
+                    <label>Ville : </label>
+                    <input type="text" class="form-control" name="ville">
+                </div>
+                <div class="form-group">
+                    <label>Rue : </label>
+                    <input type="text" class="form-control" name="rue">
+                </div>
+                <div class="form-group">
+                    <label>Code Postal : </label>
+                    <input type="text" class="form-control" name="cp">
+                </div>
+                <div class="form-group">
+                    <label>Pays : </label>
+                    <input type="text" class="form-control" name="pays">
+                </div>
+                <div class="form-group">
+                    <label>Date : </label>
+                    <input type="text" class="form-control" name="date">
+                    <small id="info" class="form-text text-muted">Format de la date : JJ-MM-AAAA, ex :
+                        17-12-2020</small>
+                </div>
+                <% if (cas != 6) { %>
+                <div id="align">
+                    <button type="submit" class="btn btn-primary">Valider l'inscription</button>
+                </div>
+                <% } %>
+            </form>
+            <p id="warning">
+                Attention : Une fois l'inscription faite, il vous faudra attendre la validation de votre compte par un
+                administrateur avant de vous connecter.
+            </p>
+        </div>
+        <div id="retourAccueil">
+            <a href="/Accueil">Retour à l'Accueil</a>
+        </div>
+    </main>
+
+    <%- include('footer') -%>
+</body>
+
+</html>

@@ -1,0 +1,59 @@
+
+#conteneur{
+    overflow: auto;
+    border-color: darkgray;
+}
+#content{
+    padding-left: 10%;
+    padding-right: 10%;
+    overflow: hidden;
+    background-color: lightgray;
+    border-color: darkgray;
+}
+h3{
+    font-size: 200%;
+    font-family: "SDA";
+    font-style: italic;
+    color: black;
+    margin-bottom: 5%;
+    text-decoration: underline;
+
+}
+p{
+    font-size: larger;
+    color: black;
+    text-align: justify;
+}
+form{
+    margin-top: 3%;
+    margin-bottom: 3%;
+    padding-left: 30%;
+    padding-right: 30%;
+}
+#info{
+    font-style: italic;
+}
+h5{
+    margin-bottom: 15%;
+    margin-top: 15%;
+    padding-left: 3%;
+    font-weight: bold;
+    font-size: 150%;
+    text-decoration: underline;
+}
+#align{
+    text-align: center;
+}
+#al{
+    text-align: center;
+}
+#warning{
+    color: red;
+}
+#retourAccueil{
+    color: lightblue;
+    text-align: center;
+    font-weight: bolder;
+    font-size: larger;
+    text-decoration: underline;
+}

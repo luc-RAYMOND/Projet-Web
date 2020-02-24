@@ -1,9 +1,12 @@
 // Les models d'où viennent les fonctions sur la BDD
 var affichage = require('../models/affichage.js')
+var verifConnexion = require ('../models/verifConnexion');
 
 // Permet de charger la page d'accueil
 exports.accueil = (request, response) => {
+    var token = request.cookies.token;
     var pageActuelle = 1;
+    // O -> Client, 1 -> Admin, 10 -> Anonyme 
     affichage.remplirCatégorie(request, response, (contient) => {
         affichage.remplirArticle(request, response, contient, (articles) => {
             affichage.remplirCatégorieArticle(request, response, contient, articles, (cat) => {
@@ -15,7 +18,10 @@ exports.accueil = (request, response) => {
                     var slicedCat = cat.slice(trimStart, trimEnd);
                     var slicedImg = img.slice(trimStart, trimEnd);
                     var pageMax = Math.ceil(articles.length / 5);
-                    response.render('pages/HC/accueilHC', { contient: contient, articles: slicedArticles, cat: slicedCat, img: slicedImg, pageActuelle: pageActuelle, pageMax: pageMax });
+                    // Selon les informations du token, on affiche l'accueil différemment
+                    verifConnexion.verifConnexion(token,(admin) =>{
+                        response.render('pages/HC/accueilHC', { contient: contient, articles: slicedArticles, cat: slicedCat, img: slicedImg, pageActuelle: pageActuelle, pageMax: pageMax });
+                    });
                 });
             });
         });

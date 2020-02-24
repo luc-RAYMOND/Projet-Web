@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html id="HautPage" lang="fr">
+
+<head>
+    <title>L'Atelier d'Alegolas 91 : L'Atelier</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+    <link rel="stylesheet" href="/css/HC/headerHC.css" type="text/css">
+    <link rel="stylesheet" href="/css/common/footer.css" type="text/css">
+    <link rel="stylesheet" href="/css/common/sidebar.css" type="text/css">
+    <link rel="stylesheet" href="/css/common/general.css" type="text/css">
+    <link rel="stylesheet" href="/css/HC/connexion.css" type="text/css">
+</head>
+
+<body>
+    <%- include('headerHC') -%>
+    <main id="conteneur" class="well small-lg">
+        <div id="content" class="well small-lg">
+            <h3>
+                Connexion
+            </h3>
+            <p>
+                Connectez-vous afin d'accéder à votre espace personnel client.
+            </p>
+            <form action="/TentativeConnexion" method="POST">
+                <div class="form-group">
+                    <label>Adresse Mail :</label>
+                    <input type="email" class="form-control" aria-describedby="Mail" name="mail">
+                </div>
+                <% if (cas == 0) { %>
+                <div class="alert alert-danger" role="alert">
+                    Veuillez rentrer un mail valide
+                </div>
+                <% } %>
+                <div class="form-group">
+                    <label>Mot de passe :</label>
+                    <input type="password" class="form-control" name="mdp">
+                </div>
+                <% if (cas == 1) { %>
+                <div class="alert alert-danger" role="alert">
+                    Mot de passe incorrect, veuillez réessayer
+                </div>
+                <% } %>
+                <div id="align">
+                    <button type="submit" class="btn btn-primary">Connexion</button>
+                </div>
+            </form>
+            <hr>
+            <h5>
+                Vous n'êtes pas encore inscrit ?
+            </h5>
+            <br>
+            <p>
+                La connexion au site est réservée aux clients de l'atelier.
+            </p>
+            <p>
+                Le lien d'inscription sera exclusivement fourni après validation d'un premier devis à la suite d'un
+                contact par mail.
+            </p>
+            <p>
+                Après inscription sur le site, il vous faudra attendre la validation de votre compte par un
+                administrateur.
+            </p>
+            <br>
+            <div id="retourAccueil">
+                <a href="/Accueil">Retour à l'Accueil</a>
+            </div>
+    </main>
+    <%- include('../common/footer') -%>
+</body>
+
+</html>

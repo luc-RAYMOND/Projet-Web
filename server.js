@@ -20,6 +20,7 @@ var horsConnexionRoute = require('./routes/commonRoute');
 var accueilPage = require('./routes/accueilRoute');
 var servicesPage = require('./routes/servicesRoute');
 var catégoriesPage = require('./routes/catégoriesRoute');
+var livreOr = require('./routes/livreOrRoute');
 
 // Tout ce qui est hors connexion
 
@@ -27,6 +28,7 @@ projet.use('/', horsConnexionRoute);
 projet.use('/Accueil', accueilPage);
 projet.use('/Services', servicesPage);
 projet.use('/Categories', catégoriesPage);
+projet.use('/LivreOr', livreOr);
 
 
 // On indique le port que l'on va utiliser

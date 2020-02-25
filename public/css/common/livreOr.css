@@ -1,0 +1,45 @@
+#conteneur{
+    overflow: auto;
+    border-color: darkgray;
+}
+#content{
+    overflow: hidden;
+    background-color: lightgray;
+    border-color: darkgray;
+}
+h3{
+    font-size: 200%;
+    font-family: "SDA";
+    font-style: italic;
+    color: black;
+    margin-bottom: 5%;
+    text-decoration: underline;
+}
+p{
+    font-size: larger;
+    color: black;
+    text-align: justify;
+}
+#comment{
+    background-color: rgba(185, 134, 66, 0.432);
+}
+h5{
+    font-size: 200%;
+    font-weight: bold;
+    color: rgba(199, 137, 22, 0.884);
+    text-decoration: underline;
+    padding-left: 2%;
+}
+#nomCaté{
+    font-size: 120%;
+    font-family: "SDA";
+    font-style: italic;
+    color: blue;
+    margin-bottom: 2%;
+}
+.avis{
+    padding-left: 15%;
+}
+#center{
+    text-align: center;
+}

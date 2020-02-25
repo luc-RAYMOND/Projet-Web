@@ -1,6 +1,7 @@
 // Ce model permet d'utiliser les fonctions des autres models pour gérer l'affichage dans l'html
 var Catégorie = require('../models/categorie');
 var Article = require('../models/article');
+var utilisateur = require('../models/utilisateur');
 var moment = require('moment');
 
 // Fonction qui permet de définir la langue locale de la date en français
@@ -89,6 +90,20 @@ exports.remplirCatégorie = (req, res, next) => {
                 next(contient);
             }
         });
+    });
+}
+
+exports.avoirPseudos = (avis, next) => {
+    // On stock les avis et le pseudo
+    var avisLO = [];
+    var compteur = 0;
+    // On remplie les valeurs des libellés de catégorie
+    utilisateur.avoirPseudo(avis, (pseudo) => {
+        avisLO[compteur] = pseudo[0].PseudoUtilisateur;
+        compteur++;
+        if (compteur == avis.length) {
+            next(avisLO);
+        }
     });
 }
 

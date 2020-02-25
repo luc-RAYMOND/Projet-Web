@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html id="HautPage" lang="fr">
+
+<head>
+    <title>L'Atelier d'Alegolas 91 : L'Atelier</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+    <link rel="stylesheet" href="/css/common/header.css" type="text/css">
+    <link rel="stylesheet" href="/css/common/footer.css" type="text/css">
+    <link rel="stylesheet" href="/css/common/sidebar.css" type="text/css">
+    <link rel="stylesheet" href="/css/common/general.css" type="text/css">
+    <link rel="stylesheet" href="/css/common/livreOr.css" type="text/css">
+</head>
+
+<body>
+    <% if (admin == 10) { %>
+    <%- include('../HC/headerHC') -%>
+    <% } %>
+    <% if (admin == 1) { %>
+    <%- include('../admin/headerA') -%>
+    <% } %>
+    <% if (admin == 0) { %>
+    <%- include('../utilisateur/headerU') -%>
+    <% } %>
+    <main id="conteneur" class="well small-lg">
+        <%- include('sidebar') -%>
+        <div id="content" class="well small-lg">
+            <h3>
+                Livre d'Or
+            </h3>
+            <p>
+                Bonjour à tous !
+            </p>
+            <p>
+                Voici donc le livre d'or de l'Atelier d'Alegolas91. Je vous laisse donc exprimer vos avis concernant vos
+                commandes pour rassurer les futurs clients potentiels :)
+            </p>
+            <p>
+                Je vous remercie d'avance pour vos messages :)
+            </p>
+            <p>
+                Cordialement,
+                <br>
+                <br>
+                Alexandre.
+            </p>
+            <% for (var i = 0; i < avis.length; i++) { %>
+            <div id="comment" class="well small-lg">
+                <h5>
+                    <%= avis[i].TitreLO %>
+                </h5>
+                <div id="nomCaté">
+                    <% if (pseudos[i] == ''){ %>
+                    Client anonyme,
+                    <% } else { %>
+                    <%= pseudos[i] %>,
+                    <% } %>
+                    <%= avis[i].DateLO %>
+                </div>
+                <p class="avis">
+                    <%= avis[i].AvisLO %>
+                </p>
+            </div>
+            <% } %>
+        </div>
+    </main>
+    <div id="center">
+        <ul class="pagination">
+            <% if(pageMax <= 5) { %>
+            <% for (var page = 1; page <= pageMax; page++) { %>
+            <% var link3 = 'href=/LivreOr/Page/'+page; %>
+            <% if (page == 1) {link3 = 'href=/LivreOr'} %>
+            <li><a <%= link3 %>> <%= page %> </a></li>
+            <% } %>
+            <% } else { %>
+            <% if (pageActuelle <=3) { %>
+            <li><a href="/LivreOr"> <%= page %>1</a></li>
+            <% for (var page = 2; page <= 5; page++) { %>
+            <% var link3 = 'href=/LivreOr/Page/'+page; %>
+            <li><a <%= link3 %>> <%= page %> </a></li>
+            <% } %>
+            <% var link3 = 'href=/LivreOr/Page/'+pageMax; %>
+            <li><a <%= link3 %>> >> </a></li>
+            <% } else { %>
+            <% if(pageActuelle == pageMax - 2) { %>
+            <li><a href="/LivreOr"> <%= page %> << </a>
+            </li>
+            <% for (var page = pageActuelle-2; page <= pageMax; page++) { %>
+            <% var link3 = 'href=/LivreOr/Page/'+page; %>
+            <li><a <%= link3 %>> <%= page %> </a></li>
+            <% } %>
+            <% } else { %>
+            <% if(pageActuelle < pageMax - 2){ %>
+            <li><a href="/LivreOr">
+                    << </a>
+            </li>
+            <% for (var page = (pageActuelle-2); page<=(2+parseInt(pageActuelle)); page++) { %>
+            <% var link3 = 'href=/LivreOr/Page/'+page; %>
+            <li><a <%= link3 %>> <%= page %> </a></li>
+            <% } %>
+            <% var link3 = 'href=/LivreOr/Page/'+pageMax; %>
+            <li><a <%= link3 %>> >> </a></li>
+            <% } else { %>
+            <li><a href="/LivreOr">
+                    << </a>
+            </li>
+            <% for (var page = pageMax-4 ; page <= pageMax; page++) { %>
+            <% var link3 = 'href=/LivreOr/Page/'+page; %>
+            <li><a <%= link3 %>> <%= page %> </a></li>
+            <% } %>
+            <% } %>
+            <% } %>
+            <% } %>
+            <% } %>
+        </ul>
+    </div>
+    <%- include('footer') -%>
+</body>
+
+</html>

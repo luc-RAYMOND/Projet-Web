@@ -175,3 +175,90 @@ exports.remplirImageArticle = (req, res, contient, articles, cat, next) => {
         }
     });
 }
+
+// Cette fonction permet de renvoyer le cas d'inscription
+exports.casInscription = (pseudo, mail, nom, prenom, mdp, mdpConf, cb) => {
+    var cas = 10;
+    // On vérifie qu'il n'y a pas déjà de compte avec cette adresse mail
+    utilisateur.mailExiste(mail, (test) => {
+        utilisateur.pseudoExiste(pseudo, (result) => {
+            // Champ vide
+            if (mail == '' || mail.length > 255) {
+                cas = 0;
+            }
+            else {
+                // Bonne adresse mail
+                if (test[0] == undefined) {
+                    // Champs prénom ou nom vide
+                    if (nom == '' || prenom == '' || nom.length > 25 || prenom.length > 25) {
+                        cas = 2;
+                    }
+                    else {
+                        // On vérifie que les deux mots de passe sont bien identiques
+                        if (mdp != mdpConf) {
+                            cas = 4;
+                        }
+                        else {
+                            // On regarde si le mdp est assez long
+                            if (mdp.length < 4) {
+                                cas = 5;
+                            }
+                            // Il reste seulement à vérifier que le pseudo n'est pas pris
+                            else {
+                                // S'il a mis un pseudo
+                                if (pseudo != '') {
+                                    // S'il existe, il faut alors changer
+                                    if (result[0] != undefined) {
+                                        cas = 3;
+                                    }
+                                    else {
+                                        if (pseudo.length > 15) {
+                                            cas = 7;
+                                        }
+                                        else {
+                                            // On peut insérer le nouveau user dans la BDD
+                                            cas = 6;
+                                        }
+                                    }
+                                }
+                                else {
+                                    // On peut insérer le nouveau user dans la BDD
+                                    cas = 6;
+                                }
+                            }
+                        }
+                    }
+                }
+                else {
+                    // Un compte a déjà cette adresse
+                    cas = 1;
+                }
+            }
+            if (cas != 3 && cas != 7 && cas != 6) {
+            }
+            cb(cas)
+        });
+    });
+}
+
+
+// Nous permet de déterminer quel sera le cas à afficher sur la page
+exports.casLivreOr = (titre, avis, next) => {
+    // Cas par défaut
+    var cas = 10;
+    // On vérifie que le titre est ok
+    if (titre == '' || titre.length > 40) {
+        cas = 0;
+    }
+    else {
+        // On vérifie que le texte est ok
+        if (avis == '' || avis.length > 400) {
+            cas = 1;
+        }
+        // Tout va bien
+        else {
+            cas = 2;
+        }
+    }
+    next(cas);
+}

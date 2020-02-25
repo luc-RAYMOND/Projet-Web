@@ -40,11 +40,11 @@
                 </h5>
                 <div class="form-group">
                     <label>Adresse Mail : *</label>
-                    <input type="email" <% if (cas != 10 && cas !=1) { %> value="<%= mail %>" <% } %> class="form-control" aria-describedby="Mail" name="mail">
+                    <input type="email" <% if (cas != 10 && cas !=1 && cas!=0) { %> value="<%= mail %>" <% } %> class="form-control" aria-describedby="Mail" name="mail">
                 </div>
                 <% if (cas == 0) { %>
                 <div id="al" class="alert alert-danger" role="alert">
-                    Ce champ est obligatoire
+                    Adresse mail incorrecte
                 </div>
                 <% } %>
                 <% if (cas == 1) { %>
@@ -56,21 +56,30 @@
                 <% } %>
                 <div class="form-group">
                     <label>Nom : *</label>
-                    <input type="text" <% if (cas != 10) { %> value="<%= nom %>" <% } %> class="form-control" name="Nom">
+                    <input type="text" <% if (cas != 10 && cas !=2) { %> value="<%= nom %>" <% } %> class="form-control" name="Nom">
+                    <small id="info" class="form-text text-muted">15 caractères maximum </small>
                 </div>
                 <div class="form-group">
                     <label>Prénom : *</label>
-                    <input type="text" <% if (cas != 10) { %> value="<%= prenom %>" <% } %>class="form-control" name="prénom">
+                    <input type="text" <% if (cas != 10 && cas !=2) { %> value="<%= prenom %>" <% } %>class="form-control" name="prénom">
+                    <small id="info" class="form-text text-muted">15 caractères maximum </small>
+
                 </div>
                 <% if (cas == 2) { %>
                 <div id="al" class="alert alert-danger" role="alert">
-                    Les champs précédents sont obligatoires
+                    Prénom ou nom incorrect
                 </div>
                 <% } %>
                 <div class="form-group">
                     <label>Pseudo : </label>
-                    <input type="text" <% if (cas != 10) { %> value="<%= pseudo %>" <% } %>class="form-control" name="pseudo">
+                    <input type="text" <% if (cas != 10 && cas != 7 && cas != 3) { %> value="<%= pseudo %>" <% } %>class="form-control" name="pseudo">
+                    <small id="info" class="form-text text-muted">15 caractères maximum </small>
                 </div>
+                <% if (cas == 7) { %>
+                    <div id="al" class="alert alert-danger" role="alert">
+                        Pseudo trop long
+                    </div>
+                    <% } %>
                 <% if (cas == 3) { %>
                 <div id="al" class="alert alert-danger" role="alert">
                     Pseudo déjà pris,
@@ -81,8 +90,7 @@
                 <div class="form-group">
                     <label>Mot de passe : *</label>
                     <input type="password" class="form-control" name="mdp">
-                    <small id="info" class="form-text text-muted">Choisissez un mot de passe de 4 caractères
-                        minimum</small>
+                    <small id="info" class="form-text text-muted">4 caractères minimum</small>
                 </div>
                 <div class="form-group">
                     <label>Confirmation du mot de passe : *</label>

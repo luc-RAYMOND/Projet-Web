@@ -20,6 +20,10 @@ p{
     color: black;
     text-align: justify;
 }
+#écrireComment{
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
 #comment{
     background-color: rgba(185, 134, 66, 0.432);
 }
@@ -30,12 +34,15 @@ h5{
     text-decoration: underline;
     padding-left: 2%;
 }
-#nomCaté{
+#pseudoDate{
     font-size: 120%;
     font-family: "SDA";
     font-style: italic;
     color: blue;
     margin-bottom: 2%;
+}
+#titreLO{
+    padding-right: 50%;
 }
 .avis{
     padding-left: 15%;

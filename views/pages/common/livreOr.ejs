@@ -49,12 +49,51 @@
                 <br>
                 Alexandre.
             </p>
+            <% if (admin == 0 && pageActuelle == 1) { %>
+            <div id="écrireComment">
+                <p>
+                    Vous pouvez écrire un message ci-dessous, avec un court titre (50 caractères maximum) suivi de votre
+                    avis (400 caractères maximum) :
+                </p>
+                <% if (cas == 2) { %>
+                <div id="al" class="alert alert-success" role="alert">
+                    Message publié ! Merci :)
+                </div>
+                <% } %>
+                <br>
+                <form action="/LivreOr/EnvoyerMessageLivreOr" method="POST">
+                    <div id="titreLO" class="form-group">
+                        <label>Titre :</label>
+                        <input class="form-control" <% if (cas != 10 && cas != 2) { %> value="<%= titre %>" <% } %>
+                            aria-describedby="Mail" name="titre">
+                    </div>
+                    <% if (cas == 0) { %>
+                    <div id="al" class="alert alert-danger" role="alert">
+                        Veuillez entrer un titre correct
+                    </div>
+                    <% } %>
+                    <div class="form-group">
+                        <label>Avis :</label>
+                        <textarea class="form-control" name="avis"
+                            rows="5"><% if (cas != 10 && cas != 2) { %> <%= texteAvis %> <% } %></textarea>
+                    </div>
+                    <% if (cas == 1) { %>
+                    <div id="al" class="alert alert-danger" role="alert">
+                        Veuillez entrer un texte correct
+                    </div>
+                    <% } %>
+                    <div id="align">
+                        <button type="submit" class="btn btn-primary">Envoyer le message</button>
+                    </div>
+                </form>
+            </div>
+            <% } %>
             <% for (var i = 0; i < avis.length; i++) { %>
             <div id="comment" class="well small-lg">
                 <h5>
                     <%= avis[i].TitreLO %>
                 </h5>
-                <div id="nomCaté">
+                <div id="pseudoDate">
                     <% if (pseudos[i] == ''){ %>
                     Client anonyme,
                     <% } else { %>

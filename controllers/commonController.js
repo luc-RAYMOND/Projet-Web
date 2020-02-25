@@ -122,73 +122,18 @@ exports.tentativeInscription = (request, response) => {
     var date = request.body.date;
     var cas = 10;
     var saltRounds = 10;
-    // On vérifie qu'il n'y a pas déjà de compte avec cette adresse mail
-    utilisateur.mailExiste(mail, (test) => {
-        // Champ vide
-        if (mail == '') {
-            cas = 0
-            response.render('pages/common/inscription', { cas: cas, mail: mail, nom: nom, prenom: prenom, pseudo: pseudo, tel: tel, ville: ville, rue: rue, cp: cp, pays: pays, date: date });
+    affichage.casInscription(pseudo, mail, nom, prenom, mdp, mdpConf, (cas) => {
+        if(cas == 6){
+            bcrypt.hash(mdp, saltRounds, (err, mdpHash) => {
+                var mdpH = mdpHash
+                utilisateur.newUtilisateur(mail, nom, prenom, pseudo, mdpH, tel, ville, rue, cp, pays, date, (cb) => {
+                    response.render('pages/common/inscription', { cas: cas, mail: mail, nom: nom, prenom: prenom, pseudo: pseudo, tel: tel, ville: ville, rue: rue, cp: cp, pays: pays, date: date });
+
+                });
+            });
         }
         else {
-            // Bonne adresse mail
-            if (test[0] == undefined) {
-                // Champs prénom ou nom vide
-                if (nom == '' || prenom == '') {
-                    cas = 2;
-                    response.render('pages/common/inscription', { cas: cas, mail: mail, nom: nom, prenom: prenom, pseudo: pseudo, tel: tel, ville: ville, rue: rue, cp: cp, pays: pays, date: date });
-                }
-                else {
-                    // On vérifie que les deux mots de passe sont bien identiques
-                    if (mdp != mdpConf) {
-                        cas = 4;
-                        response.render('pages/common/inscription', { cas: cas, mail: mail, nom: nom, prenom: prenom, pseudo: pseudo, tel: tel, ville: ville, rue: rue, cp: cp, pays: pays, date: date });
-                    }
-                    else {
-                        // On regarde si le mdp est assez long
-                        if (mdp.length < 4) {
-                            cas = 5;
-                            response.render('pages/common/inscription', { cas: cas, mail: mail, nom: nom, prenom: prenom, pseudo: pseudo, tel: tel, ville: ville, rue: rue, cp: cp, pays: pays, date: date });
-                        }
-                        // Tout est bon, le reste peut être vide, on insère dans la BDD
-                        else {
-                            // On hash le mot de passe
-                            bcrypt.hash(mdp, saltRounds, (err, mdpHash) => {
-                                var mdpH = mdpHash
-                                // S'il a mis un pseudo
-                                if (pseudo != '') {
-                                    utilisateur.pseudoExiste(pseudo, (result) => {
-                                        // S'il existe, il faut alors changer
-                                        if (result[0] != undefined) {
-                                            cas = 3;
-                                            response.render('pages/common/inscription', { cas: cas, mail: mail, nom: nom, prenom: prenom, pseudo: pseudo, tel: tel, ville: ville, rue: rue, cp: cp, pays: pays, date: date });
-                                        }
-                                        else {
-                                            // On insère le nouveau user dans la BDD
-                                            utilisateur.newUtilisateur(mail, nom, prenom, pseudo, mdpH, tel, ville, rue, cp, pays, date, (cb) => {
-                                                cas = 6;
-                                                response.render('pages/common/inscription', { cas: cas, mail: mail, nom: nom, prenom: prenom, pseudo: pseudo, tel: tel, ville: ville, rue: rue, cp: cp, pays: pays, date: date });
-                                            });
-                                        }
-                                    });
-                                }
-                                else {
-                                    // On insère le nouveau user dans la BDD
-                                    utilisateur.newUtilisateur(mail, nom, prenom, pseudo, mdpH, tel, ville, rue, cp, pays, date, (cb) => {
-                                        cas = 6;
-                                        response.render('pages/common/inscription', { cas: cas, mail: mail, nom: nom, prenom: prenom, pseudo: pseudo, tel: tel, ville: ville, rue: rue, cp: cp, pays: pays, date: date });
-                                    });
-                                }
-                            });
-                        }
-                    }
-                }
-            }
-            else {
-                // Un compte a déjà cette adresse
-                cas = 1;
-                response.render('pages/common/inscription', { cas: cas, mail: mail, nom: nom, prenom: prenom, pseudo: pseudo, tel: tel, ville: ville, rue: rue, cp: cp, pays: pays, date: date });
-            }
+            response.render('pages/common/inscription', { cas: cas, mail: mail, nom: nom, prenom: prenom, pseudo: pseudo, tel: tel, ville: ville, rue: rue, cp: cp, pays: pays, date: date });
         }
-
-    })
+    });
 }

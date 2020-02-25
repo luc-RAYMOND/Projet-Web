@@ -60,7 +60,6 @@ exports.tentativeConnexion = (request, response) => {
         else {
             // On compare les 2 mots de passe
             bcrypt.compare(mdp, bonMDP[0].MotDePasseUtilisateur, function (err, result) {
-                // Tout est bon, on se connecte
                 if (result) {
                     // On véifie que le compte est activé
                     if (bonMDP[0].EtatCompteUtilisateur == 1) {
@@ -73,14 +72,15 @@ exports.tentativeConnexion = (request, response) => {
                         });
                     }
                     else {
+                        // Compte non activé encore
                         cas = 2;
-                        response.render('pages/common/connexion', { cas: cas });
+                        response.render('pages/common/connexion', { cas: cas, mail : mail });
                     }
                 }
                 // Cas de mauvais mot de passe
                 else {
                     cas = 1;
-                    response.render('pages/common/connexion', { cas: cas });
+                    response.render('pages/common/connexion', { cas: cas, mail: mail });
                 }
             });
         }
@@ -127,7 +127,7 @@ exports.tentativeInscription = (request, response) => {
         // Champ vide
         if (mail == '') {
             cas = 0
-            response.render('pages/common/inscription', { cas: cas });
+            response.render('pages/common/inscription', { cas: cas, mail : mail, nom : nom, prenom : prenom, pseudo : pseudo, tel : tel, ville : ville, rue :rue, cp : cp, pays : pays, date: date });
         }
         else {
             // Bonne adresse mail
@@ -135,19 +135,19 @@ exports.tentativeInscription = (request, response) => {
                 // Champs prénom ou nom vide
                 if (nom == '' || prenom == '') {
                     cas = 2;
-                    response.render('pages/common/inscription', { cas: cas });
+                    response.render('pages/common/inscription', { cas: cas, mail : mail, nom : nom, prenom : prenom, pseudo : pseudo, tel : tel, ville : ville, rue :rue, cp : cp, pays : pays, date: date });
                 }
                 else {
                     // On vérifie que les deux mots de passe sont bien identiques
                     if (mdp != mdpConf) {
                         cas = 4;
-                        response.render('pages/common/inscription', { cas: cas });
+                        response.render('pages/common/inscription', { cas: cas, mail : mail, nom : nom, prenom : prenom, pseudo : pseudo, tel : tel, ville : ville, rue :rue, cp : cp, pays : pays, date: date });
                     }
                     else {
                         // On regarde si le mdp est assez long
                         if (mdp.length < 4) {
                             cas = 5;
-                            response.render('pages/common/inscription', { cas: cas });
+                            response.render('pages/common/inscription', { cas: cas, mail : mail, nom : nom, prenom : prenom, pseudo : pseudo, tel : tel, ville : ville, rue :rue, cp : cp, pays : pays, date: date });
                         }
                         // Tout est bon, le reste peut être vide, on insère dans la BDD
                         else {
@@ -160,13 +160,13 @@ exports.tentativeInscription = (request, response) => {
                                         // S'il existe, il faut alors changer
                                         if (result[0] != undefined) {
                                             cas = 3;
-                                            response.render('pages/common/inscription', { cas: cas });
+                                            response.render('pages/common/inscription', { cas: cas, mail : mail, nom : nom, prenom : prenom, pseudo : pseudo, tel : tel, ville : ville, rue :rue, cp : cp, pays : pays, date: date });
                                         }
                                         else {
                                             // On insère le nouveau user dans la BDD
                                             utilisateur.newUtilisateur(mail, nom, prenom, pseudo, mdpH, tel, ville, rue, cp, pays, date, (cb) => {
                                                 cas = 6;
-                                                response.render('pages/common/inscription', { cas: cas });
+                                                response.render('pages/common/inscription', { cas: cas, mail : mail, nom : nom, prenom : prenom, pseudo : pseudo, tel : tel, ville : ville, rue :rue, cp : cp, pays : pays, date: date });
                                             });
                                         }
                                     });
@@ -175,7 +175,7 @@ exports.tentativeInscription = (request, response) => {
                                     // On insère le nouveau user dans la BDD
                                     utilisateur.newUtilisateur(mail, nom, prenom, pseudo, mdpH, tel, ville, rue, cp, pays, date, (cb) => {
                                         cas = 6;
-                                        response.render('pages/common/inscription', { cas: cas });
+                                        response.render('pages/common/inscription', { cas: cas, mail : mail, nom : nom, prenom : prenom, pseudo : pseudo, tel : tel, ville : ville, rue :rue, cp : cp, pays : pays, date: date });
                                     });
                                 }
                             });
@@ -186,7 +186,7 @@ exports.tentativeInscription = (request, response) => {
             else {
                 // Un compte a déjà cette adresse
                 cas = 1;
-                response.render('pages/common/inscription', { cas: cas });
+                response.render('pages/common/inscription', { cas: cas, mail : mail, nom : nom, prenom : prenom, pseudo : pseudo, tel : tel, ville : ville, rue :rue, cp : cp, pays : pays, date: date });
             }
         }
 

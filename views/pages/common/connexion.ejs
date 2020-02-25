@@ -37,7 +37,8 @@
                 <% } %>
                 <div class="form-group">
                     <label>Adresse Mail :</label>
-                    <input type="email" class="form-control" aria-describedby="Mail" name="mail">
+                    
+                    <input type="email" <% if (cas == 2 || cas == 1) { %> value= <%= mail %> <% } %> class="form-control" aria-describedby="Mail" name="mail">
                 </div>
                 <% if (cas == 0) { %>
                 <div id="al" class="alert alert-danger" role="alert">

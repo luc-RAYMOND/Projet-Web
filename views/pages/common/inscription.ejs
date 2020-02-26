@@ -40,7 +40,8 @@
                 </h5>
                 <div class="form-group">
                     <label>Adresse Mail : *</label>
-                    <input type="email" <% if (cas != 10 && cas !=1 && cas!=0) { %> value="<%= mail %>" <% } %> class="form-control" aria-describedby="Mail" name="mail">
+                    <input type="email" <% if (cas != 10 && cas !=1 && cas!=0) { %> value="<%= mail %>" <% } %>
+                        class="form-control" aria-describedby="Mail" name="mail">
                 </div>
                 <% if (cas == 0) { %>
                 <div id="al" class="alert alert-danger" role="alert">
@@ -56,12 +57,14 @@
                 <% } %>
                 <div class="form-group">
                     <label>Nom : *</label>
-                    <input type="text" <% if (cas != 10 && cas !=2) { %> value="<%= nom %>" <% } %> class="form-control" name="Nom">
+                    <input type="text" <% if (cas != 10 && cas !=2) { %> value="<%= nom %>" <% } %> class="form-control"
+                        name="Nom">
                     <small id="info" class="form-text text-muted">15 caractères maximum </small>
                 </div>
                 <div class="form-group">
                     <label>Prénom : *</label>
-                    <input type="text" <% if (cas != 10 && cas !=2) { %> value="<%= prenom %>" <% } %>class="form-control" name="prénom">
+                    <input type="text" <% if (cas != 10 && cas !=2) { %> value="<%= prenom %>"
+                        <% } %>class="form-control" name="prénom">
                     <small id="info" class="form-text text-muted">15 caractères maximum </small>
 
                 </div>
@@ -72,14 +75,15 @@
                 <% } %>
                 <div class="form-group">
                     <label>Pseudo : </label>
-                    <input type="text" <% if (cas != 10 && cas != 7 && cas != 3) { %> value="<%= pseudo %>" <% } %>class="form-control" name="pseudo">
+                    <input type="text" <% if (cas != 10 && cas != 7 && cas != 3) { %> value="<%= pseudo %>"
+                        <% } %>class="form-control" name="pseudo">
                     <small id="info" class="form-text text-muted">15 caractères maximum </small>
                 </div>
                 <% if (cas == 7) { %>
-                    <div id="al" class="alert alert-danger" role="alert">
-                        Pseudo trop long
-                    </div>
-                    <% } %>
+                <div id="al" class="alert alert-danger" role="alert">
+                    Pseudo trop long
+                </div>
+                <% } %>
                 <% if (cas == 3) { %>
                 <div id="al" class="alert alert-danger" role="alert">
                     Pseudo déjà pris,
@@ -111,15 +115,18 @@
                 </h5>
                 <div class="form-group">
                     <label>Numéro de téléphone : </label>
-                    <input type="text" <% if (cas != 10) { %> value="<%= tel %>" <% } %> class="form-control" name="tel">
+                    <input type="text" <% if (cas != 10) { %> value="<%= tel %>" <% } %> class="form-control"
+                        name="tel">
                 </div>
                 <div class="form-group">
                     <label>Ville : </label>
-                    <input type="text" <% if (cas != 10) { %> value="<%= ville %>" <% } %> class="form-control" name="ville">
+                    <input type="text" <% if (cas != 10) { %> value="<%= ville %>" <% } %> class="form-control"
+                        name="ville">
                 </div>
                 <div class="form-group">
                     <label>Rue : </label>
-                    <input type="text" <% if (cas != 10) { %> value="<%= rue %>" <% } %> class="form-control" name="rue">
+                    <input type="text" <% if (cas != 10) { %> value="<%= rue %>" <% } %> class="form-control"
+                        name="rue">
                 </div>
                 <div class="form-group">
                     <label>Code Postal : </label>
@@ -127,13 +134,15 @@
                 </div>
                 <div class="form-group">
                     <label>Pays : </label>
-                    <input type="text" <% if (cas != 10) { %> value="<%= pays %>" <% } %> class="form-control" name="pays">
+                    <input type="text" <% if (cas != 10) { %> value="<%= pays %>" <% } %> class="form-control"
+                        name="pays">
                 </div>
                 <div class="form-group">
                     <label>Date : </label>
-                    <input type="text" <% if (cas != 10) { %> value="<%= date %>" <% } %> class="form-control" name="date">
-                    <small id="info" class="form-text text-muted">Format de la date : JJ-MM-AAAA, ex :
-                        17-12-2020</small>
+                    <input type="text" <% if (cas != 10) { %> value="<%= date %>" <% } %> class="form-control"
+                        name="date">
+                    <small id="info" class="form-text text-muted">Format de la date : AAAA-MM-JJ, ex :
+                        2020-11-16</small>
                 </div>
                 <% if (cas != 6) { %>
                 <div id="align">

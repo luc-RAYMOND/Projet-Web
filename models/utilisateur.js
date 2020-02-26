@@ -27,6 +27,7 @@ class Utilisateur {
             });
         }
     }
+    
     // Fonction permettant de créer un nouvel utilisateura
     static newUtilisateur(mail, nom, prenom, pseudo, mdp, tel, ville, rue, cp, pays, date, cb) {
         var user = { MailUtilisateur: mail, NomUtilisateur: nom, PrénomUtilisateur: prenom, PseudoUtilisateur: pseudo, MotDePasseUtilisateur: mdp, NumTéléphone: tel, VilleFacturationClient: ville, RueFacturationClient: rue, CodePostalFacturationClient: cp, PaysFacturationClient: pays, DateNaissanceUtilisateur: date, AdminUtilisateur: 0, EtatCompteUtilisateur: 0 };
@@ -35,7 +36,6 @@ class Utilisateur {
             cb(results);
         });
     }
-
 }
 
 module.exports = Utilisateur;

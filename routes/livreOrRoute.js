@@ -7,7 +7,8 @@ var LO = require('../controllers/livreOrController');
 // Les différentes routes du livre d'or
 route.get('/', LO.livreOr);
 route.get('/Page/:numPage', LO.livreOrPage);
-route.post('/EnvoyerMessageLivreOr',LO.envoyerMessageLivreOr)
+route.get('/:numLO/SupprimerMessage',LO.supprimerMessage);
+route.post('/',LO.envoyerMessageLivreOr);
 
 // On exporte nos routes
 module.exports = route;

@@ -52,8 +52,8 @@ exports.tentativeConnexion = (request, response) => {
     var mdp = request.body.mdp;
     var cas;
     utilisateur.mailExiste(mail, (bonMDP) => {
-        // Cas de mauvais mail
-        if (bonMDP[0] == undefined) {
+        // Cas de mail vide
+        if (mail == '') {
             cas = 0;
             response.render('pages/common/connexion', { cas: cas });
         }
@@ -90,7 +90,7 @@ exports.tentativeConnexion = (request, response) => {
 exports.deconnexion = (request, response) => {
     var cas = 3;
     response.clearCookie('token', request.cookies.token);
-    response.render('pages/common/connexion', { cas: cas});
+    response.render('pages/common/connexion', { cas: cas });
 }
 
 exports.inscription = (request, response) => {
@@ -124,7 +124,7 @@ exports.tentativeInscription = (request, response) => {
     var cas = 10;
     var saltRounds = 10;
     affichage.casInscription(pseudo, mail, nom, prenom, mdp, mdpConf, (cas) => {
-        if(cas == 6){
+        if (cas == 6) {
             bcrypt.hash(mdp, saltRounds, (err, mdpHash) => {
                 var mdpH = mdpHash
                 utilisateur.newUtilisateur(mail, nom, prenom, pseudo, mdpH, tel, ville, rue, cp, pays, date, (cb) => {

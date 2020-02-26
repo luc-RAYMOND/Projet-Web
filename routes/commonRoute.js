@@ -8,10 +8,10 @@ var common = require('../controllers/commonController');
 route.get('/Formations', common.formations);
 route.get('/Qui-suis-je', common.contact);
 route.get('/Connexion', common.connexion);
-route.post('/TentativeConnexion', common.tentativeConnexion);
 route.get('/Deconnexion', common.deconnexion);
 route.get('/InscriptionClientAtelierAlegolas91', common.inscription);
-route.post('/TentativeInscriptionAtelier', common.tentativeInscription);
+route.post('/Connexion', common.tentativeConnexion);
+route.post('/InscriptionClientAtelierAlegolas91', common.tentativeInscription);
 
 
 // On exporte nos routes

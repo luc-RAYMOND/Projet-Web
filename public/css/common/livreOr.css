@@ -41,6 +41,9 @@ h5{
     color: blue;
     margin-bottom: 2%;
 }
+#modifSuppr{
+    text-align: right;
+}
 #titreLO{
     padding-right: 50%;
 }

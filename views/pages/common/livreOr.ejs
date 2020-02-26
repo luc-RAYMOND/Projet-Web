@@ -51,16 +51,16 @@
                 Alexandre.
             </p>
             <% } %>
-            <% if ((admin == 0 || admin == 1) && pageActuelle == 1) { %>
+            <% if ((admin == 0) && pageActuelle == 1) { %>
             <div id="écrireComment">
                 <p>
                     Vous pouvez écrire un message ci-dessous, avec un court titre (50 caractères maximum) suivi de votre
                     avis (400 caractères maximum) :
                 </p>
                 <% if (cas == 3) { %>
-                    <div id="al" class="alert alert-success" role="alert">
-                        Message supprimé avec succès !
-                    </div>
+                <div id="al" class="alert alert-success" role="alert">
+                    Message supprimé avec succès !
+                </div>
                 <% } %>
                 <% if (cas == 2) { %>
                 <div id="al" class="alert alert-success" role="alert">
@@ -68,16 +68,16 @@
                 </div>
                 <% } %>
                 <% if (cas == 4) { %>
-                    <div id="al" class="alert alert-danger" role="alert">
-                        Vous ne pouvez pas supprimer un message que vous n'avez pas posté ou qui n'existe plus.
-                    </div>
+                <div id="al" class="alert alert-danger" role="alert">
+                    Vous ne pouvez pas modifier/supprimer un message que vous n'avez pas posté ou qui n'existe plus.
+                </div>
                 <% } %>
                 <br>
                 <form action="/LivreOr" method="POST">
                     <div id="titreLO" class="form-group">
                         <label>Titre :</label>
-                        <input class="form-control" <% if (cas != 10 && cas != 2 && cas != 4 && cas != 3) { %> value="<%= titre %>" <% } %>
-                            aria-describedby="Mail" name="titre">
+                        <input class="form-control" <% if (cas != 10 && cas != 2 && cas != 4 && cas != 3) { %>
+                            value="<%= titre %>" <% } %> aria-describedby="Mail" name="titre">
                     </div>
                     <% if (cas == 0) { %>
                     <div id="al" class="alert alert-danger" role="alert">

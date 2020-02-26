@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html id="HautPage" lang="fr">
+
+<head>
+    <title>L'Atelier d'Alegolas 91 : L'Atelier</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+    <link rel="stylesheet" href="/css/common/header.css" type="text/css">
+    <link rel="stylesheet" href="/css/common/footer.css" type="text/css">
+    <link rel="stylesheet" href="/css/common/sidebar.css" type="text/css">
+    <link rel="stylesheet" href="/css/common/general.css" type="text/css">
+    <link rel="stylesheet" href="/css/common/livreOr.css" type="text/css">
+</head>
+
+<body>
+    <%- include('../utilisateur/headerU') -%>
+    <main id="conteneur" class="well small-lg">
+        <%- include('sidebar') -%>
+        <div id="content" class="well small-lg">
+            <h3>
+                Modifier Message
+            </h3>
+            <p>
+                Vous pouvez modifier votre message ci-dessous, avec un court titre (50 caractères maximum) suivi de
+                votre
+                avis (400 caractères maximum) :
+            </p>
+            <div id="écrireComment">
+                <br>
+                <% var link = '/LivreOr/'+avis[0].NumLO+'/ModifierMessage' %>
+                <form action='<%= link %>' method="POST">
+                    <div id="titreLO" class="form-group">
+                        <label>Titre :</label>
+                        <input class="form-control" value="<%= titre %>" name="titre">
+                    </div>
+                    <% if (cas == 0) { %>
+                    <div id="al" class="alert alert-danger" role="alert">
+                        Veuillez entrer un titre correct
+                    </div>
+                    <% } %>
+                    <div class="form-group">
+                        <label>Avis :</label>
+                        <textarea class="form-control" name="avis" rows="5"><%= texteAvis %></textarea>
+                    </div>
+                    <% if (cas == 1) { %>
+                    <div id="al" class="alert alert-danger" role="alert">
+                        Veuillez entrer un texte correct
+                    </div>
+                    <% } %>
+                    <div id="align">
+                        <button type="submit" class="btn btn-primary">Modifier le message</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+    <%- include('footer') -%>
+</body>
+
+</html>

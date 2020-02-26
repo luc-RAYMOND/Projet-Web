@@ -264,12 +264,12 @@ exports.casLivreOr = (titre, avis, next) => {
     next(cas);
 }
 
-exports.casSupprLivreOr = (utilisateur,decoded, next) => {
+exports.casSupprLivreOr = (utilisateur, decoded, next) => {
     var cas = 10;
-    if ( utilisateur[0] != undefined) {
+    if (utilisateur[0] != undefined) {
         var NumUtilisateur = utilisateur[0].NumUtilisateur;
         // Tout est bon, on supprime
-        if (NumUtilisateur == decoded.NumUtilisateur){
+        if (NumUtilisateur == decoded.NumUtilisateur) {
             cas = 3
         }
         // Ce n'est pas le bon utilisateur

@@ -14,9 +14,17 @@ class LO {
         });
     }
 
+    // Permet de récupérer un avis selon le numéro de l'avis
+    static avoirLO(numLO, cb) {
+        var query = connection.query('SELECT * FROM livreor WHERE NumLO = ?', numLO, (error, results) => {
+            if (error) throw error;
+            cb(results);
+        });
+    }
+
     // Permet de récupèrer l'utilisateur qui a créé le message
-    static utilisateurAvis(numLO,cb) {
-        var query = connection.query('SELECT NumUtilisateur FROM livreor WHERE NumLO = ?',numLO, (error, results) => {
+    static utilisateurAvis(numLO, cb) {
+        var query = connection.query('SELECT NumUtilisateur FROM livreor WHERE NumLO = ?', numLO, (error, results) => {
             cb(results);
         });
     }
@@ -33,6 +41,15 @@ class LO {
     // Permet de supprimer un avis dans le livre d'or
     static supprimerAvis(num, cb) {
         var query = connection.query('DELETE FROM livreor WHERE NumLO= ?', num, (error, results) => {
+            if (error) throw error;
+            cb(results);
+        });
+    }
+
+    // Permet de mettre à jour un message du livre d'or
+    // Permet de supprimer un avis dans le livre d'or
+    static modifierAvis(titre, avis, num, cb) {
+        var query = connection.query('UPDATE livreor SET TitreLO = ?, AvisLO = ? WHERE NumLO = ?', [titre, avis, num], (error, results) => {
             if (error) throw error;
             cb(results);
         });

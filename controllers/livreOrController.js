@@ -177,3 +177,97 @@ exports.supprimerMessage = (request, response) => {
         }
     });
 }
+
+// Permet d'afficher la page permettant de modifier un message posté
+exports.modifierMessagePage = (request, response) => {
+    var numLO = request.params.numLO;
+    var token = request.cookies.token;
+    var cas = 10;
+    // On regarde s'il y a des cookies pour le livre d'or
+    if (request.cookies.livreOr != undefined) {
+        // On récupère toutes les valeurs
+        cas = request.cookies.livreOr.cas;
+        titre = request.cookies.livreOr.titre;
+        texteAvis = request.cookies.livreOr.texteAvis
+    }
+    // Puis on le supprime
+    // Il s'expirera par lui même sinon
+    response.clearCookie('livreOr');
+    var titre;
+    var texteAvis;
+    var NumUtilisateur;
+    // On vérifie d'abord qu'on est bien toujours connecté
+    verifConnexion.verifConnexion(token, (admin) => {
+        affichage.remplirCatégorie(request, response, (next) => {
+            // On vérifie que c'est bien un client qui veut modifier son message
+            if (admin != 0) {
+                response.redirect('LivreOr');
+            }
+            else {
+                livreOr.utilisateurAvis(numLO, (utilisateur) => {
+                    // On vérifie que le message existe
+                    if (utilisateur[0] == undefined) {
+                        // Message non existant
+                        cas = 4;
+                        response.cookie('livreOr', { titre: titre, texteAvis: texteAvis, cas: cas }, { expiresIn: '5s' });
+                        response.redirect('/LivreOr');
+                    }
+                    else {
+                        NumUtilisateur = utilisateur[0].NumUtilisateur;
+                        // On vérifie que c'est le bon utilisateur qui veut modifier son message
+                        jwt.verify(token, key.key, (err, decoded) => {
+                            if (NumUtilisateur == decoded.NumUtilisateur) {
+                                livreOr.avoirLO(numLO, (avis) => {
+                                    if (cas == 10) {
+                                        titre = avis[0].TitreLO;
+                                        texteAvis = avis[0].AvisLO;
+                                    }
+                                    response.render('pages/common/modifMessageLO', { contient: next, avis: avis, titre: titre, texteAvis: texteAvis, cas: cas });
+                                });
+                            }
+                            // Pas le bon utilisateur
+                            else {
+                                cas = 4;
+                                response.cookie('livreOr', { titre: titre, texteAvis: texteAvis, cas: cas }, { expiresIn: '5s' });
+                                response.redirect('/LivreOr')
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    });
+}
+
+// Permet de modifier un message existant du livre d'or
+exports.modifierMessage = (request, response) => {
+    var numLO = request.params.numLO;
+    var token = request.cookies.token;
+    var titre = request.body.titre;
+    var texteAvis = request.body.avis;
+    affichage.casLivreOr(titre, texteAvis, (cas) => {
+        jwt.verify(token, key.key, (err, decoded) => {
+            // On crée un cookie qui dure 1s, afin que le retour au livre d'or traite le bon cas
+            response.cookie('livreOr', { titre: titre, texteAvis: texteAvis, cas: cas }, { expiresIn: '5s' });
+            // On peut insérer dans la BDD et afficher que c'est bon
+            if (cas == 2) {
+                // Si le token expire entre temps
+                if (decoded == undefined) {
+                    response.redirect('/Connexion');
+                }
+                // Sinon on crée le message
+                else {
+                    livreOr.modifierAvis(titre, texteAvis, numLO, (cb) => {
+                        // Et on retourne sur le livre d'or
+                        response.redirect('/LivreOr');
+                    });
+                }
+            }
+            // Il y a un soucis, on le fait remarquer sur la page de modification
+            else {
+                var url = '/LivreOr/' + numLO + '/ModifierMessage'
+                response.redirect(url);
+            }
+        });
+    });
+}

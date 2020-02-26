@@ -28,6 +28,11 @@
                 Connectez-vous afin d'accéder à votre espace personnel client.
             </p>
             <form action="/TentativeConnexion" method="POST">
+                <% if (cas == 3) { %>
+                    <div id="al" class="alert alert-success" role="alert">
+                        Vous avez bien été déconnecté !
+                    </div>
+                    <% } %>
                 <% if (cas == 2) { %>
                 <div id="al" class="alert alert-warning" role="alert">
                     Votre compte n'a pas encore été activé,

@@ -177,6 +177,7 @@ exports.remplirImageArticle = (req, res, contient, articles, cat, next) => {
 }
 
 // Cette fonction permet de renvoyer le cas d'inscription
+// On ne vérifie pas tout ce qui est données de facturation
 exports.casInscription = (pseudo, mail, nom, prenom, mdp, mdpConf, cb) => {
     var cas = 10;
     // On vérifie qu'il n'y a pas déjà de compte avec cette adresse mail

@@ -52,17 +52,12 @@ moment.locale('fr', {
     isPM: function (input) {
         return input.charAt(0) === 'M';
     },
-    // In case the meridiem units are not separated around 12, then implement
-    // this function (look at locale/id.js for an example).
-    // meridiemHour : function (hour, meridiem) {
-    //     return /* 0-23 hour, given meridiem token and hour 1-12 */ ;
-    // },
     meridiem: function (hours, minutes, isLower) {
         return hours < 12 ? 'PD' : 'MD';
     },
     week: {
-        dow: 1, // Monday is the first day of the week.
-        doy: 4  // Used to determine first week of the year.
+        dow: 1,
+        doy: 4
     }
 });
 
@@ -93,6 +88,7 @@ exports.remplirCatégorie = (req, res, next) => {
     });
 }
 
+// Nous permet d'avoir les pseudos de ceux ayant posté dans le livre d'or
 exports.avoirPseudos = (avis, next) => {
     // On stock les avis et le pseudo
     var avisLO = [];
@@ -177,7 +173,7 @@ exports.remplirImageArticle = (req, res, contient, articles, cat, next) => {
 }
 
 // Cette fonction permet de renvoyer le cas d'inscription
-// On ne vérifie pas tout ce qui est données de facturation
+// On ne vérifie pas tout ce qui est données de facturation (taille immense)
 exports.casInscription = (pseudo, mail, nom, prenom, mdp, mdpConf, cb) => {
     var cas = 10;
     // On vérifie qu'il n'y a pas déjà de compte avec cette adresse mail
@@ -242,7 +238,6 @@ exports.casInscription = (pseudo, mail, nom, prenom, mdp, mdpConf, cb) => {
     });
 }
 
-
 // Nous permet de déterminer quel sera le cas à afficher sur la page
 exports.casLivreOr = (titre, avis, next) => {
     // Cas par défaut
@@ -264,6 +259,7 @@ exports.casLivreOr = (titre, avis, next) => {
     next(cas);
 }
 
+// Cas de suppression dans le livre d'or
 exports.casSupprLivreOr = (utilisateur, decoded, next) => {
     var cas = 10;
     if (utilisateur[0] != undefined) {
@@ -282,4 +278,50 @@ exports.casSupprLivreOr = (utilisateur, decoded, next) => {
         cas = 4;
     }
     next(cas);
+}
+
+// Cas d'ajout d'une catégorie 
+exports.casAjoutCatégorie = (libCat, next) => {
+    var cas = 10;
+    Catégorie.vérifierLibellé(libCat, (result) => {
+        if (libCat == '' || libCat.length > 50) {
+            // Mauvaise entrée
+            cas = 0;
+        }
+        else {
+            if (result[0] != undefined) {
+                // Cette catégorie existe déjà
+                cas = 1;
+            }
+            else {
+                // Tout va bien
+                cas = 2;
+            }
+        }
+        next(cas);
+    });
+}
+
+// Cas de modification d'une catégorie 
+exports.casModifCatégorie = (numCat, libCat, next) => {
+    var cas = 10;
+    Catégorie.avoirLibellé(numCat, (lib) => {
+        Catégorie.vérifierLibellé(libCat, (result) => {
+            if (libCat == '' || libCat.length > 50) {
+                // Mauvaise entrée
+                cas = 0;
+            }
+            else {
+                if (result[0] != undefined && libCat != lib.LibelléCatégorie) {
+                    // Cette catégorie existe déjà
+                    cas = 1;
+                }
+                else {
+                    // Tout va bien
+                    cas = 4;
+                }
+            }
+            next(cas);
+        });
+    });
 }

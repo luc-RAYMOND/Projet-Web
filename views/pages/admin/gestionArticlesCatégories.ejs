@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html id="HautPage" lang="fr">
+
+<head>
+    <title>L'Atelier d'Alegolas 91 : L'Atelier</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+    <link rel="stylesheet" href="/css/common/header.css" type="text/css">
+    <link rel="stylesheet" href="/css/common/footer.css" type="text/css">
+    <link rel="stylesheet" href="/css/common/general.css" type="text/css">
+    <link rel="stylesheet" href="/css/admin/gestionArticlesCatégories.css" type="text/css">
+</head>
+
+<body>
+    <%- include('headerA') -%>
+    <main id="conteneur" class="well small-lg">
+        <div id="content" class="well small-lg">
+            <h3>
+                Ajout et gestion des Articles / Catégories
+            </h3>
+            <p>
+                - <a id="lien" href="#Partie1"> Ajouter une catégorie.</a>
+            </p>
+            <p>
+                - <a id="lien" href="#Partie2"> Gérer les catégories.</a>
+            </p>
+            <p>
+                - <a id="lien" href="#Partie3"> Créer un article.</a>
+            </p>
+            <br>
+            <br>
+            <h5 id="Partie1">
+                Créer une nouvelle catégorie :
+            </h5>
+            <% if (cas == 0) { %>
+            <div id="align" class="alert alert-danger" role="alert">
+                Mauvaise entrée, veuillez réessayer.
+            </div>
+            <% } %>
+            <% if (cas == 1) { %>
+            <div id="align" class="alert alert-danger" role="alert">
+                Cette catégorie existe déjà.
+            </div>
+            <% } %>
+            <% if (cas == 2) { %>
+            <div id="align" class="alert alert-success" role="alert">
+                Ajout de la catégorie avec succès !
+            </div>
+            <% } %>
+            <% if (cas == 3) { %>
+            <div id="align" class="alert alert-success" role="alert">
+                Suppression de la catégorie avec succès !
+            </div>
+            <% } %>
+            <% if (cas == 4) { %>
+            <div id="align" class="alert alert-success" role="alert">
+                Modification de la catégorie avec succès !
+            </div>
+            <% } %>
+            <form action="/EspaceAdmin/GestionArticlesCategories1" method="POST">
+                <div class="form-group">
+                    <label>Libellé de la catégorie :</label>
+                    <input class="form-control" name="libCat">
+                </div>
+                <div id="align">
+                    <button type="submit" class="btn btn-primary">Ajouter</button>
+                </div>
+            </form>
+            <h5 id="Partie2">
+                Gestion des catégories :
+            </h5>
+            <table class="table-striped">
+                <thead>
+                    <tr>
+                        <th>Libellé Catégorie</th>
+                        <th>Modification</th>
+                        <th>Suppression</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for (var i = 0;i<catégories.length;i++) { %>
+                    <tr>
+                        <td><%= catégories[i].LibelléCatégorie %></td>
+                        <% var link3 = 'GestionArticlesCategories/'+catégories[i].NumCatégorie+'/ModifierCategorie'; %>
+                        <td><a href=<%= link3 %>><button class="btn btn-success">Modifier</button></a></td>
+                        <% var link= 'supprimer'+catégories[i].NumCatégorie %>
+                        <td><button data-toggle="collapse" data-target="#<%= link %>"
+                                class="btn btn-danger">Supprimer</button>
+                            <div id="<%= link %>" class="collapse">
+                                <% var link2 = 'GestionArticlesCategories/'+catégories[i].NumCatégorie+'/SupprimerCategorie'; %>
+                                <a href="<%= link2 %>"><button class="btn btn-danger">Confirmer la
+                                        suppression</button></a>
+                            </div>
+                        </td>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+            <h5 id="Partie3">
+                Créer un article :
+            </h5>
+        </div>
+        <div id="retourAccueil">
+            <a href="/Accueil">Retour à l'Accueil</a>
+        </div>
+    </main>
+    <%- include('../common/footer') -%>
+</body>
+
+</html>

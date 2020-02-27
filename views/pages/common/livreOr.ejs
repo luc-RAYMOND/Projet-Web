@@ -51,7 +51,7 @@
                 Alexandre.
             </p>
             <% } %>
-            <% if ((admin == 0) && pageActuelle == 1) { %>
+            <% if ((admin == 0 || admin == 1) && pageActuelle == 1) { %>
             <div id="écrireComment">
                 <p>
                     Vous pouvez écrire un message ci-dessous, avec un court titre (50 caractères maximum) suivi de votre
@@ -73,6 +73,8 @@
                 </div>
                 <% } %>
                 <br>
+                <% } %>
+                <% if (admin == 0) { %>
                 <form action="/LivreOr" method="POST">
                     <div id="titreLO" class="form-group">
                         <label>Titre :</label>
@@ -104,15 +106,24 @@
             <% if (admin == 0 && avis[i].NumUtilisateur == NumUtilisateur) { %>
             <div id="modifSuppr">
                 <% var link = '/LivreOr/'+avis[i].NumLO; %>
+                <% var link2 = 'supprimer'+avis[i].NumLO; %>
                 <a href=<%= link+'/ModifierMessage' %>><button class="btn btn-info">Modifier</button></a>
-                <a href=<%= link+'/SupprimerMessage' %>><button class="btn btn-danger">Supprimer</button></a>
-
+                <button data-toggle="collapse" data-target="#<%= link2 %>" class="btn btn-danger">Supprimer</button>
+                <div class="collapse hid" id="<%= link2 %>">
+                    <a href=<%= link+'/SupprimerMessage' %>><button class="btn btn-danger">Confirmer la
+                            suppression</button></a>
+                </div>
             </div>
             <% } %>
             <% if (admin == 1) { %>
             <div id="modifSuppr">
                 <% var link = '/LivreOr/'+avis[i].NumLO; %>
-                <a href=<%= link+'/SupprimerMessage' %>><button class="btn btn-danger">Supprimer</button></a>
+                <% var link2 = 'supprimer'+avis[i].NumLO; %>
+                <button data-toggle="collapse" data-target="#<%= link2 %>" class="btn btn-danger">Supprimer</button>
+                <div class="collapse hid" id="<%= link2 %>">
+                    <a href=<%= link+'/SupprimerMessage' %>><button class="btn btn-danger">Confirmer la
+                            suppression</button></a>
+                </div>
             </div>
             <% } %>
             <div id="comment" class="well small-lg">

@@ -1,3 +1,5 @@
+/* Style du main */
+
 #conteneur{
     overflow: auto;
     border-color: darkgray;
@@ -20,42 +22,27 @@ p{
     color: black;
     text-align: justify;
 }
-#écrireComment{
+nav{
     margin-top: 5%;
-    margin-bottom: 5%;
+    margin-left: 20%;
+    margin-right: 20%;
 }
-#comment{
-    background-color: rgba(185, 134, 66, 0.432);
-}
-h5{
+#title{
     font-size: 200%;
-    font-weight: bold;
-    color: rgba(199, 137, 22, 0.884);
-    text-decoration: underline;
-    padding-left: 2%;
 }
-#pseudoDate{
+#txt{
+    padding-left: 5%;
     font-size: 120%;
-    font-family: "SDA";
+    color: black;
     font-style: italic;
-    color: blue;
-    margin-bottom: 2%;
 }
-#modifSuppr{
-    text-align: right;
+a:link{
+    text-decoration: none;
 }
-#titreLO{
-    padding-right: 50%;
-}
-.avis{
-    padding-left: 15%;
-}
-#center{
+#retourAccueil{
+    color: lightblue;
     text-align: center;
-}
-#al{
-    text-align: center;
-}
-.hid{
-    margin-top: 1%;
+    font-weight: bolder;
+    font-size: larger;
+    text-decoration: underline;
 }

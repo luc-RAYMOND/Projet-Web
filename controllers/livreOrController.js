@@ -19,7 +19,7 @@ exports.livreOr = (request, response) => {
     }
     // Puis on le supprime
     // Il s'expirera par lui même sinon
-    response.clearCookie('livreOr');
+    response.clearCookie('livreOr', request.cookies.livreOr);
     var NumUtilisateur;
     var token = request.cookies.token;
     var pageActuelle = 1;
@@ -192,7 +192,7 @@ exports.modifierMessagePage = (request, response) => {
     }
     // Puis on le supprime
     // Il s'expirera par lui même sinon
-    response.clearCookie('livreOr');
+    response.clearCookie('livreOr', request.cookies.livreOr);
     var titre;
     var texteAvis;
     var NumUtilisateur;

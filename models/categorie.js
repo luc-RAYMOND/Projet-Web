@@ -27,6 +27,38 @@ class Categorie {
             });
         }
     }
+
+    // Fonction permettant de vérifier s'il existe une catégorie avec le libellé en paramètre
+    static vérifierLibellé(lib, cb) {
+        var query = connection.query('SELECT LibelléCatégorie FROM catégorie WHERE LibelléCatégorie = ?', lib, (error, results) => {
+            if (error) throw error;
+            cb(results);
+        });
+    }
+
+    // Fonction permettant d'ajouter une catégorie
+    static ajouterCatégorie(lib, cb) {
+        var query = connection.query('INSERT INTO catégorie SET Libellécatégorie = ?', lib, (error, results) => {
+            if (error) throw error;
+            cb(results);
+        });
+    }
+
+    // Fonction permettant de supprimer une catégorie
+    static supprimerCatégorie(num, cb) {
+        var query = connection.query('DELETE FROM catégorie WHERE NumCatégorie = ?', num, (error, results) => {
+            if (error) throw error;
+            cb(results);
+        });
+    }
+
+    // Fonction permettant de modifier une catégorie
+    static modifierCatégorie(libCat, num, cb) {
+        var query = connection.query('UPDATE catégorie SET LibelléCatégorie = ? WHERE NumCatégorie = ?', [libCat, num], (error, results) => {
+            if (error) throw error;
+            cb(results);
+        });
+    }
 }
 
 module.exports = Categorie;

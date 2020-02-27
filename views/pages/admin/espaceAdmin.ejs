@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html id="HautPage" lang="fr">
+
+<head>
+    <title>L'Atelier d'Alegolas 91 : L'Atelier</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+    <link rel="stylesheet" href="/css/common/header.css" type="text/css">
+    <link rel="stylesheet" href="/css/common/footer.css" type="text/css">
+    <link rel="stylesheet" href="/css/common/general.css" type="text/css">
+    <link rel="stylesheet" href="/css/admin/espaceAdmin.css" type="text/css">
+</head>
+
+<body>
+    <%- include('headerA') -%>
+    <main id="conteneur" class="well small-lg">
+        <div id="content" class="well small-lg">
+            <h3>
+                Espace Administrateur
+            </h3>
+            <p>
+                Bienvenue sur votre espace administrateur,
+            </p>
+            <p>
+                Ici, vous pouvez gérer vos clients, gérer les articles ainsi que leurs catégories, consulter des
+                statistiques et enfin gérer des devis :
+            </p>
+            <nav id="Nav" class="list-group">
+                <button id="title" type="button" class="list-group-item list-group-item-action active">
+                  Accèder à ...
+                </button>
+                <a href="/EspaceAdmin/GestionClients"><button  id="txt" type="button" class="list-group-item list-group-item-action">Gestion des Clients</button></a>
+                <a href="/EspaceAdmin/GestionDevis"><button id="txt" type="button" class="list-group-item list-group-item-action">Gestion des Devis</button></a>
+                <a href="/EspaceAdmin/GestionArticlesCategories"><button id="txt" type="button" class="list-group-item list-group-item-action">Ajout et Gestion des Articles/Catégories</button></a>
+                <a href=""><button id="txt" type="button" class="list-group-item list-group-item-action">Statistiques</button></a>
+            </nav>
+        </div>
+        <div id="retourAccueil">
+            <a href="/Accueil">Retour à l'Accueil</a>
+        </div>
+    </main>
+    <%- include('../common/footer') -%>
+</body>
+
+</html>

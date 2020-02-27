@@ -40,14 +40,13 @@ class LO {
 
     // Permet de supprimer un avis dans le livre d'or
     static supprimerAvis(num, cb) {
-        var query = connection.query('DELETE FROM livreor WHERE NumLO= ?', num, (error, results) => {
+        var query = connection.query('DELETE FROM livreor WHERE NumLO = ?', num, (error, results) => {
             if (error) throw error;
             cb(results);
         });
     }
 
     // Permet de mettre à jour un message du livre d'or
-    // Permet de supprimer un avis dans le livre d'or
     static modifierAvis(titre, avis, num, cb) {
         var query = connection.query('UPDATE livreor SET TitreLO = ?, AvisLO = ? WHERE NumLO = ?', [titre, avis, num], (error, results) => {
             if (error) throw error;

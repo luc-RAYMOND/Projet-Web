@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html id="HautPage" lang="fr">
+
+<head>
+    <title>L'Atelier d'Alegolas 91 : L'Atelier</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+    <link rel="stylesheet" href="/css/common/header.css" type="text/css">
+    <link rel="stylesheet" href="/css/common/footer.css" type="text/css">
+    <link rel="stylesheet" href="/css/common/general.css" type="text/css">
+    <link rel="stylesheet" href="/css/admin/gestionClients.css" type="text/css">
+</head>
+
+<body>
+    <%- include('headerA') -%>
+    <main id="conteneur" class="well small-lg">
+        <div id="content" class="well small-lg">
+            <h3>
+                Gestion des Clients
+            </h3>
+            <p>
+                - <a id="lien" href="#Partie1"> Vous pouvez valider les comptes en cours de validation ou les
+                    supprimer.</a>
+            </p>
+            <p>
+                - <a id="lien" href="#Partie2"> Vous pouvez également supprimer un compte existant.</a>
+            </p>
+            <p id="attention">
+                ! La suppression d'un utilisateur entraînera la suppression de ses commentaires dans le livre d'or !
+            </p>
+            <br>
+            <% if (cas == 1) { %>
+            <div id="al" class="alert alert-success" role="alert">
+                Utilisateur supprimé avec succès !
+            </div>
+            <% } %>
+            <% if (cas == 2) { %>
+            <div id="al" class="alert alert-success" role="alert">
+                Utilisateur validé avec succès !
+            </div>
+            <% } %>
+            <br>
+            <h5 id="Partie1">
+                Validation / Suppression de comptes non validés :
+            </h5>
+            <table class="table-striped">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Pseudo</th>
+                        <th>Mail</th>
+                        <th>Validation</th>
+                        <th>Suppression</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for (var i=0;i<utilisateursNV.length;i++) { %>
+                    <tr>
+                        <td><%= utilisateursNV[i].NomUtilisateur%></td>
+                        <td><%= utilisateursNV[i].PrénomUtilisateur%></td>
+                        <td><%= utilisateursNV[i].PseudoUtilisateur%></td>
+                        <td><%= utilisateursNV[i].MailUtilisateur%></td>
+                        <% var link3 = utilisateursNV[i].NumUtilisateur+'/ValiderUtilisateur'; %>
+                        <td><a href=<%= link3 %>><button class="btn btn-success">Valider</button></a></td>
+                        <% var link= 'supprimer'+utilisateursNV[i].NumUtilisateur %>
+                        <td><button data-toggle="collapse" data-target="#<%= link %>"
+                                class="btn btn-danger">Supprimer</button>
+                            <div id="<%= link %>" class="collapse">
+                                <% var link2 = utilisateursNV[i].NumUtilisateur+'/SupprimerUtilisateur'; %>
+                                <a href="<%= link2 %>"><button class="btn btn-danger">Confirmer la
+                                        suppression</button></a>
+                            </div>
+                        </td>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+            <h5 id="Partie2">
+                Suppression de comptes existant :
+            </h5>
+            <table class="table-striped">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Pseudo</th>
+                        <th>Mail</th>
+                        <th>Suppression</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for (var i=0;i<utilisateursV.length;i++) { %>
+                    <tr>
+                        <td scope="row"><%= utilisateursV[i].NomUtilisateur%></td>
+                        <td><%= utilisateursV[i].PrénomUtilisateur%></td>
+                        <td><%= utilisateursV[i].PseudoUtilisateur%></td>
+                        <td><%= utilisateursV[i].MailUtilisateur%></td>
+                        <% var link= 'supprimer'+utilisateursV[i].NumUtilisateur %>
+                        <td><button data-toggle="collapse" data-target="#<%= link %>"
+                                class="btn btn-danger">Supprimer</button>
+                            <div id="<%= link %>" class="collapse">
+                                <% var link2 = utilisateursV[i].NumUtilisateur+'/SupprimerUtilisateur'; %>
+                                <a href="<%= link2 %>"><button class="btn btn-danger">Confirmer la
+                                        suppression</button></a>
+                            </div>
+                        </td>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+        <div id="retourAccueil">
+            <a href="/Accueil">Retour à l'Accueil</a>
+        </div>
+    </main>
+    <%- include('../common/footer') -%>
+</body>
+
+</html>

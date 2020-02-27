@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html id="HautPage" lang="fr">
+
+<head>
+    <title>L'Atelier d'Alegolas 91 : L'Atelier</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+    <link rel="stylesheet" href="/css/common/header.css" type="text/css">
+    <link rel="stylesheet" href="/css/common/footer.css" type="text/css">
+    <link rel="stylesheet" href="/css/common/general.css" type="text/css">
+    <link rel="stylesheet" href="/css/admin/gestionDevis.css" type="text/css">
+</head>
+
+<body>
+    <%- include('headerA') -%>
+    <main id="conteneur" class="well small-lg">
+        <div id="content" class="well small-lg">
+            <h3>
+                Gestion des Articles / Catégories
+            </h3>
+            <p>
+                - <a id="lien" href="#Partie1"> Gérer les devis en cours.</a>
+            </p>
+            <p>
+                - <a id="lien" href="#Partie2"> Créer un devis.</a>
+            </p>
+            <br>
+            <br>
+            <h5 id="Partie1">
+                Gestion des articles :
+            </h5>
+            <table class="table-striped">
+                <thead>
+                    <tr>
+                        <th>En construction</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>En construction</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h5 id="Partie2">
+                Créer un devis :
+            </h5>
+        </div>
+        <div id="retourAccueil">
+            <a href="/Accueil">Retour à l'Accueil</a>
+        </div>
+    </main>
+    <%- include('../common/footer') -%>
+</body>
+
+</html>

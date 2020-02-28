@@ -8,6 +8,7 @@
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+    <script src="//cdn.ckeditor.com/4.13.1/basic/ckeditor.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
     <link rel="stylesheet" href="/css/common/header.css" type="text/css">
@@ -45,7 +46,8 @@
                     <% } %>
                     <div class="form-group">
                         <label>Avis :</label>
-                        <textarea class="form-control" name="avis" rows="5"><%= texteAvis %></textarea>
+                        <textarea class="form-control" name="avis" rows="5"><%- texteAvis %></textarea>
+                        <script>CKEDITOR.replace('avis')</script> 
                     </div>
                     <% if (cas == 1) { %>
                     <div id="al" class="alert alert-danger" role="alert">

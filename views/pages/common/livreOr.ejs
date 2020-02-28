@@ -8,6 +8,7 @@
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+    <script src="//cdn.ckeditor.com/4.13.1/basic/ckeditor.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
     <link rel="stylesheet" href="/css/common/header.css" type="text/css">
@@ -34,17 +35,17 @@
             <h3>
                 Livre d'Or
             </h3>
-            <p>
+            <p id="info">
                 Bonjour à tous !
             </p>
-            <p>
+            <p id="info">
                 Voici donc le livre d'or de l'Atelier d'Alegolas91. Je vous laisse donc exprimer vos avis concernant vos
                 commandes pour rassurer les futurs clients potentiels :)
             </p>
-            <p>
+            <p id="info">
                 Je vous remercie d'avance pour vos messages :)
             </p>
-            <p>
+            <p id="info">
                 Cordialement,
                 <br>
                 <br>
@@ -53,7 +54,7 @@
             <% } %>
             <% if ((admin == 0 || admin == 1) && pageActuelle == 1) { %>
             <div id="écrireComment">
-                <p>
+                <p id="info">
                     Vous pouvez écrire un message ci-dessous, avec un court titre (50 caractères maximum) suivi de votre
                     avis (400 caractères maximum) :
                 </p>
@@ -79,7 +80,7 @@
                     <div id="titreLO" class="form-group">
                         <label>Titre :</label>
                         <input class="form-control" <% if (cas != 10 && cas != 2 && cas != 4 && cas != 3) { %>
-                            value="<%= titre %>" <% } %> aria-describedby="Mail" name="titre">
+                            value="<%= titre %>" <% } %> name="titre">
                     </div>
                     <% if (cas == 0) { %>
                     <div id="al" class="alert alert-danger" role="alert">
@@ -90,6 +91,7 @@
                         <label>Avis :</label>
                         <textarea class="form-control" name="avis"
                             rows="5"><% if (cas != 10 && cas != 2 && cas != 4 && cas != 3) { %> <%= texteAvis %> <% } %></textarea>
+                            <script>CKEDITOR.replace('avis')</script> 
                     </div>
                     <% if (cas == 1) { %>
                     <div id="al" class="alert alert-danger" role="alert">
@@ -138,9 +140,9 @@
                     <% } %>
                     <%= avis[i].DateLO %>
                 </div>
-                <p class="avis">
-                    <%= avis[i].AvisLO %>
-                </p>
+                <div id="avis">
+                    <%- avis[i].AvisLO %>
+                </div>
             </div>
             <% } %>
         </div>

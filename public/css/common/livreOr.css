@@ -15,7 +15,7 @@ h3{
     margin-bottom: 5%;
     text-decoration: underline;
 }
-p{
+#info{
     font-size: larger;
     color: black;
     text-align: justify;
@@ -47,8 +47,11 @@ h5{
 #titreLO{
     padding-right: 50%;
 }
-.avis{
+#avis{
     padding-left: 15%;
+    font-size: larger;
+    color: black;
+    text-align: justify;
 }
 #center{
     text-align: center;

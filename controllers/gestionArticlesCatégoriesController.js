@@ -2,7 +2,6 @@
 var verifConnexion = require('../models/verifConnexion');
 var casErreur = require('../models/casErreur');
 var Catégorie = require('../models/categorie')
-var affichage = require('../models/affichage');
 var article = require('../models/article');
 var image = require('../models/image');
 var avoirImage = require('../models/avoirImage');
@@ -148,7 +147,6 @@ exports.modifierCatégorie = (request, response) => {
     });
 }
 
-
 // Permet d'ajouter un article
 exports.ajoutArticle = (request, response) => {
     var token = request.cookies.token;
@@ -201,3 +199,39 @@ exports.ajoutArticle = (request, response) => {
         }
     });
 }
+
+// Permet de charger la page contenant l'article que l'on veut modifier
+
+// Permet de supprimer un article (et avec, ses images)
+exports.supprimerArticle = (request,response) => {
+    var token = request.cookies.token;
+    var numArticle = request.params.numArticle;
+    verifConnexion.verifConnexion(token, (admin) => {
+        if (admin == 1) {
+            // On supprime également les images du serveur, par contre on garde les catégories intactes
+            avoirImage.avoirImagesArticle(numArticle, (numsImg) => {
+                // On supprime les liens entre images/article
+                avoirImage.supprimerLienImageArticle(numArticle, (next1) =>{
+                    // On supprime les liens catégories/article
+                    avoircategorie.supprimerCatégorieImageArticle(numArticle,  (next2) => {
+                        // On enlève les images du serveur
+                        image.supprimerImages(numsImg, (next2) => {
+                            // Et enfin on supprime l'article
+                            article.supprimerArticle(numArticle, (next3) => {
+                                var cas = 1;
+                                response.cookie('infoA', { cas: cas }, { expiresIn: '5s' });
+                                response.redirect('/Accueil');
+                            });
+                        });
+                    });
+
+                });
+            });
+        }
+        else {
+            response.redirect('/Connexion');
+        }
+    });
+}
+
+// Permet de modifier un article

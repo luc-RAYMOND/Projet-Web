@@ -47,6 +47,14 @@ class Article {
             cb(results.insertId);
         });
     }
+
+    // Fonction permettant de supprimer un article
+    static supprimerArticle(NumArticle, cb) {
+        var query = connection.query('DELETE FROM article WHERE NumArticle = ?', NumArticle, (error, results) => {
+            if (error) throw error;
+            cb(results);
+        });
+    }
 }
 
 module.exports = Article;

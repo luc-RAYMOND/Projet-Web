@@ -10,6 +10,22 @@ class avoirImage {
             cb(results);
         });
     }
+
+    // Fonction permettant d'avoir les images d'un article
+    static avoirImagesArticle(numArt, cb) {
+        var query = connection.query('SELECT NumImage FROM avoirimage WHERE NumArticle = ?', numArt, (error, results) => {
+            if (error) throw error;
+            cb(results);
+        });
+    }
+
+    // Fonction permettant de supprimer le lien entre une image et un article
+    static supprimerLienImageArticle(numArt, cb) {
+        var query = connection.query('DELETE FROM avoirimage WHERE NumArticle = ?', numArt, (error, results) => {
+            if (error) throw error;
+            cb(results);
+        });
+    }
 }
 
 module.exports = avoirImage;

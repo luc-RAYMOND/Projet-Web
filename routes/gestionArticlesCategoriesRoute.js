@@ -11,6 +11,8 @@ route.post('/2', GAC.ajoutArticle);
 route.get('/:numCat/SupprimerCategorie', GAC.supprimerCatégorie);
 route.get('/:numCat/ModifierCategorie', GAC.modifierCatégoriePage);
 route.post('/:numCat/ModifierCategorie', GAC.modifierCatégorie);
+route.get('/:numArticle/SupprimerArticle', GAC.supprimerArticle);
+
 
 // On exporte nos routes
 module.exports = route;

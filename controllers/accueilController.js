@@ -6,6 +6,14 @@ var verifConnexion = require('../models/verifConnexion');
 exports.accueil = (request, response) => {
     var token = request.cookies.token;
     var pageActuelle = 1;
+    var cas = 10;
+    if (request.cookies.infoA != undefined) {
+        // On récupère toutes les valeurs
+        cas = request.cookies.infoA.cas;
+    }
+    // Puis on le supprime
+    // Il s'expirera par lui même sinon
+    response.clearCookie('infoA', request.cookies.infoA);
     affichage.remplirCatégorie(request, response, (contient) => {
         affichage.remplirArticle(request, response, contient, (articles) => {
             affichage.remplirCatégorieArticle(request, response, contient, articles, (cat) => {
@@ -19,7 +27,7 @@ exports.accueil = (request, response) => {
                     var pageMax = Math.ceil(articles.length / 5);
                     // Selon les informations du token, on affiche l'accueil différemment
                     verifConnexion.verifConnexion(token, (admin) => {
-                        response.render('pages/common/accueil', { contient: contient, articles: slicedArticles, cat: slicedCat, img: slicedImg, pageActuelle: pageActuelle, pageMax: pageMax, admin: admin });
+                        response.render('pages/common/accueil', { contient: contient, articles: slicedArticles, cat: slicedCat, img: slicedImg, pageActuelle: pageActuelle, pageMax: pageMax, admin: admin, cas: cas });
                     });
                 });
             });
@@ -30,6 +38,7 @@ exports.accueil = (request, response) => {
 // Permet d'afficher les autres pages sur l'accueil
 exports.accueilPage = (request, response) => {
     var token = request.cookies.token;
+    var cas = 10;
     var pageActuelle = request.params.numPage;
     affichage.remplirCatégorie(request, response, (contient) => {
         affichage.remplirArticle(request, response, contient, (articles) => {
@@ -45,7 +54,7 @@ exports.accueilPage = (request, response) => {
                     if (parseInt(pageActuelle) == parseFloat(pageActuelle) && (pageActuelle >= 2 && pageActuelle <= pageMax)) {
                         // Selon les informations du token, on affiche l'accueil différemment
                         verifConnexion.verifConnexion(token, (admin) => {
-                            response.render('pages/common/accueil', { contient: contient, articles: slicedArticles, cat: slicedCat, img: slicedImg, pageActuelle: pageActuelle, pageMax: pageMax, admin: admin });
+                            response.render('pages/common/accueil', { contient: contient, articles: slicedArticles, cat: slicedCat, img: slicedImg, pageActuelle: pageActuelle, pageMax: pageMax, admin: admin, cas: cas });
                         });
                     }
                     else {

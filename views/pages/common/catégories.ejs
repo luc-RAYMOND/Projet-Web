@@ -43,6 +43,16 @@
             <% } %>
             <% if(data == true) { %>
             <% for (var i = 0; i < articles.length; i++) { %>
+            <div id="modifSuppr">
+                <% var link = '/EspaceAdmin/GestionArticlesCategories/'+articles[i].NumArticle; %>
+                <% var link2 = 'supprimer'+articles[i].NumArticle; %>
+                <a href=<%= link+'/ModifierArticle' %>><button class="btn btn-info">Modifier</button></a>
+                <button data-toggle="collapse" data-target="#<%= link2 %>" class="btn btn-danger">Supprimer</button>
+                <div class="collapse hid" id="<%= link2 %>">
+                    <a href=<%= link+'/SupprimerArticle' %>><button class="btn btn-danger">Confirmer la
+                            suppression</button></a>
+                </div>
+            </div>
             <h5>
                 <%= articles[i].TitreArticle %>
             </h5>

@@ -10,9 +10,8 @@ route.get('/Qui-suis-je', common.contact);
 route.get('/Connexion', common.connexion);
 route.get('/Deconnexion', common.deconnexion);
 route.get('/InscriptionClientAtelierAlegolas91', common.inscription);
-route.post('/Connexion', common.tentativeConnexion);
 route.post('/InscriptionClientAtelierAlegolas91', common.tentativeInscription);
-
+route.post('/Connexion', common.tentativeConnexion);
 
 // On exporte nos routes
 module.exports = route;

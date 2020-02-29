@@ -30,7 +30,7 @@ class Categorie {
 
     // Fonction permettant de vérifier s'il existe une catégorie avec le libellé en paramètre
     static vérifierLibellé(lib, cb) {
-        var query = connection.query('SELECT LibelléCatégorie FROM catégorie WHERE LibelléCatégorie = ?', lib, (error, results) => {
+        var query = connection.query('SELECT NumCatégorie,LibelléCatégorie FROM catégorie WHERE LibelléCatégorie = ?', lib, (error, results) => {
             if (error) throw error;
             cb(results);
         });

@@ -28,10 +28,10 @@
             </p>
             <form action="/Connexion" method="POST">
                 <% if (cas == 3) { %>
-                    <div id="al" class="alert alert-success" role="alert">
-                        Vous avez bien été déconnecté !
-                    </div>
-                    <% } %>
+                <div id="al" class="alert alert-success" role="alert">
+                    Vous avez bien été déconnecté !
+                </div>
+                <% } %>
                 <% if (cas == 2) { %>
                 <div id="al" class="alert alert-warning" role="alert">
                     Votre compte n'a pas encore été activé,
@@ -41,8 +41,9 @@
                 <% } %>
                 <div class="form-group">
                     <label>Adresse Mail :</label>
-                    
-                    <input type="email" <% if (cas == 2 || cas == 1) { %> value= <%= mail %> <% } %> class="form-control" aria-describedby="Mail" name="mail">
+
+                    <input type="email" <% if (cas == 2 || cas == 1) { %> value=<%= mail %> <% } %> class="form-control"
+                        aria-describedby="Mail" name="mail">
                 </div>
                 <% if (cas == 0) { %>
                 <div id="al" class="alert alert-danger" role="alert">

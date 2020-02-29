@@ -2,7 +2,7 @@
 var jwt = require('jsonwebtoken');
 var key = require('../config/tokenKey');
 
-// Cette fonction permet de vérifier si on est connecté ou non
+// Cette fonction permet de vérifier si l'on est connecté ou non
 exports.verifConnexion = (token, admin) => {
     var ad = 10;
     // On regarde si le token existe ou non

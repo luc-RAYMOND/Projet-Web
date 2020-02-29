@@ -1,8 +1,6 @@
 // Les models d'où viennent les fonctions sur la BDD
 var verifConnexion = require('../models/verifConnexion');
 var utilisateur = require('../models/utilisateur');
-var Catégorie = require('../models/categorie')
-var affichage = require('../models/affichage');
 var verifConnexion = require('../models/verifConnexion');
 
 // Permet d'afficher la page principale de l'espace Admin
@@ -77,125 +75,6 @@ exports.validerUtilisateur = (request, response) => {
                 var cas = 2;
                 response.cookie('gestion', { cas: cas }, { expiresIn: '5s' });
                 response.redirect('/EspaceAdmin/GestionClients');
-            });
-        }
-        else {
-            response.redirect('/Connexion');
-        }
-    });
-}
-
-// Permet d'accéder à la page de gestion des articles et catégories
-exports.gestionArticlesCatégories = (request, response) => {
-    var token = request.cookies.token;
-    var cas = 10;
-    if (request.cookies.gestionAC != undefined) {
-        // On récupère toutes les valeurs
-        cas = request.cookies.gestionAC.cas;
-    }
-    // Puis on le supprime
-    // Il s'expirera par lui même sinon
-    response.clearCookie('gestionAC', request.cookies.gestionAC);
-    verifConnexion.verifConnexion(token, (admin) => {
-        Catégorie.avoirNomCatégories((catégories) => {
-            if (admin == 1) {
-                response.render('pages/admin/gestionArticlesCatégories', { catégories: catégories, cas: cas });
-            }
-            else {
-                response.redirect('/Connexion');
-            }
-        });
-    });
-}
-
-exports.ajoutCatégorie = (request, response) => {
-    var token = request.cookies.token;
-    // On récupère le libellé entré
-    var libCat = request.body.libCat;
-    verifConnexion.verifConnexion(token, (admin) => {
-        if (admin == 1) {
-            // On récupère le cas d'erreur ou de succès
-            affichage.casAjoutCatégorie(libCat, (cas) => {
-                response.cookie('gestionAC', { cas: cas }, { expiresIn: '5s' });
-                // On peut l'insérer dans la BDD
-                if (cas == 2) {
-                    Catégorie.ajouterCatégorie(libCat, (cb) => {
-                    });
-                }
-                response.redirect('/EspaceAdmin/GestionArticlesCategories');
-            });
-        }
-        else {
-            response.redirect('/Connexion');
-        }
-    });
-}
-
-// Permet de supprimer une catégorie
-exports.supprimerCatégorie = (request, response) => {
-    var numCat = request.params.numCat;
-    var token = request.cookies.token;
-    verifConnexion.verifConnexion(token, (admin) => {
-        if (admin == 1) {
-            Catégorie.supprimerCatégorie(numCat, (cb) => {
-                // On le supprime, et on indique qu'on l'a bien supprimé sur la page
-                var cas = 3;
-                response.cookie('gestionAC', { cas: cas }, { expiresIn: '5s' });
-                response.redirect('/EspaceAdmin/GestionArticlesCategories');
-            });
-        }
-        else {
-            response.redirect('/Connexion');
-        }
-    });
-}
-
-// Permet d'accéder à la page de modification d'une catégorie
-exports.modifierCatégoriePage = (request, response) => {
-    var numCat = request.params.numCat;
-    var token = request.cookies.token;
-    var cas = 10;
-    if (request.cookies.gestionAC != undefined) {
-        // On récupère toutes les valeurs
-        cas = request.cookies.gestionAC.cas;
-    }
-    // Puis on le supprime
-    // Il s'expirera par lui même sinon
-    response.clearCookie('gestionAC', request.cookies.gestionAC);
-    verifConnexion.verifConnexion(token, (admin) => {
-        if (admin == 1) {
-            // On rend la page en remplissant le champ et en renvoyant le cas d'erreur s'il y en a
-            Catégorie.avoirLibellé(numCat, (libCat) => {
-                response.render('pages/admin/modifierCatégorie', { cas: cas, libCat: libCat, numCat: numCat });
-            });
-        }
-        else {
-            response.redirect('/Connexion');
-        }
-    });
-}
-
-// Permet de modifier la catégorie
-exports.modifierCatégorie = (request, response) => {
-    var numCat = request.params.numCat;
-    var libCat = request.body.libCat;
-    var token = request.cookies.token;
-    verifConnexion.verifConnexion(token, (admin) => {
-        if (admin == 1) {
-            // On recupère le libellé de base, pour qu'on sache dans quel cas on est
-            affichage.casModifCatégorie(numCat, libCat, (cas) => {
-                response.cookie('gestionAC', { cas: cas }, { expiresIn: '5s' });
-                if (cas == 4) {
-                    // Tout est bon, on modifie
-                    Catégorie.modifierCatégorie(libCat, numCat, (cb) => {
-                        response.redirect('/EspaceAdmin/GestionArticlesCategories');
-                    });
-                }
-                // Sinon on renvoie l'erreur dans le cookie et on redirige
-                else {
-                    var link = '/EspaceAdmin/GestionArticlesCategories/' + numCat + '/ModifierCategorie';
-                    response.redirect(link)
-                }
             });
         }
         else {

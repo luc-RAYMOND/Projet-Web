@@ -71,7 +71,7 @@ class Utilisateur {
         });
     }
 
-    // Permet de supprimer un utilisateur
+    // Permet de valider un utilisateur
     static validerUtilisateur(num, cb) {
         var query = connection.query('UPDATE utilisateur SET EtatCompteUtilisateur = 1 WHERE NumUtilisateur = ?', num, (error, results) => {
             if (error) throw error;

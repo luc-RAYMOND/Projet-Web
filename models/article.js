@@ -39,6 +39,14 @@ class Article {
         }
     }
 
+    // Fonction permettant de créer un article
+    static ajoutArticle(TitreArticle, TexteArticle, cb) {
+        var article = { TitreArticle: TitreArticle, TexteArticle: TexteArticle, DateArticle: new Date() }
+        var query = connection.query('INSERT INTO article SET ?', article, (error, results) => {
+            if (error) throw error;
+            cb(results.insertId);
+        });
+    }
 }
 
 module.exports = Article;

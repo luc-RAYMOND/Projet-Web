@@ -1,5 +1,6 @@
 // Les models d'où viennent les fonctions sur la BDD
 var affichage = require('../models/affichage');
+var casErreur = require('../models/casErreur');
 var utilisateur = require('../models/utilisateur');
 var verifConnexion = require('../models/verifConnexion');
 
@@ -121,9 +122,8 @@ exports.tentativeInscription = (request, response) => {
     var cp = request.body.cp;
     var pays = request.body.pays;
     var date = request.body.date;
-    var cas = 10;
     var saltRounds = 10;
-    affichage.casInscription(pseudo, mail, nom, prenom, mdp, mdpConf, (cas) => {
+    casErreur.casInscription(pseudo, mail, nom, prenom, mdp, mdpConf, (cas) => {
         if (cas == 6) {
             bcrypt.hash(mdp, saltRounds, (err, mdpHash) => {
                 var mdpH = mdpHash

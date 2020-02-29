@@ -21,7 +21,8 @@ var accueilPage = require('./routes/accueilRoute');
 var servicesPage = require('./routes/servicesRoute');
 var catégoriesPage = require('./routes/catégoriesRoute');
 var livreOr = require('./routes/livreOrRoute');
-var EspaceAdmin = require('./routes/espaceAdminRoute');
+var espaceAdmin = require('./routes/espaceAdminRoute');
+var gestionArticlesCategories = require('./routes/gestionArticlesCategoriesRoute');
 
 // Tout ce qui est hors connexion
 
@@ -30,7 +31,8 @@ projet.use('/Accueil', accueilPage);
 projet.use('/Services', servicesPage);
 projet.use('/Categories', catégoriesPage);
 projet.use('/LivreOr', livreOr);
-projet.use('/EspaceAdmin', EspaceAdmin);
+projet.use('/EspaceAdmin', espaceAdmin);
+projet.use('/EspaceAdmin/GestionArticlesCategories', gestionArticlesCategories);
 
 // On indique le port que l'on va utiliser
 projet.listen(8080);

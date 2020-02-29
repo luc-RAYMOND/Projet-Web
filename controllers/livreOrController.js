@@ -1,5 +1,6 @@
 // Les models d'où viennent les fonctions sur la BDD
 var affichage = require('../models/affichage');
+var casErreur = require('../models/casErreur');
 var verifConnexion = require('../models/verifConnexion');
 var livreOr = require('../models/livreOr');
 var jwt = require('jsonwebtoken');
@@ -100,7 +101,7 @@ exports.envoyerMessageLivreOr = (request, response) => {
     var token = request.cookies.token;
     var NumUtilisateur;
     var pageActuelle = 1;
-    affichage.casLivreOr(titre, texteAvis, (cas) => {
+    casErreur.casLivreOr(titre, texteAvis, (cas) => {
         jwt.verify(token, key.key, (err, decoded) => {
             // On crée un cookie qui dure 1s, afin que le retour au livre d'or traite le bon cas
             response.cookie('livreOr', { titre: titre, texteAvis: texteAvis, cas: cas }, { expiresIn: '5s' });
@@ -152,7 +153,7 @@ exports.supprimerMessage = (request, response) => {
                 livreOr.utilisateurAvis(numLO, (utilisateur) => {
                     jwt.verify(token, key.key, (err, decoded) => {
                         // On vérifie que c'est bien le bon utilisateur qui veut supprimer
-                        affichage.casSupprLivreOr(utilisateur, decoded, (cas) => {
+                        casErreur.casSupprLivreOr(utilisateur, decoded, (cas) => {
                             response.cookie('livreOr', { titre: titre, texteAvis: texteAvis, cas: cas }, { expiresIn: '5s' });
                             if (cas == 3) {
                                 var NumUtilisateur = utilisateur[0].NumUtilisateur;
@@ -245,7 +246,7 @@ exports.modifierMessage = (request, response) => {
     var token = request.cookies.token;
     var titre = request.body.titre;
     var texteAvis = request.body.avis;
-    affichage.casLivreOr(titre, texteAvis, (cas) => {
+    casErreur.casLivreOr(titre, texteAvis, (cas) => {
         jwt.verify(token, key.key, (err, decoded) => {
             // On crée un cookie qui dure 1s, afin que le retour au livre d'or traite le bon cas
             response.cookie('livreOr', { titre: titre, texteAvis: texteAvis, cas: cas }, { expiresIn: '5s' });

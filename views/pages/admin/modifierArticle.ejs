@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html id="HautPage" lang="fr">
+
+<head>
+    <title>L'Atelier d'Alegolas 91 : L'Atelier</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+    <script src="//cdn.ckeditor.com/4.13.1/standard/ckeditor.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+    <link rel="stylesheet" href="/css/common/header.css" type="text/css">
+    <link rel="stylesheet" href="/css/common/footer.css" type="text/css">
+    <link rel="stylesheet" href="/css/common/general.css" type="text/css">
+    <link rel="stylesheet" href="/css/admin/modifierArticle.css" type="text/css">
+</head>
+
+<body>
+    <%- include('headerA') -%>
+    <main id="conteneur" class="well small-lg">
+        <div id="content" class="well small-lg">
+            <h3>
+                Modification de l'article
+            </h3>
+            <% if (cas == 1) { %>
+            <div id="al" class="alert alert-success" role="alert">
+                Suppression de la catégorie de cet article avec succès !
+            </div>
+            <% } %>
+            <% if (cas == 2) { %>
+            <div id="al" class="alert alert-success" role="alert">
+                Suppression de l'image de cet article avec succès !
+            </div>
+            <% } %>
+            <% if (cas == 3) { %>
+            <div id="al" class="alert alert-danger" role="alert">
+                Veuillez entrer un titre correct.
+            </div>
+            <% } %>
+            <% if (cas == 4) { %>
+            <div id="al" class="alert alert-danger" role="alert">
+                Veuillez entrer un texte correct.
+            </div>
+            <% } %>
+            <% if (cas == 5) { %>
+            <div id="al" class="alert alert-danger" role="alert">
+                Cette catégorie est déjà associée à cette article.
+            </div>
+            <% } %>
+            <% var link8 = '/EspaceAdmin/GestionArticlesCategories/'+article[0].NumArticle+'/ModifierArticle' %>
+            <form action="<%= link8 %>" enctype="multipart/form-data" method="POST">
+                <div class="form-group">
+                    <label>Titre de l'Article (255 caractères au maximum):</label>
+                    <input value="<%- article[0].TitreArticle%>" class="form-control" name="TitreArticle">
+                </div>
+                <label>Texte de l'Article :</label>
+                <textarea class="form-control" name="texteArticle" rows="5"> <%- article[0].TexteArticle %> </textarea>
+                <script>CKEDITOR.replace('texteArticle')</script>
+                <label id="marg" for="sel">Sélectionner les différentes catégories à rajouter (appuyer sur 'Ctrl' pour
+                    un choix multiple) :</label>
+                <script>
+                    $(document).ready(function () {
+                        $("#filtre2").on("keyup", function () {
+                            var value = $(this).val().toLowerCase();
+                            $("#sel option").filter(function () {
+                                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                            });
+                        });
+                    });
+                </script>
+                <input class="form-control" id="filtre2" type="text" placeholder="Rechercher une catégorie ...">
+                <select multiple class="form-control" id="sel" name="Categories">
+                    <% for (var i = 0; i < libCat.length;i++) { %>
+                    <option><%= libCat[i].LibelléCatégorie %></option>
+                    <% } %>
+                </select>
+                <label id="marg" for="sel">Sélectionner les images que vous voulez rajouter à l'article (.png ou
+                    .jpeg):</label>
+                <input type="file" enctype="multipart/form-data" accept="image/png, image/jpeg" name="images" multiple>
+                <div id="al">
+                    <button type="submit" class="btn btn-primary">Modifier</button>
+                </div>
+            </form>
+            <h5>
+                Gérer ses catégories :
+            </h5>
+            <table class="table-striped">
+                <thead>
+                    <tr>
+                        <th>Libellé Catégorie</th>
+                        <th>Suppression</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for (var i = 0;i<catégories.length;i++) { %>
+                    <tr>
+                        <td><%= catégories[i].LibelléCatégorie %></td>
+                        <% var link= 'supprimer'+catégories[i].NumCatégorie %>
+                        <td><button data-toggle="collapse" data-target="#<%= link %>"
+                                class="btn btn-danger">Supprimer</button>
+                            <div id="<%= link %>" class="collapse">
+                                <% var link2 = '/EspaceAdmin/GestionArticlesCategories/'+article[0].NumArticle+'/ModifierArticle/'+catégories[i].NumCatégorie+'/SupprimerCategorieArticle'; %>
+                                <a href="<%= link2 %>"><button class="btn btn-danger">Confirmer la
+                                        suppression</button></a>
+                            </div>
+                        </td>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+            <h5>
+                Gérer ses images :
+            </h5>
+            <% for(var k = 0; k < Img.length; k++) { %>
+            <% var link= 'supprimer'+Img[k].NumImage %>
+            <figure>
+                <% var link1 = 'href=/images/articles/'+Img[k].LienImage %>
+                <a <%= link1 %> data-fancybox data-caption="">
+                    <% var link2 = 'src=/images/articles/'+Img[k].LienImage %>
+                    <img id="imgAte" <%= link2 %> alt="Photo de l'article">
+                </a>
+            </figure>
+            <div id="al">
+                <button data-toggle="collapse" data-target="#<%= link %>" class="btn btn-danger">Supprimer</button>
+                <div id="<%= link %>" class="collapse">
+                    <% var link2 = '/EspaceAdmin/GestionArticlesCategories/'+article[0].NumArticle+'/ModifierArticle/'+Img[k].NumImage+'/SupprimerImageArticle'; %>
+                    <a href="<%= link2 %>"><button class="btn btn-danger">Confirmer la
+                            suppression</button></a>
+                </div>
+            </div>
+            <% } %>
+        </div>
+        <div id="retourAccueil">
+            <a href="/Accueil">Retour à l'Accueil</a>
+        </div>
+    </main>
+    <%- include('../common/footer') -%>
+</body>
+
+</html>

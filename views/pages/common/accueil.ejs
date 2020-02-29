@@ -44,10 +44,15 @@
                 Suppression de l'article avec succès !
             </div>
             <% } %>
+            <% if (cas == 6 || cas == 7) { %>
+            <div id="al" class="alert alert-success" role="alert">
+                Modification de l'article avec succès !
+            </div>
+            <% } %>
             <% for (var i = 0; i < articles.length; i++) { %>
             <% if (admin == 1) { %>
             <div id="modifSuppr">
-                <% var link = 'EspaceAdmin/GestionArticlesCategories/'+articles[i].NumArticle; %>
+                <% var link = '/EspaceAdmin/GestionArticlesCategories/'+articles[i].NumArticle; %>
                 <% var link2 = 'supprimer'+articles[i].NumArticle; %>
                 <a href=<%= link+'/ModifierArticle' %>><button class="btn btn-info">Modifier</button></a>
                 <button data-toggle="collapse" data-target="#<%= link2 %>" class="btn btn-danger">Supprimer</button>

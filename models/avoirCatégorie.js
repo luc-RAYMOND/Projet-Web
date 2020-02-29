@@ -35,10 +35,18 @@ class avoirCatégorie {
     }
 
     // Permet de supprimer tous les liens entre un article et ses catégories
-    static supprimerCatégorieImageArticle(numArt, cb) {
+    static supprimerCatégorieArticle(numArt, cb) {
         var query = connection.query('DELETE FROM avoircatégorie WHERE NumArticle = ?', numArt, (error, results) => {
             if (error) throw error;
             cb(results);
+        });
+    }
+
+    // Permet de supprimer un lien entre un article et une catégorie
+    static supprimerCatégorieArticle(numArt, numCat, nb) {
+        var query = connection.query('DELETE FROM avoircatégorie WHERE NumArticle = ? AND NumCatégorie = ?', [numArt, numCat], (error, results) => {
+            if (error) throw error;
+            nb(results.affectedRows);
         });
     }
 }

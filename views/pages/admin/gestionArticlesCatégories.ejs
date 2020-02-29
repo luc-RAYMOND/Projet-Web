@@ -138,7 +138,7 @@
             <% } %>
             <form action="/EspaceAdmin/GestionArticlesCategories/2" enctype="multipart/form-data" method="POST">
                 <div class="form-group">
-                    <label>Titre de l'Article:</label>
+                    <label>Titre de l'Article (255 caractères au maximum) :</label>
                     <input <% if (cas != 8) { %> value="<%- titreArticle%>" <% } %> class="form-control"
                         name="TitreArticle">
                 </div>

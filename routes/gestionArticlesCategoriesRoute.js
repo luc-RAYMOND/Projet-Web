@@ -12,7 +12,10 @@ route.get('/:numCat/SupprimerCategorie', GAC.supprimerCatégorie);
 route.get('/:numCat/ModifierCategorie', GAC.modifierCatégoriePage);
 route.post('/:numCat/ModifierCategorie', GAC.modifierCatégorie);
 route.get('/:numArticle/SupprimerArticle', GAC.supprimerArticle);
-
+route.get('/:numArticle/ModifierArticle', GAC.modifierArticle);
+route.post('/:numArticle/ModifierArticle', GAC.modifierArticleAction);
+route.get('/:numArticle/ModifierArticle/:numCategorie/SupprimerCategorieArticle', GAC.supprimerCatégorieArticle);
+route.get('/:numArticle/ModifierArticle/:numImage/SupprimerImageArticle', GAC.supprimerImageArticle);
 
 // On exporte nos routes
 module.exports = route;

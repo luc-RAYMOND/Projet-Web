@@ -159,7 +159,6 @@ exports.ajoutArticle = (request, response) => {
                     var texteArticle = request.body.texteArticle;
                     var catégories = request.body.Categories;
                     var images = request.files
-                    //var images = request.body.images;
                     // On récupère le cas d'erreur s'il y en a un
                     casErreur.casErreurAjoutArticle(titreArticle, texteArticle, catégories, (cas) => {
                         // Tout va bien, on crée l'article
@@ -179,16 +178,16 @@ exports.ajoutArticle = (request, response) => {
                             response.redirect('/EspaceAdmin/GestionArticlesCategories#Partie3')
                         }
                         else {
-                            // Sinon on affiche le cas d'erreur
-                            response.cookie('gestionAC', { titreArticle: titreArticle, texteArticle: texteArticle, cas: cas }, { expiresIn: '5s' });
-                            response.redirect('/EspaceAdmin/GestionArticlesCategories#Partie3');
-                            // On supprime les immages qui viennent d'être upload
+                            // On supprime les images qui viennent d'être upload
                             for (var i = 0; i < images.length; i++) {
                                 var link = 'public/images/articles/' + images[i].filename;
                                 fs.unlink(link, (err) => {
                                     if (err) throw err;
                                 });
                             }
+                            // Sinon on affiche le cas d'erreur
+                            response.cookie('gestionAC', { titreArticle: titreArticle, texteArticle: texteArticle, cas: cas }, { expiresIn: '5s' });
+                            response.redirect('/EspaceAdmin/GestionArticlesCategories#Partie3');
                         }
                     });
                 }
@@ -201,9 +200,86 @@ exports.ajoutArticle = (request, response) => {
 }
 
 // Permet de charger la page contenant l'article que l'on veut modifier
+exports.modifierArticle = (request, response) => {
+    var token = request.cookies.token;
+    var numArticle = request.params.numArticle;
+    var cas = 8;
+    if (request.cookies.gestionModifA != undefined) {
+        // On récupère toutes les valeurs
+        cas = request.cookies.gestionModifA.cas;
+    }
+    // Puis on le supprime
+    // Il s'expirera par lui même sinon
+    response.clearCookie('gestionModifA', request.cookies.gestionModifA);
+    verifConnexion.verifConnexion(token, (admin) => {
+        if (admin == 1) {
+            // On récupère les infos nécessaires à afficher (article, images et catégories)
+            article.avoirArticle(numArticle, (art) => {
+                article.avoirLibellé(art, (catégories) => {
+                    avoirImage.avoirLienImagesArticle(numArticle, (Img) => {
+                        // Affiche toutes les catégories existantes
+                        Catégorie.avoirNomCatégories((libCat) => {
+                            response.render('pages/admin/modifierArticle', { article: art, catégories: catégories, cas: cas, Img: Img, libCat: libCat });
+                        });
+                    });
+                });
+            });
+        }
+        else {
+            response.redirect('/Connexion');
+        }
+    });
+}
+
+// Permet de supprimer la catégorie d'un article
+exports.supprimerCatégorieArticle = (request, response) => {
+    var token = request.cookies.token;
+    var numArticle = request.params.numArticle;
+    var numCatégorie = request.params.numCategorie;
+    var cas = 10;
+    verifConnexion.verifConnexion(token, (admin) => {
+        if (admin == 1) {
+            // On enlève le lien avec catégorie en question 
+            avoircategorie.supprimerCatégorieArticle(numArticle, numCatégorie, (nbAffect) => {
+                cas = 1;
+                // On renvoie que c'est bien un succès
+                response.cookie('gestionModifA', { cas: cas }, { expiresIn: '5s' });
+                var link = '/EspaceAdmin/GestionArticlesCategories/' + numArticle + '/ModifierArticle';
+                response.redirect(link);
+            });
+        }
+        else {
+            response.redirect('/Connexion');
+        }
+    });
+}
+
+// Permet de supprimer une image d'un article
+exports.supprimerImageArticle = (request, response) => {
+    var token = request.cookies.token;
+    var numArticle = request.params.numArticle;
+    var numImage = request.params.numImage;
+    verifConnexion.verifConnexion(token, (admin) => {
+        if (admin == 1) {
+            // On supprime le lien image article
+            avoirImage.supprimerLienImageArticle(numArticle, numImage, (cb) => {
+                // Puis on supprime l'image du serveur
+                image.supprimerImage(numImage, (cb) => {
+                    cas = 2;
+                    response.cookie('gestionModifA', { cas: cas }, { expiresIn: '5s' });
+                    var link = '/EspaceAdmin/GestionArticlesCategories/' + numArticle + '/ModifierArticle';
+                    response.redirect(link);
+                });
+            });
+        }
+        else {
+            response.redirect('/Connexion');
+        }
+    });
+}
 
 // Permet de supprimer un article (et avec, ses images)
-exports.supprimerArticle = (request,response) => {
+exports.supprimerArticle = (request, response) => {
     var token = request.cookies.token;
     var numArticle = request.params.numArticle;
     verifConnexion.verifConnexion(token, (admin) => {
@@ -211,9 +287,9 @@ exports.supprimerArticle = (request,response) => {
             // On supprime également les images du serveur, par contre on garde les catégories intactes
             avoirImage.avoirImagesArticle(numArticle, (numsImg) => {
                 // On supprime les liens entre images/article
-                avoirImage.supprimerLienImageArticle(numArticle, (next1) =>{
+                avoirImage.supprimerLienImagesArticle(numArticle, (next1) => {
                     // On supprime les liens catégories/article
-                    avoircategorie.supprimerCatégorieImageArticle(numArticle,  (next2) => {
+                    avoircategorie.supprimerCatégorieArticle(numArticle, (next2) => {
                         // On enlève les images du serveur
                         image.supprimerImages(numsImg, (next2) => {
                             // Et enfin on supprime l'article
@@ -235,3 +311,60 @@ exports.supprimerArticle = (request,response) => {
 }
 
 // Permet de modifier un article
+exports.modifierArticleAction = (request, response) => {
+    var token = request.cookies.token;
+    var numArticle = request.params.numArticle;
+    verifConnexion.verifConnexion(token, (admin) => {
+        if (admin == 1) {
+            upload(request, response, (err) => {
+                if (err) throw err;
+                else {
+                    var titreArticle = request.body.TitreArticle;
+                    var texteArticle = request.body.texteArticle;
+                    var catégories = request.body.Categories;
+                    var images = request.files
+                    // On récupère le cas d'erreur s'il y en a un
+                    casErreur.casErreurModifArticle(numArticle, titreArticle, texteArticle, catégories, (cas) => {
+                        // Tout va bien, on modifie l'article
+                        if (cas == 6 || cas == 7) {
+                            response.cookie('infoA', { cas: cas }, { expiresIn: '5s' });
+                            // On update le titre et le texte
+                            article.modifierArticle(titreArticle, texteArticle, numArticle, (cb) => {
+                                // On ajoute les nouveaux liens de catégories s'il y en a
+                                if (cas == 7) {
+                                    avoircategorie.ajoutUnLienArticleCatégorie(catégories, numArticle, (next) => { });
+                                }
+                                // Ajout des liens des images en BDD avec les lien image/article s'il y en a
+                                for (var i = 0; i < images.length; i++) {
+                                    image.ajoutImage(images[i].filename, (numImg) => {
+                                        avoirImage.ajoutAvoirImage(numImg, numArticle, (cb) => { });
+                                    });
+                                }
+                            });
+                            // On indique que c'est un succès, on a pas besoin d'attendre la fin des modifications pour l'afficher
+                            response.redirect('/Accueil')
+                        }
+                        else {
+                            // Sinon on affiche le cas d'erreur
+                            response.cookie('gestionModifA', { titreArticle: titreArticle, texteArticle: texteArticle, cas: cas }, { expiresIn: '5s' });
+                            // On supprime les images qui viennent d'être upload
+                            if (images != undefined) {
+                                for (var i = 0; i < images.length; i++) {
+                                    var link = 'public/images/articles/' + images[i].filename;
+                                    fs.unlink(link, (err) => {
+                                        if (err) throw err;
+                                    });
+                                }
+                            }
+                            var link = '/EspaceAdmin/GestionArticlesCategories/' + numArticle + '/ModifierArticle';
+                            response.redirect(link);
+                        }
+                    });
+                }
+            });
+        }
+        else {
+            response.redirect('/Connexion');
+        }
+    });
+}

@@ -1,0 +1,73 @@
+/* Style du main */
+#conteneur{
+    overflow: auto;
+    border-color: darkgray;
+}
+#content{
+    overflow: hidden;
+    background-color: lightgray;
+    border-color: darkgray;
+}
+h3{
+    font-size: 200%;
+    font-family: "SDA";
+    font-style: italic;
+    color: black;
+    margin-bottom: 5%;
+    text-decoration: underline;
+}
+#retourAccueil{
+    color: lightblue;
+    text-align: center;
+    font-weight: bolder;
+    font-size: larger;
+    text-decoration: underline;
+}
+table {
+    margin-top: 3%;
+    margin-bottom: 3%;
+    margin-left:auto;
+    margin-right:auto;
+    border-collapse: collapse;
+    border: 2px solid black;
+    align-content: center;
+}
+td,
+th {
+    border: 1px solid black;
+    padding: 5px 10px;
+    text-align: center;
+}
+form{
+    margin-top: 3%;
+    margin-bottom: 3%;
+    padding-left: 15%;
+    padding-right: 15%;
+}
+#al{
+    text-align: center;
+}
+figure{
+    margin-top: 3%;
+    margin-left: 40%;
+    margin-right: 40%;
+}
+#imgAte{
+    max-width: 100%;
+    height: auto;
+}
+h5{
+    font-size: 200%;
+    font-weight: bold;
+    color: black;
+    text-decoration: underline;
+    text-align: center;
+}
+#marg{
+    margin-top: 4%;
+}
+#filtre{
+    margin-left: 25%;
+    width: 50%;
+
+}

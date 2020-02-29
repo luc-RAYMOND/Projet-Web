@@ -1,6 +1,7 @@
 // Ce model permet d'utiliser les fonctions des autres models pour gérer les différents cas d'erreur
 var Catégorie = require('../models/categorie');
 var utilisateur = require('../models/utilisateur');
+var article = require('../models/article');
 var image = require('../models/image');
 
 // Cette fonction permet de renvoyer le cas d'inscription
@@ -160,27 +161,87 @@ exports.casModifCatégorie = (numCat, libCat, next) => {
 // Cas d'erreur d'ajout d'article
 exports.casErreurAjoutArticle = (titreArticle, texteArticle, catégories, next) => {
     var cas = 10;
-    var length = 0;
-    image.liensImage((imgBDD) => {
-        if (titreArticle == '' || titreArticle > 255) {
-            // Le titre est incorrect
-            cas = 5;
+    if (titreArticle == '' || titreArticle > 255) {
+        // Le titre est incorrect
+        cas = 5;
+    }
+    else {
+        if (texteArticle == '') {
+            // Le texte est incorrect
+            cas = 6;
         }
         else {
-            if (texteArticle == '') {
-                // Le texte est incorrect
-                cas = 6;
+            if (catégories == undefined) {
+                // Il faut au moins choisir une catégorie 
+                cas = 7;
             }
             else {
-                if (catégories == undefined) {
-                    // Il faut au moins choisir une catégorie 
-                    cas = 7;
-                }
-                else {
-                    cas = 8;
-                }
+                // Tout va bien
+                cas = 8;
             }
         }
+    }
+    next(cas);
+
+}
+
+exports.casErreurModifArticle = (numArticle, titreArticle, texteArticle, catégories, next) => {
+    var cas = 10;
+    if (titreArticle == '' || titreArticle > 255) {
+        // Le titre est incorrect
+        cas = 3;
         next(cas);
-    });
+    }
+    else {
+        if (texteArticle == '') {
+            // Le texte est incorrect
+            cas = 4;
+            next(cas);
+        }
+        else {
+            article.avoirLibelléUnArticle(numArticle, (libCat) => {
+                var length1;
+                // On regarde si l'article a des catégories de base
+                if (catégories != undefined && libCat[0] != undefined) {
+                    // On regarde combien de catégories qu'on veut rajouter
+                    if (catégories[0].length == 1) {
+                        // S'il y a qu'une catégorie, c'est simplement un String
+                        length1 = 1;
+                    }
+                    else {
+                        // Sinon c'est un tableau
+                        length1 = catégories.length;
+                    }
+                    var k = 0
+                    var length2 = libCat.length;
+                    // On vérifie qu'il n'y ait pas de doublon de catégorie
+                    while (cas != 5 && k != length2) {
+                        if (length1 == 1) {
+                            if (catégories == libCat[k].LibelléCatégorie) {
+                                cas = 5
+                            }
+                        }
+                        else {
+                            for (var i = 0; i < length1; i++) {
+                                if (catégories[i] == libCat[k].LibelléCatégorie) {
+                                    cas = 5;
+                                }
+                            }
+                        }
+                        k++;
+                    }
+                    // Tout va bien, on peut ajouter les nouvelles catégories
+                    if (cas != 5) {
+                        cas = 7;
+                    }
+                    next(cas);
+                }
+                // On n'ajoute pas de catégorie, tout va bien
+                else {
+                    cas = 6
+                    next(cas);
+                }
+            });
+        }
+    }
 }

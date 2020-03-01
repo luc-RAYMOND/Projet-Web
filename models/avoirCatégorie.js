@@ -35,7 +35,7 @@ class avoirCatégorie {
     }
 
     // Permet de supprimer tous les liens entre un article et ses catégories
-    static supprimerCatégorieArticle(numArt, cb) {
+    static supprimerCatégoriesArticle(numArt, cb) {
         var query = connection.query('DELETE FROM avoircatégorie WHERE NumArticle = ?', numArt, (error, results) => {
             if (error) throw error;
             cb(results);

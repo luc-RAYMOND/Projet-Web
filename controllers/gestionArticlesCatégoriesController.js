@@ -289,7 +289,7 @@ exports.supprimerArticle = (request, response) => {
                 // On supprime les liens entre images/article
                 avoirImage.supprimerLienImagesArticle(numArticle, (next1) => {
                     // On supprime les liens catégories/article
-                    avoircategorie.supprimerCatégorieArticle(numArticle, (next2) => {
+                    avoircategorie.supprimerCatégoriesArticle(numArticle, (next2) => {
                         // On enlève les images du serveur
                         image.supprimerImages(numsImg, (next2) => {
                             // Et enfin on supprime l'article

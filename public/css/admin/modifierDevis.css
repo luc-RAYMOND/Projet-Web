@@ -6,7 +6,13 @@
 #content{
     overflow: hidden;
     background-color: lightgray;
-    border-color: darkgray;
+    border-color:
+     darkgray;
+}
+#lien{
+    color: black;
+    font-style: italic;
+    font-weight: bold;
 }
 h3{
     font-size: 200%;
@@ -20,11 +26,6 @@ p{
     font-size: larger;
     color: black;
     text-align: justify;
-}
-#lien{
-    color: black;
-    font-style: italic;
-    font-weight: bold;
 }
 h5{
     font-size: 200%;
@@ -55,9 +56,6 @@ th {
     font-size: larger;
     text-decoration: underline;
 }
-#marg{
-    margin-top: 4%;
-}
 #align{
     text-align: center;
 }
@@ -66,4 +64,13 @@ form{
     margin-bottom: 3%;
     padding-left: 25%;
     padding-right: 25%;
+}
+tfoot,thead{
+    font-weight: bold;
+    border: 2px solid black;
+}
+#attention{
+    margin-top: 4%;
+    color: red;
+    text-align: center;
 }

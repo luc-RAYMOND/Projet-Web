@@ -21,35 +21,178 @@
     <main id="conteneur" class="well small-lg">
         <div id="content" class="well small-lg">
             <h3>
-                Gestion des Articles / Catégories
+                Gestion des Devis
             </h3>
             <p>
-                - <a id="lien" href="#Partie1"> Gérer les devis en cours.</a>
+                - <a id="lien" href="#Partie1"> Gestion des devis en attente.</a>
             </p>
             <p>
-                - <a id="lien" href="#Partie2"> Créer un devis.</a>
+                - <a id="lien" href="#Partie2"> Gestion en cours.</a>
+            </p>
+            <p>
+                - <a id="lien" href="#Partie3"> Gestion / Consultation des factures.</a>
+            </p>
+            <p>
+                - <a id="lien" href="#Partie4"> Créer un devis.</a>
             </p>
             <br>
+            <% if (cas == 1) { %>
+            <div id="align" class="alert alert-danger" role="alert">
+                Vous ne pouvez pas modifier/supprimer/consulter un devis/facture n'existant pas, <br>
+                ou modifier une facture.
+            </div>
+            <% } %>
+            <% if (cas == 3) { %>
+            <div id="align" class="alert alert-success" role="alert">
+                Suppression du devis avec succès !
+            </div>
+            <% } %>
+            <% if (cas == 4) { %>
+            <div id="align" class="alert alert-success" role="alert">
+                Devis transformé en facture avec succès !
+            </div>
+            <% } %>
             <br>
             <h5 id="Partie1">
-                Gestion des articles :
+                Gestion des devis en attente :
             </h5>
             <table class="table-striped">
                 <thead>
                     <tr>
-                        <th>En construction</th>
-
+                        <th>Date Devis</th>
+                        <th>Client</th>
+                        <th>Statut</th>
+                        <th>Montant total prévisionnel</th>
+                        <th>Modifier</th>
+                        <th>Supprimer</th>
                     </tr>
                 </thead>
                 <tbody>
+                    <% for (var i=0; i<devisClient.length;i++) { %>
                     <tr>
-                        <td>En construction</td>
+                        <td><%= devisClient[i].DateDevis %></td>
+                        <td><% if (utilisateurs[i][0] == undefined) { %> Client non enregistré :
+                            <%= devisClient[i].NomPrénomProv   %><% } else { %>
+                            <%= utilisateurs[i][0].NomUtilisateur + ' ' + utilisateurs[i][0].PrénomUtilisateur + ', ' + utilisateurs[i][0].MailUtilisateur %>
+                            <% } %></td>
+                        <td><%= devisClient[i].LibelléStatutDevis %></td>
+                        <td><%= montants[i] %></td>
+                        <% var link3 = 'GestionDevis/'+ devisClient[i].NumDevis+'/ModifierDevis'; %>
+                        <td><a href=<%= link3 %>><button class="btn btn-success">Modifier</button></a></td>
+                        <% var link= 'supprimer'+ devisClient[i].NumDevis %>
+                        <td><button data-toggle="collapse" data-target="#<%= link %>"
+                                class="btn btn-danger">Supprimer</button>
+                            <div id="<%= link %>" class="collapse">
+                                <% var link2 = 'GestionDevis/'+devisClient[i].NumDevis+'/SupprimerDevis'; %>
+                                <a href="<%= link2 %>"><button class="btn btn-danger">Confirmer la
+                                        suppression</button></a>
+                            </div>
+                        </td>
                     </tr>
+                    <% } %>
                 </tbody>
             </table>
             <h5 id="Partie2">
+                Gestion des devis en cours :
+            </h5>
+            <table class="table-striped">
+                <thead>
+                    <tr>
+                        <th>Date Devis</th>
+                        <th>Client</th>
+                        <th>Statut</th>
+                        <th>Montant total prévisionnel</th>
+                        <th>Modifier</th>
+                        <th>Supprimer</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for (var i=0; i<devisClientCours.length;i++) { %>
+                    <tr>
+                        <td><%= devisClientCours[i].DateDevis %></td>
+                        <td><% if (utilisateursCours[i][0] == undefined) { %> Client non enregistré :
+                            <%= devisClientCours[i].NomPrénomProv   %><% } else { %>
+                            <%= utilisateursCours[i][0].NomUtilisateur + ' ' + utilisateursCours[i][0].PrénomUtilisateur + ', ' + utilisateursCours[i][0].MailUtilisateur %>
+                            <% } %></td>
+                        <td><%= devisClientCours[i].LibelléStatutDevis %></td>
+                        <td><%= montantsCours[i] %></td>
+                        <% var link3 = 'GestionDevis/'+ devisClientCours[i].NumDevis+'/ModifierDevis'; %>
+                        <td><a href=<%= link3 %>><button class="btn btn-success">Modifier</button></a></td>
+                        <% var link= 'supprimer'+ devisClientCours[i].NumDevis %>
+                        <td><button data-toggle="collapse" data-target="#<%= link %>"
+                                class="btn btn-danger">Supprimer</button>
+                            <div id="<%= link %>" class="collapse">
+                                <% var link2 = 'GestionDevis/'+devisClientCours[i].NumDevis+'/SupprimerDevis'; %>
+                                <a href="<%= link2 %>"><button class="btn btn-danger">Confirmer la
+                                        suppression</button></a>
+                            </div>
+                        </td>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+            <h5 id="Partie3">
+                Gestion / Consultation des Factures :
+            </h5>
+            <table class="table-striped">
+                <thead>
+                    <tr>
+                        <th>Date Facture</th>
+                        <th>Client</th>
+                        <th>Montant total</th>
+                        <th>Consulter</th>
+                        <th>Supprimer</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for (var i=0; i<factureClients.length;i++) { %>
+                    <tr>
+                        <td><%= factureClients[i].DateDevis %></td>
+                        <td><% if (utilsateursFacture[i][0] == undefined) { %> Client non enregistré :
+                            <%= factureClients[i].NomPrénomProv   %><% } else { %>
+                            <%= utilsateursFacture[i][0].NomUtilisateur + ' ' + utilsateursFacture[i][0].PrénomUtilisateur + ', ' + utilsateursFacture[i][0].MailUtilisateur %>
+                            <% } %>
+                        </td>
+                        <td><%= montantsFactures[i] %></td>
+                        <% var link3 = 'GestionDevis/'+ factureClients[i].NumDevis+'/ConsulterFacture'; %>
+                        <td><a href=<%= link3 %>><button class="btn btn-success">Consulter</button></a></td>
+                        <% var link= 'supprimer'+ factureClients[i].NumDevis %>
+                        <td><button data-toggle="collapse" data-target="#<%= link %>"
+                                class="btn btn-danger">Supprimer</button>
+                            <div id="<%= link %>" class="collapse">
+                                <% var link2 = 'GestionDevis/'+factureClients[i].NumDevis+'/SupprimerDevis'; %>
+                                <a href="<%= link2 %>"><button class="btn btn-danger">Confirmer la
+                                        suppression</button></a>
+                            </div>
+                        </td>
+                    </tr>
+                    <% } %>
+
+                </tbody>
+            </table>
+            <h5 id="Partie4">
                 Créer un devis :
             </h5>
+            <% if (cas == 2) { %>
+            <div id="align" class="alert alert-danger" role="alert">
+                Veuillez entrer un nom et prénom correct.
+            </div>
+            <% } %>
+            <form action="/EspaceAdmin/GestionDevis" method="POST">
+                <label id="marg" for="sel">Sélectionner le client concerné :</label>
+                <select class="form-control" id="sel" name="utilisateurs">
+                    <option>Non Inscrit</option>
+                    <% for (var i = 0; i < clients.length;i++) { %>
+                    <% var user = clients[i].NumUtilisateur + ': ' + clients[i].NomUtilisateur + ' ' + clients[i].PrénomUtilisateur + ', ' + clients[i].MailUtilisateur %>
+                    <option><%= user %></option>
+                    <% } %>
+                </select>
+                <label id="marg">S'il n'est pas encore inscrit, veuillez entrer son nom et prénom :</label>
+                <input class="form-control" name="prenomNom">
+                <div id="align">
+                    <button type="submit" class="btn btn-primary">Passer à l'étape suivante</button>
+                </div>
+            </form>
         </div>
         <div id="retourAccueil">
             <a href="/Accueil">Retour à l'Accueil</a>

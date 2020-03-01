@@ -245,3 +245,47 @@ exports.casErreurModifArticle = (numArticle, titreArticle, texteArticle, catégo
         }
     }
 }
+
+exports.casErreurAjoutDevis = (numUtilisateur, prenomNom, cb) => {
+    // On regarde d'abord si l'on a entré un utilisateur inscrit ou non
+    if (numUtilisateur == "N") {
+        // Si non, on regarde si l'entrée est correcte pour les nom et prénom provisoires
+        if (prenomNom == '' || prenomNom.length > 50) {
+            cas = 2;
+        }
+        else {
+            // On a le cas où l'on va créer un devis avec un utilisateur provisoire
+            cas = 3;
+        }
+    }
+    else {
+        // On a forcément un utilisateur avec un numéro qui existe
+        cas = 4;
+    }
+    cb(cas);
+}
+
+exports.casErreurAjoutLC = (libellé, quantité, prixU, cb) => {
+    var cas = 10;
+    // On regarde si le libellé a une entrée correcte
+    if (libellé == '' || libellé.length > 400) {
+        cas = 1;
+    }
+    else {
+        // On regarde si la quantité est bien positive
+        if (quantité < 0 || quantité == '') {
+            cas = 2;
+        }
+        else {
+            // On regarde que le prixU est bien positif
+            if (prixU < 0 || prixU == '') {
+                cas = 3;
+            }
+            // Tout est bon
+            else {
+                cas = 4;
+            }
+        }
+    }
+    cb(cas);
+}

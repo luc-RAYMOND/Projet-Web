@@ -82,16 +82,3 @@ exports.validerUtilisateur = (request, response) => {
         }
     });
 }
-
-// Permet d'accéder à la page de gestion des devis
-exports.gestionDevis = (request, response) => {
-    var token = request.cookies.token;
-    verifConnexion.verifConnexion(token, (admin) => {
-        if (admin == 1) {
-            response.render('pages/admin/gestionDevis');
-        }
-        else {
-            response.redirect('/Connexion');
-        }
-    });
-}

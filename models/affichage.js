@@ -3,6 +3,8 @@
 var Catégorie = require('../models/categorie');
 var Article = require('../models/article');
 var utilisateur = require('../models/utilisateur');
+var avoirDevis = require('../models/avoirDevis');
+var avoirLC = require('../models/avoirLC');
 var moment = require('moment');
 
 // Fonction qui permet de définir la langue locale de la date en français (provenant du module 'moment')
@@ -176,4 +178,42 @@ exports.remplirImageArticle = (req, res, contient, articles, cat, next) => {
             next(img);
         }
     });
+}
+
+// Permet d'avoir les utilisateurs des devis
+exports.avoirUtilisateursDevis = (devisClients, next) => {
+    // Va contenir les utilisateurs pour chaque devis
+    var users = [];
+    var compteur4 = 0;
+    compteur4 = 0;
+    for (var i = 0; i < devisClients.length; i++) {
+        avoirDevis.avoirUtilisateurDevis(devisClients[i].NumDevis, (utilisateur) => {
+            users[compteur4] = utilisateur;
+            compteur4++;
+            if (compteur4 == devisClients.length) {
+                next(users);
+            }
+        });
+    }
+}
+
+// Fonction permettant de calculer les montants des devis
+exports.montantDevis = (devisClients, next) => {
+    var montantDevis = [];
+    var compteur5 = 0;
+    compteur5 = 0;
+    for (var i = 0; i < devisClients.length; i++) {
+        avoirLC.avoirlignesCommandesDevis(devisClients[i].NumDevis, (LC) => {
+            var montant = 0;
+            // On récupère les montants du devis
+            for (var j = 0; j < LC.length; j++) {
+                montant += LC[j].PrixTarifUnitaire * LC[j].Quantité;
+            }
+            montantDevis[compteur5] = montant.toFixed(2);
+            compteur5++;
+            if (compteur5 == devisClients.length) {
+                next(montantDevis);
+            }
+        });
+    }
 }

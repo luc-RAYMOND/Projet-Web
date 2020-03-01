@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html id="HautPage" lang="fr">
+
+<head>
+    <title>L'Atelier d'Alegolas 91 : L'Atelier</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+    <link rel="stylesheet" href="/css/common/header.css" type="text/css">
+    <link rel="stylesheet" href="/css/common/footer.css" type="text/css">
+    <link rel="stylesheet" href="/css/common/general.css" type="text/css">
+    <link rel="stylesheet" href="/css/admin/modifierDevis.css" type="text/css">
+</head>
+
+<body>
+    <%- include('headerA') -%>
+    <main id="conteneur" class="well small-lg">
+        <div id="content" class="well small-lg">
+            <h3>
+                Ajout des lignes de commandes
+            </h3>
+            <p>
+                - <a id="lien" href="#Partie1"> Lignes de commandes du devis.</a>
+            </p>
+            <p>
+                - <a id="lien" href="#Partie2"> Créer une ligne de commande pour ce devis.</a>
+            </p>
+            <p>
+                - <a id="lien" href="#Partie3"> Changer l'état du devis.</a>
+            </p>
+            <% if (!test) { %>
+            <p>
+                - <a id="lien" href="#Partie4"> Associer à un utilisateur.</a>
+            </p>
+            <% } %>
+            <br>
+            <br>
+            <h5 id="Partie1">
+                Lignes de commandes du devis :
+            </h5>
+            <% if (cas == 5) { %>
+            <div id="align" class="alert alert-danger" role="alert">
+                Vous ne pouvez pas supprimer une ligne de commande n'existant pas.
+            </div>
+            <% } %>
+            <% if (cas == 6) { %>
+            <div id="align" class="alert alert-success" role="alert">
+                Suppression avec succès de la ligne de commande !
+            </div>
+            <% } %>
+            <% if (cas == 8) { %>
+            <div id="align" class="alert alert-success" role="alert">
+                Association de l'utilisateur avec succès !
+            </div>
+            <% } %>
+            <table class="table-striped">
+                <thead>
+                    <tr>
+                        <th>Libellé de la ligne de commande</th>
+                        <th>Quantité</th>
+                        <th>Prix unitaire</th>
+                        <th>Montant</th>
+                        <th>Supprimer</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% var montantTot = 0; %>
+                    <% for (var i =0; i<LC.length;i++){ %>
+                    <tr>
+                        <% var montant = LC[i].PrixTarifUnitaire * LC[i].Quantité; %>
+                        <% montantTot+= montant; %>
+                        <td><%= LC[i].LibelléLigneCommande %></td>
+                        <td><%= LC[i].Quantité %></td>
+                        <td><%= LC[i].PrixTarifUnitaire.toFixed(2); %></td>
+                        <td><%= montant.toFixed(2); %></td>
+                        <% var link= 'supprimer'+LC[i].NumLigneCommande %>
+                        <td>
+                            <button data-toggle="collapse" data-target="#<%= link %>"
+                                class="btn btn-danger">Supprimer</button>
+                            <div id="<%= link %>" class="collapse">
+                                <% var link2 = '/EspaceAdmin/GestionDevis/'+numDevis+'/ModifierDevis/'+LC[i].NumLigneCommande+'/SupprimerLC'; %>
+                                <a href="<%= link2 %>"><button class="btn btn-danger">Confirmer la
+                                        suppression</button></a>
+                            </div>
+                        </td>
+                    </tr>
+                    <% } %>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td>Montant Total :</td>
+                        <td> - </td>
+                        <td> - </td>
+                        <td><%= montantTot.toFixed(2); %></td>
+                    </tr>
+                </tfoot>
+            </table>
+            <h5 id="Partie2">
+                Créer une ligne de commande pour ce devis :
+            </h5>
+            <% if (cas == 1) { %>
+            <div id="align" class="alert alert-danger" role="alert">
+                Veuillez entrer un texte correct.
+            </div>
+            <% } %>
+            <% if (cas == 2) { %>
+            <div id="align" class="alert alert-danger" role="alert">
+                Veuiller entrer une quantité correct.
+            </div>
+            <% } %>
+            <% if (cas == 3) { %>
+            <div id="align" class="alert alert-danger" role="alert">
+                Veuiller entrer un prix correct.
+            </div>
+            <% } %>
+            <% if (cas == 4) { %>
+            <div id="align" class="alert alert-success" role="alert">
+                Ligne de commande créée avec succès !
+            </div>
+            <% } %>
+            <% var link = '/EspaceAdmin/GestionDevis/' + numDevis + '/ModifierDevis' %>
+            <form action="<%= link %>" method="POST">
+                <label id="marg">Contenu de la ligne (400 caractères maximum) :</label>
+                <textarea class="form-control" name="libellé"><% if (cas != 4) { %><%= libellé %> <% } %></textarea>
+                <label id="marg">Quantité :</label>
+                <input <% if(cas != 4) { %> value="<%= quantité %>" <% } %> class="form-control" name="quantité">
+                <label id="marg">Prix unitaire (ex: 10.45):</label>
+                <input <% if(cas != 4) {%> value="<%= prixU %>" <% } %> class="form-control" name="prixU">
+                <div id="align">
+                    <button type="submit" class="btn btn-primary">Ajouter</button>
+                </div>
+            </form>
+            <h5 id="Partie3">
+                Changer l'état du devis :
+            </h5>
+            <p id="attention">
+                ! Un devis passé en terminé n'est plus modifiable !
+            </p>
+            <% if (cas == 7) { %>
+            <div id="align" class="alert alert-success" role="alert">
+                Statut changé avec succès !
+            </div>
+            <% } %>
+            <% var link2 = '/EspaceAdmin/GestionDevis/' + numDevis + '/ModifierStatutDevis' %>
+            <form action="<%= link2 %>" method="POST">
+                <label id="marg" for="sel">Sélectionner le statut du devis :</label>
+                <select class="form-control" id="sel" name="statut">
+                    <% for (var i = 0; i < statutDevis.length;i++) { %>
+                    <option><%= statutDevis[i].LibelléStatutDevis %></option>
+                    <% } %>
+                </select>
+                <div id="align">
+                    <button type="submit" class="btn btn-primary">Mettre à jour</button>
+                </div>
+            </form>
+            </h5>
+            <% if (!test) { %>
+            <h5 id="Partie4">
+                Associer à un utilisateur :
+            </h5>
+            <% var link3 = '/EspaceAdmin/GestionDevis/' + numDevis + '/AssocierUtilisateurDevis' %>
+            <form action="<%= link3 %>" method="POST">
+                <label id="marg" for="sel">Sélectionner le client concerné :</label>
+                <select class="form-control" id="sel" name="utilisateur">
+                    <% for (var i = 0; i < utilisateurs.length;i++) { %>
+                    <% var user = utilisateurs[i].NumUtilisateur + ': ' + utilisateurs[i].NomUtilisateur + ' ' + utilisateurs[i].PrénomUtilisateur + ', ' + utilisateurs[i].MailUtilisateur %>
+                    <option><%= user %></option>
+                    <% } %>
+                </select>
+                <div id="align">
+                    <button type="submit" class="btn btn-primary">Associer l'utilisateur</button>
+                </div>
+            </form>
+            <% } %>
+        </div>
+        <div id="retourAccueil">
+            <a href="/EspaceAdmin/GestionDevis">Retour à la gestion des devis</a>
+        </div>
+    </main>
+    <%- include('../common/footer') -%>
+</body>
+
+</html>

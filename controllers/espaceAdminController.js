@@ -1,6 +1,7 @@
 // Les models d'où viennent les fonctions sur la BDD
 var verifConnexion = require('../models/verifConnexion');
 var utilisateur = require('../models/utilisateur');
+var statistiques = require('../models/statistiques');
 var verifConnexion = require('../models/verifConnexion');
 
 // Permet d'afficher la page principale de l'espace Admin
@@ -75,6 +76,31 @@ exports.validerUtilisateur = (request, response) => {
                 var cas = 2;
                 response.cookie('gestion', { cas: cas }, { expiresIn: '5s' });
                 response.redirect('/EspaceAdmin/GestionClients');
+            });
+        }
+        else {
+            response.redirect('/Connexion');
+        }
+    });
+}
+
+// Fonction permettant d'afficher la page des statistiques
+exports.statistiques = (request, response) => {
+    var token = request.cookies.token;
+    verifConnexion.verifConnexion(token, (admin) => {
+        if (admin == 1) {
+            // On récupère les stats des 7 derniers jours
+            statistiques.avoirStats((stats) => {
+                // Des 7 derniers mois
+                statistiques.avoirStatsDesMois((avoirStatsDesMois) => {
+                    var vuesMois = [avoirStatsDesMois[6].NombreVisitesStats, avoirStatsDesMois[5].NombreVisitesStats, avoirStatsDesMois[4].NombreVisitesStats, avoirStatsDesMois[3].NombreVisitesStats, avoirStatsDesMois[2].NombreVisitesStats, avoirStatsDesMois[1].NombreVisitesStats, avoirStatsDesMois[0].NombreVisitesStats];
+                    var Mois = [avoirStatsDesMois[0].Mois, avoirStatsDesMois[1].Mois, avoirStatsDesMois[2].Mois, avoirStatsDesMois[3].Mois, avoirStatsDesMois[4].Mois, avoirStatsDesMois[5].Mois, avoirStatsDesMois[6].Mois];
+                    var CAMois = [avoirStatsDesMois[6].CAMois, avoirStatsDesMois[5].CAMois, avoirStatsDesMois[4].CAMois, avoirStatsDesMois[3].CAMois, avoirStatsDesMois[2].CAMois, avoirStatsDesMois[1].CAMois, avoirStatsDesMois[0].CAMois];
+                    var vues = [stats[0].NombreVisitesStats, stats[1].NombreVisitesStats, stats[2].NombreVisitesStats, stats[3].NombreVisitesStats, stats[4].NombreVisitesStats, stats[5].NombreVisitesStats, stats[6].NombreVisitesStats];
+                    var jours = [stats[0].Jour, stats[1].Jour, stats[2].Jour, stats[3].Jour, stats[4].Jour, stats[5].Jour, stats[6].Jour];
+                    response.render('pages/admin/statistiques', { vues: vues, jours: jours, vuesMois: vuesMois, Mois: Mois, CAMois: CAMois });
+                });
+
             });
         }
         else {

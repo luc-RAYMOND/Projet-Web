@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html id="HautPage" lang="fr">
+
+<head>
+    <title>L'Atelier d'Alegolas 91 : L'Atelier</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+    <link rel="stylesheet" href="/css/common/header.css" type="text/css">
+    <link rel="stylesheet" href="/css/common/footer.css" type="text/css">
+    <link rel="stylesheet" href="/css/common/general.css" type="text/css">
+    <link rel="stylesheet" href="/css/admin/statistiques.css" type="text/css">
+</head>
+
+<body>
+    <%- include('headerA') -%>
+    <main id="conteneur" class="well small-lg">
+        <div id="content" class="well small-lg">
+            <h3>
+                Statistiques
+            </h3>
+            <p>
+                - <a id="lien" href="#Partie1">Visites sur le site cette dernière semaine.</a>
+            </p>
+            <p>
+                - <a id="lien" href="#Partie2">Visites sur le site ces 6 derniers mois.</a>
+            </p>
+            <p>
+                - <a id="lien" href="#Partie3">Chiffre d'affaires ces 6 derniers mois.</a>
+            </p>
+            <br>
+            <br>
+
+            <h5 id="Partie1">
+                Visites sur le site cette dernière semaine :
+            </h5>
+            <canvas id="vueSemaine"></canvas>
+            <script>
+                Chart.defaults.global.defaultFontSize = 20;
+                var ctx = 'vueSemaine';
+                var myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['<%= jours[0] %>', '<%= jours[1] %>', '<%= jours[2] %>', '<%= jours[3] %>', '<%= jours[4] %>', '<%= jours[5] %>', '<%= jours[6] %>' + ", aujourd'hui"],
+                        datasets: [{
+                            label: "Nombre de vues par jour",
+                            data: [<%= vues %>],
+                            backgroundColor: 'rgba(0, 0, 255, 0.5)',
+                            borderColor: [
+                                'rgba(0, 0, 0, 1)',
+                                'rgba(0, 0, 0, 1)',
+                                'rgba(0, 0 ,0, 1)',
+                                'rgba(0, 0, 0, 1)',
+                                'rgba(0, 0, 0, 1)',
+                                'rgba(0, 0, 0, 1)',
+                                'rgba(0, 0, 0, 1)',
+                            ],
+                            borderWidth: 1
+                        }],
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        }
+                    }
+                });
+            </script>
+            <h5 id="Partie2">
+                Visites sur le site ces 6 derniers mois :
+            </h5>
+            <canvas id="vueMois"></canvas>
+            <script>
+                var ctx = 'vueMois';
+                var myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['<%= Mois[6] %>', '<%= Mois[5] %>', '<%= Mois[4] %>', '<%= Mois[3] %>', '<%= Mois[2] %>', '<%= Mois[1] %>', '<%= Mois[0] %>' + ", mois actuel"],
+                        datasets: [{
+                            label: "Nombre de vues par mois",
+                            data: [<%= vuesMois %>],
+                            backgroundColor: 'rgba(0, 191, 255, 0.5)',
+                            borderColor: [
+                                'rgba(0, 0, 0, 1)',
+                                'rgba(0, 0, 0, 1)',
+                                'rgba(0, 0 ,0, 1)',
+                                'rgba(0, 0, 0, 1)',
+                                'rgba(0, 0, 0, 1)',
+                                'rgba(0, 0, 0, 1)',
+                                'rgba(0, 0, 0, 1)',
+                            ],
+                            borderWidth: 1
+                        }],
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        }
+                    }
+                });
+            </script>
+            <h5 id="Partie3">
+                Chiffre d'affaires ces 6 derniers mois:
+            </h5>
+            <canvas id="myChart"></canvas>
+            <script>
+                var ctx = 'myChart';
+                var myChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+
+                        labels: ['<%= Mois[6] %>', '<%= Mois[5] %>', '<%= Mois[4] %>', '<%= Mois[3] %>', '<%= Mois[2] %>', '<%= Mois[1] %>', '<%= Mois[0] %>' + ", mois actuel"],
+                        datasets: [{
+                            label: "Chiffre d'affaires par mois",
+                            data: [<%= CAMois %>],
+                            backgroundColor: 'rgba(176, 196, 222, 0.5)',
+                            borderColor: [
+                                'rgba(0, 0, 0, 1)',
+                                'rgba(0, 0, 0, 1)',
+                                'rgba(0, 0 ,0, 1)',
+                                'rgba(0, 0, 0, 1)',
+                                'rgba(0, 0, 0, 1)',
+                                'rgba(0, 0, 0, 1)',
+                                'rgba(0, 0, 0, 1)',
+                            ],
+                            borderWidth: 1
+                        }],
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        }
+                    }
+                });
+            </script>
+        </div>
+        <div id="retourEspaceAdmin">
+            <a href="/EspaceAdmin">Retour à l'Espace Admin</a>
+        </div>
+    </main>
+    <%- include('../common/footer') -%>
+</body>
+
+</html>

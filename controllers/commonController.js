@@ -91,6 +91,7 @@ exports.tentativeConnexion = (request, response) => {
 exports.deconnexion = (request, response) => {
     var cas = 3;
     response.clearCookie('token', request.cookies.token);
+    response.clearCookie('vue', request.cookies.vue);
     response.render('pages/common/connexion', { cas: cas });
 }
 

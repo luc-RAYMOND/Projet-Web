@@ -1,4 +1,6 @@
 var connection = require('../config/db');
+var statistiques = require('../models/statistiques');
+var affichage = require('../models/affichage');
 var moment = require('moment');
 
 class Devis {
@@ -31,7 +33,7 @@ class Devis {
 
     // Fonction permettant de récupérer les devis en attente 
     static avoirDevisClientsAttente(cb) {
-        var query = connection.query("SELECT * FROM devis WHERE `LibelléStatutDevis` = 'En attente de validation'", (error, results) => {
+        var query = connection.query("SELECT * FROM devis WHERE `LibelléStatutDevis` = 'En attente de validation' ORDER BY DateDevis DESC", (error, results) => {
             if (error) throw error;
             for (var i = 0; i < results.length; i++) {
                 results[i].DateDevis = moment(results[i].DateDevis).format("DD MMMM YYYY");
@@ -42,7 +44,7 @@ class Devis {
 
     // Fonction permettant de récupérer les devis en cours
     static avoirDevisClientsCours(cb) {
-        var query = connection.query("SELECT * FROM devis WHERE `LibelléStatutDevis` = 'En cours de traitement'", (error, results) => {
+        var query = connection.query("SELECT * FROM devis WHERE `LibelléStatutDevis` = 'En cours de traitement' ORDER BY DateDevis DESC", (error, results) => {
             if (error) throw error;
             for (var i = 0; i < results.length; i++) {
                 results[i].DateDevis = moment(results[i].DateDevis).format("DD MMMM YYYY");
@@ -53,7 +55,7 @@ class Devis {
 
     // Fonction permettant de récupérer les factures (devis terminés)
     static avoirFactureClients(cb) {
-        var query = connection.query("SELECT * FROM devis WHERE `LibelléStatutDevis` = 'Terminé'", (error, results) => {
+        var query = connection.query("SELECT * FROM devis WHERE `LibelléStatutDevis` = 'Terminé' ORDER BY DateDevis DESC", (error, results) => {
             if (error) throw error;
             for (var i = 0; i < results.length; i++) {
                 results[i].DateDevis = moment(results[i].DateDevis).format("DD MMMM YYYY");
@@ -70,11 +72,34 @@ class Devis {
         });
     }
 
+    // Fonction permettant de mettre à jour la date d'une facture
+    static dateFacture(numDevis, cb) {
+        var query = connection.query("UPDATE devis SET DateDevis = ? WHERE NumDevis = ?", [new Date(), numDevis], (error, results) => {
+            if (error) throw error;
+            cb(results);
+        });
+    }
+
     // Fonction permettant de mettre à jour le statut d'un devis
     static updateStatutDevis(libellé, numDevis, cb) {
         var query = connection.query("UPDATE devis SET LibelléStatutDevis = ? WHERE NumDevis = ?", [libellé, numDevis], (error, results) => {
             if (error) throw error;
-            cb(results);
+            // Si on le passe en facture, alors on ajoute le montant au mois correspondant
+            if (libellé == 'Terminé') {
+                // On met la date de la facture à aujourd'hui
+                this.dateFacture(numDevis, (ccb) => {
+                    // On récupère le montant du devis
+                    affichage.montantDevis([{ NumDevis: numDevis }], (montantDevis) => {
+                        // Et on l'ajoute
+                        statistiques.gagnerCA(montantDevis, (next) => {
+                            cb(results);
+                        });
+                    });
+                })
+            }
+            else {
+                cb(results)
+            }
         });
     }
 

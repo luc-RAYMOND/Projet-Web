@@ -1,0 +1,51 @@
+/* Style du main */
+
+#conteneur{
+    overflow: auto;
+    border-color: darkgray;
+}
+#content{
+    overflow: hidden;
+    background-color: lightgray;
+    border-color: darkgray;
+}
+#retourEspaceAdmin{
+    color: lightblue;
+    text-align: center;
+    font-weight: bolder;
+    font-size: larger;
+    text-decoration: underline;
+}
+h3{
+    font-size: 200%;
+    font-family: "SDA";
+    font-style: italic;
+    color: black;
+    margin-bottom: 5%;
+    text-decoration: underline;
+}
+p{
+    font-size: larger;
+    color: black;
+    text-align: justify;
+}
+#lien{
+    color: black;
+    font-style: italic;
+    font-weight: bold;
+}
+h5{
+    font-size: 200%;
+    font-weight: bold;
+    color: black;
+    text-decoration: underline;
+    text-align: center;
+}
+canvas{
+    width: auto;
+    height: auto;
+    padding-left: 25%;
+    padding-right: 25%;
+    padding-top: 5%;
+    padding-bottom: 5%;
+}

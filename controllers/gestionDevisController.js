@@ -173,7 +173,7 @@ exports.ajoutLigneCommande = (request, response) => {
             // On regarde s'il y a des erreurs
             casErreur.casErreurAjoutLC(libellé, quantité, prixU, (cas) => {
                 response.cookie('ajoutLC', { cas: cas, libellé: libellé, quantité: quantité, prixU: prixU }, { expiresIn: '5s' });
-                var link = '/EspaceAdmin/GestionDevis/' + numDevis + '/ModifierDevis#Partie4';
+                var link = '/EspaceAdmin/GestionDevis/' + numDevis + '/ModifierDevis#Partie2';
                 // Il y a un problème, on le signale
                 if (cas != 4) {
                     response.redirect(link);

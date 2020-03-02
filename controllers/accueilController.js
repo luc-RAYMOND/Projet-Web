@@ -1,5 +1,6 @@
 // Les models d'où viennent les fonctions sur la BDD
 var affichage = require('../models/affichage.js')
+var statistiques = require('../models/statistiques')
 var verifConnexion = require('../models/verifConnexion');
 
 // Permet de charger la page d'accueil
@@ -7,6 +8,7 @@ exports.accueil = (request, response) => {
     var token = request.cookies.token;
     var pageActuelle = 1;
     var cas = 10;
+    statistiques.avoirStatsMois((cb) => {});
     if (request.cookies.infoA != undefined) {
         // On récupère toutes les valeurs
         cas = request.cookies.infoA.cas;
@@ -14,6 +16,13 @@ exports.accueil = (request, response) => {
     // Puis on le supprime
     // Il s'expirera par lui même sinon
     response.clearCookie('infoA', request.cookies.infoA);
+    // Si le cookie vue n'existe pas, on ajoute de 1 la vue sur le site
+    if (request.cookies.vue == undefined) {
+        // On crée un cookie qui restera 1h
+        response.cookie('vue', { expiresIn: '1h' });
+        // On ajoute une vue
+        statistiques.gagnerUneVue((cb) => {});
+    }
     affichage.remplirCatégorie(request, response, (contient) => {
         affichage.remplirArticle(request, response, contient, (articles) => {
             affichage.remplirCatégorieArticle(request, response, contient, articles, (cat) => {

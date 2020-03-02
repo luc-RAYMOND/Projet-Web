@@ -26,6 +26,14 @@ class AvoirDevis {
             cb(results);
         });
     }
+
+    // Fonction permettant de mettre à jour le lien entre un devis et un utilisateur
+    static updateLienDevis(numUtilisateur, numDevis, cb) {
+        var query = connection.query('UPDATE avoirdevis SET NumUtilisateur = ? WHERE NumDevis = ?', [numUtilisateur, numDevis], (error, results) => {
+            if (error) throw error;
+            cb(results);
+        });
+    }
 }
 
 module.exports = AvoirDevis;

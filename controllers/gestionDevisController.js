@@ -254,7 +254,7 @@ exports.modifierStatutDevis = (request, response) => {
                         });
                     }
                     else {
-                        var link = '/EspaceAdmin/GestionDevis/' + numDevis + '/ModifierDevis#Partie1';
+                        var link = '/EspaceAdmin/GestionDevis/' + numDevis + '/ModifierDevis#Partie3';
                         cas = 7;
                         response.cookie('ajoutLC', { cas: cas }, { expiresIn: '5s' });
                         devis.updateStatutDevis(statut, numDevis, (cb) => {
@@ -345,9 +345,50 @@ exports.associerUtilisateurDevis = (request, response) => {
                     devis.updateNomPrénomProv(numDevis, (cb) => {
                         // On crée le lien entre l'utilisateur et le devis
                         avoirDevis.créerLienDevis(numUtilisateur, numDevis, (cb) => {
-                            console.log("success !")
                             response.redirect(link);
                         });
+                    });
+                }
+            });
+        }
+        else {
+            response.redirect('/Connexion');
+        }
+    });
+}
+
+// Fonction permettant de modifier l'utilisateur d'un devis 
+exports.modifierUtilisateurDevis = (request, response) => {
+    var token = request.cookies.token;
+    var numDevis = request.params.numDevis;
+    var user = request.body.utilisateur;
+    var i = 1;
+    var numUtilisateur = user[0];
+    var k = user[i];
+    // Permet de récupérer le num Utilisateur dans la choicebox
+    while (k != ':') {
+        numUtilisateur += user[i];
+        i++;
+        k = user[i]
+    }
+    verifConnexion.verifConnexion(token, (admin) => {
+        if (admin == 1) {
+            // On vérifie que le devis demandé existe
+            devis.vérifDevis(numDevis, (vérif) => {
+                if (vérif[0].tot == 0) {
+                    cas = 1;
+                    response.cookie('gestionDevis', { cas: cas }, { expiresIn: '5s' });
+                    response.redirect('/EspaceAdmin/GestionDevis')
+                }
+                else {
+                    // Tout est bon, on peut update l'utilisateur
+                    var link = '/EspaceAdmin/GestionDevis/' + numDevis + '/ModifierDevis#Partie1';
+                    cas = 9;
+                    response.cookie('ajoutLC', { cas: cas }, { expiresIn: '5s' });
+                    // On met le prénom provisoire comme indéfini dans le devis
+                    // On update le lien entre l'utilisateur et le devis
+                    avoirDevis.updateLienDevis(numUtilisateur, numDevis, (cb) => {
+                        response.redirect(link);
                     });
                 }
             });

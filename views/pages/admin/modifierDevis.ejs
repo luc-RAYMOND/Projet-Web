@@ -36,6 +36,10 @@
             <p>
                 - <a id="lien" href="#Partie4"> Associer à un utilisateur.</a>
             </p>
+            <% } else { %>
+            <p>
+                - <a id="lien" href="#Partie4"> Modifier l'utilisateur.</a>
+            </p>
             <% } %>
             <br>
             <br>
@@ -55,6 +59,11 @@
             <% if (cas == 8) { %>
             <div id="align" class="alert alert-success" role="alert">
                 Association de l'utilisateur avec succès !
+            </div>
+            <% } %>
+            <% if (cas == 9) { %>
+            <div id="align" class="alert alert-success" role="alert">
+                Modification de l'utilisateur avec succès !
             </div>
             <% } %>
             <table class="table-striped">
@@ -175,10 +184,27 @@
                     <button type="submit" class="btn btn-primary">Associer l'utilisateur</button>
                 </div>
             </form>
+            <% } else { %>
+            <h5 id="Partie4">
+                Modifier l'utilisateur :
+            </h5>
+            <% var link3 = '/EspaceAdmin/GestionDevis/' + numDevis + '/ModifierUtilisateurDevis' %>
+            <form action="<%= link3 %>" method="POST">
+                <label id="marg" for="sel">Sélectionner le client concerné :</label>
+                <select class="form-control" id="sel" name="utilisateur">
+                    <% for (var i = 0; i < utilisateurs.length;i++) { %>
+                    <% var user = utilisateurs[i].NumUtilisateur + ': ' + utilisateurs[i].NomUtilisateur + ' ' + utilisateurs[i].PrénomUtilisateur + ', ' + utilisateurs[i].MailUtilisateur %>
+                    <option><%= user %></option>
+                    <% } %>
+                </select>
+                <div id="align">
+                    <button type="submit" class="btn btn-primary">Modifier l'utilisateur</button>
+                </div>
+            </form>
             <% } %>
         </div>
         <div id="retourAccueil">
-            <a href="/EspaceAdmin/GestionDevis">Retour à la gestion des devis</a>
+            <a href="/EspaceAdmin/GestionDevis">Retour à la Gestion des Devis</a>
         </div>
     </main>
     <%- include('../common/footer') -%>

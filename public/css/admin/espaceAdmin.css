@@ -24,11 +24,13 @@ p{
 }
 nav{
     margin-top: 5%;
-    margin-left: 20%;
-    margin-right: 20%;
+    margin-left: 10%;
+    margin-right: 30%;
 }
 #title{
     font-size: 200%;
+    background-color: rgba(175, 192, 192, 0.562);
+    border-color: rgba(0, 0, 0, 0.096);
 }
 #txt{
     padding-left: 5%;

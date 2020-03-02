@@ -12,6 +12,7 @@ route.get('/:numDevis/SupprimerDevis', gestionDevis.supprimerDevis);
 route.get('/:numDevis/ConsulterFacture', gestionDevis.consulterFacture);
 route.post('/:numDevis/ModifierDevis', gestionDevis.ajoutLigneCommande);
 route.post('/:numDevis/AssocierUtilisateurDevis', gestionDevis.associerUtilisateurDevis);
+route.post('/:numDevis/ModifierUtilisateurDevis', gestionDevis.modifierUtilisateurDevis);
 route.post('/:numDevis/ModifierStatutDevis', gestionDevis.modifierStatutDevis);
 route.get('/:numDevis/ModifierDevis/:numLC/SupprimerLC', gestionDevis.supprimerLigneCommandeDevis);
 

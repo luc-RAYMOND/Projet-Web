@@ -186,10 +186,10 @@ exports.avoirUtilisateursDevis = (devisClients, next) => {
     var users = [];
     var compteur4 = 0;
     compteur4 = 0;
-    if(devisClients[0] == undefined){
+    if (devisClients[0] == undefined) {
         next(users);
     }
-    else{
+    else {
         for (var i = 0; i < devisClients.length; i++) {
             avoirDevis.avoirUtilisateurDevis(devisClients[i].NumDevis, (utilisateur) => {
                 users[compteur4] = utilisateur;
@@ -207,10 +207,10 @@ exports.montantDevis = (devisClients, next) => {
     var montantDevis = [];
     var compteur5 = 0;
     compteur5 = 0;
-    if(devisClients[0] == undefined){
+    if (devisClients[0] == undefined) {
         next(montantDevis);
     }
-    else{
+    else {
         for (var i = 0; i < devisClients.length; i++) {
             avoirLC.avoirlignesCommandesDevis(devisClients[i].NumDevis, (LC) => {
                 var montant = 0;

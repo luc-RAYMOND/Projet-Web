@@ -250,7 +250,7 @@ exports.casErreurAjoutDevis = (numUtilisateur, prenomNom, cb) => {
     // On regarde d'abord si l'on a entré un utilisateur inscrit ou non
     if (numUtilisateur == "N") {
         // Si non, on regarde si l'entrée est correcte pour les nom et prénom provisoires
-        if (prenomNom == '' || prenomNom.length > 50) {
+        if (prenomNom == '' || prenomNom.length > 50 || prenomNom.length < 2) {
             cas = 2;
         }
         else {

@@ -186,14 +186,19 @@ exports.avoirUtilisateursDevis = (devisClients, next) => {
     var users = [];
     var compteur4 = 0;
     compteur4 = 0;
-    for (var i = 0; i < devisClients.length; i++) {
-        avoirDevis.avoirUtilisateurDevis(devisClients[i].NumDevis, (utilisateur) => {
-            users[compteur4] = utilisateur;
-            compteur4++;
-            if (compteur4 == devisClients.length) {
-                next(users);
-            }
-        });
+    if(devisClients[0] == undefined){
+        next(users);
+    }
+    else{
+        for (var i = 0; i < devisClients.length; i++) {
+            avoirDevis.avoirUtilisateurDevis(devisClients[i].NumDevis, (utilisateur) => {
+                users[compteur4] = utilisateur;
+                compteur4++;
+                if (compteur4 == devisClients.length) {
+                    next(users);
+                }
+            });
+        }
     }
 }
 
@@ -202,18 +207,23 @@ exports.montantDevis = (devisClients, next) => {
     var montantDevis = [];
     var compteur5 = 0;
     compteur5 = 0;
-    for (var i = 0; i < devisClients.length; i++) {
-        avoirLC.avoirlignesCommandesDevis(devisClients[i].NumDevis, (LC) => {
-            var montant = 0;
-            // On récupère les montants du devis
-            for (var j = 0; j < LC.length; j++) {
-                montant += LC[j].PrixTarifUnitaire * LC[j].Quantité;
-            }
-            montantDevis[compteur5] = montant.toFixed(2);
-            compteur5++;
-            if (compteur5 == devisClients.length) {
-                next(montantDevis);
-            }
-        });
+    if(devisClients[0] == undefined){
+        next(montantDevis);
+    }
+    else{
+        for (var i = 0; i < devisClients.length; i++) {
+            avoirLC.avoirlignesCommandesDevis(devisClients[i].NumDevis, (LC) => {
+                var montant = 0;
+                // On récupère les montants du devis
+                for (var j = 0; j < LC.length; j++) {
+                    montant += LC[j].PrixTarifUnitaire * LC[j].Quantité;
+                }
+                montantDevis[compteur5] = montant.toFixed(2);
+                compteur5++;
+                if (compteur5 == devisClients.length) {
+                    next(montantDevis);
+                }
+            });
+        }
     }
 }

@@ -2,7 +2,7 @@
 var Catégorie = require('../models/categorie');
 var utilisateur = require('../models/utilisateur');
 var article = require('../models/article');
-var image = require('../models/image');
+var bcrypt = require('bcrypt');
 
 // Cette fonction permet de renvoyer le cas d'inscription
 // On ne vérifie pas tout ce qui est données de facturation (taille immense dans la BDD)
@@ -288,4 +288,69 @@ exports.casErreurAjoutLC = (libellé, quantité, prixU, cb) => {
         }
     }
     cb(cas);
+}
+
+// Permet de voir les cas d'erreurs de changement de mot de passe
+exports.casModifMDP = (numUtiliateur, mdpAct, newMdp, newMdpConf, cb) => {
+    var modifMDP = 10;
+    // On récupère le mdp du user
+    utilisateur.avoirUtilisateur(numUtiliateur, (user) => {
+        // On le compare avec ce qu'il a rentré
+        bcrypt.compare(mdpAct, user[0].MotDePasseUtilisateur, function (err, result) {
+            // On regarde si l'utilisateur veut changer son mot de passe
+            if (mdpAct != '') {
+                if (result) {
+                    // Les nouveaux mots de passe ne sont pas identiques
+                    if (newMdp != newMdpConf) {
+                        modifMDP = 2;
+                    }
+                    else {
+                        // On regarde si le mdp est assez long
+                        if (newMdp.length < 4) {
+                            modifMDP = 3;
+                        }
+                        else {
+                            // Tout est bon ici
+                            modifMDP = 4;
+                        }
+                    }
+                }
+                else {
+                    // Le mot de passe actuel est faux
+                    modifMDP = 1;
+                }
+            }
+            // Il ne cherche pas à modifier le mdp, on renvoie 10
+            cb(modifMDP);
+        });
+    });
+}
+
+// Permet de vérifier le pseudo
+exports.casModifPseudo = (pseudo, cb) => {
+    var cas = 10;
+    if (pseudo != undefined) {
+        utilisateur.pseudoExiste(pseudo, (result) => {
+            if (pseudo != '' && pseudo != undefined) {
+                // S'il existe, il faut alors changer
+                if (result[0] != undefined) {
+                    cas = 1;
+                }
+                else {
+                    if (pseudo.length > 15) {
+                        cas = 2;
+                    }
+                    else {
+                        // Tout va bien
+                        cas = 3;
+                    }
+                }
+            }
+            cb(cas);
+        });
+    }
+    else {
+        cb(cas);
+    }
+
 }

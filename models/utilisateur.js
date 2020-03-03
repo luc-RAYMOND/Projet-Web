@@ -1,4 +1,5 @@
 var connection = require('../config/db');
+var moment = require('moment');
 
 class Utilisateur {
 
@@ -14,6 +15,17 @@ class Utilisateur {
     static pseudoExiste(pseudo, cb) {
         var query = connection.query('SELECT PseudoUtilisateur FROM utilisateur WHERE PseudoUtilisateur = ?', pseudo, (error, results) => {
             if (error) throw error;
+            cb(results);
+        });
+    }
+
+    // Fonction permettant de récupérer les informations d'un utilisateur
+    static avoirUtilisateur(NumUtilisateur, cb) {
+        var query = connection.query('SELECT * FROM utilisateur WHERE NumUtilisateur = ?', NumUtilisateur, (error, results) => {
+            if (error) throw error;
+            if (results[0] != undefined) {
+                results[0].DateNaissanceUtilisateur = moment(results[0].DateNaissanceUtilisateur).format("YYYY-MM-DD");
+            }
             cb(results);
         });
     }
@@ -74,6 +86,31 @@ class Utilisateur {
     // Permet de valider un utilisateur
     static validerUtilisateur(num, cb) {
         var query = connection.query('UPDATE utilisateur SET EtatCompteUtilisateur = 1 WHERE NumUtilisateur = ?', num, (error, results) => {
+            if (error) throw error;
+            cb(results);
+        });
+    }
+
+    // Permet de changer le mot de passe d'un utilisateur
+    static modifMdp(mdp, num, cb) {
+        var query = connection.query('UPDATE utilisateur SET MotDePasseUtilisateur = ? WHERE NumUtilisateur = ?', [mdp, num], (error, results) => {
+            if (error) throw error;
+            cb(results);
+        });
+    }
+
+    // Permet de mettre à jour le pseudo
+    static modifPseudo(pseudo, num, cb) {
+        var query = connection.query('UPDATE utilisateur SET PseudoUtilisateur = ? WHERE NumUtilisateur = ?', [pseudo, num], (error, results) => {
+            if (error) throw error;
+            cb(results);
+        });
+    }
+
+    // Permet de mettre à jour le reste des infos
+    static updateInfo(tel, ville, rue, cp, pays, date, num, cb) {
+        var user = { NumTéléphone: tel, VilleFacturationClient: ville, RueFacturationClient: rue, CodePostalFacturationClient: cp, PaysFacturationClient: pays, DateNaissanceUtilisateur: date };
+        var query = connection.query('UPDATE utilisateur SET ? WHERE NumUtilisateur = ?', [user, num], (error, results) => {
             if (error) throw error;
             cb(results);
         });

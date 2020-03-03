@@ -17,33 +17,25 @@
 </head>
 
 <body>
-    <%- include('headerA') -%>
+    <%- include('headerU') -%>
     <main id="conteneur" class="well small-lg">
         <div id="content" class="well small-lg">
             <h3>
-                Espace Administrateur
+                Espace Client
             </h3>
             <p>
                 Bienvenue sur votre espace administrateur,
             </p>
             <p>
-                Ici, vous pouvez gérer vos clients, gérer les articles ainsi que leurs catégories, consulter des
-                statistiques, gérer des devis et modifier vos informations de compte :
+                Ici, vous pouvez consulter vos devis ainsi que modifier vos informations de compte :
             </p>
             <nav id="Nav" class="list-group">
                 <div id="title" class="list-group-item list-group-item-action">
                     Accèder à ...
                 </div>
-                <a href="/EspaceAdmin/GestionClients"><button id="txt" type="button"
-                        class="list-group-item list-group-item-action">Gestion des Clients</button></a>
-                <a href="/EspaceAdmin/GestionDevis"><button id="txt" type="button"
-                        class="list-group-item list-group-item-action">Gestion des Devis</button></a>
-                <a href="/EspaceAdmin/GestionArticlesCategories"><button id="txt" type="button"
-                        class="list-group-item list-group-item-action">Ajout et Gestion des
-                        Articles/Catégories</button></a>
-                <a href="/EspaceAdmin/Statistiques"><button id="txt" type="button"
-                        class="list-group-item list-group-item-action">Statistiques</button></a>
-                        <% const link = '/EspaceAdmin/'+NumUtilisateur+'/ModifierInfosPerso'; %>
+                <a href="/EspaceClient/VoirDevis"><button id="txt" type="button"
+                        class="list-group-item list-group-item-action">Mes devis</button></a>
+                <% const link = '/EspaceAdmin/'+NumUtilisateur+'/ModifierInfosPerso'; %>
                 <a href="<%= link %>"><button id="txt" type="button"
                         class="list-group-item list-group-item-action">Modification des Informations du
                         Compte</button></a>

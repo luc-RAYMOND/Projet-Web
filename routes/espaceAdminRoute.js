@@ -10,6 +10,8 @@ route.get('/GestionClients', EA.gestionClients);
 route.get('/Statistiques', EA.statistiques);
 route.get('/:numUtilisateur/SupprimerUtilisateur', EA.supprimerUtilisateur);
 route.get('/:numUtilisateur/ValiderUtilisateur', EA.validerUtilisateur);
+route.get('/:numUtilisateur/ModifierInfosPerso', EA.modifierInfosPersoPage);
+route.post('/:numUtilisateur/ModifierInfosPerso', EA.modifierInfosPerso);
 
 // On exporte nos routes
 module.exports = route;

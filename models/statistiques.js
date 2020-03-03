@@ -1,5 +1,4 @@
 var connection = require('../config/db');
-var moment = require('moment');
 
 class Stats {
 

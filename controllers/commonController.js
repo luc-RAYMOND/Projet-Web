@@ -130,7 +130,6 @@ exports.tentativeInscription = (request, response) => {
                 var mdpH = mdpHash
                 utilisateur.newUtilisateur(mail, nom, prenom, pseudo, mdpH, tel, ville, rue, cp, pays, date, (cb) => {
                     response.render('pages/common/inscription', { cas: cas, mail: mail, nom: nom, prenom: prenom, pseudo: pseudo, tel: tel, ville: ville, rue: rue, cp: cp, pays: pays, date: date });
-
                 });
             });
         }

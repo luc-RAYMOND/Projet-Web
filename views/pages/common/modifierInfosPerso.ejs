@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html id="HautPage" lang="fr">
+
+<head>
+    <title>L'Atelier d'Alegolas 91 : L'Atelier</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+    <link rel="stylesheet" href="/css/common/header.css" type="text/css">
+    <link rel="stylesheet" href="/css/common/footer.css" type="text/css">
+    <link rel="stylesheet" href="/css/common/general.css" type="text/css">
+    <link rel="stylesheet" href="/css/common/inscription.css" type="text/css">
+</head>
+
+<body>
+    <% if (admin == 0) { %>
+    <%- include('../utilisateur/headerU') -%>
+    <% } %>
+    <% if (admin == 1) { %>
+    <%- include('../admin/headerA') -%>
+    <% } %>
+    <main id="conteneur" class="well small-lg">
+        <div id="content" class="well small-lg">
+            <h3>
+                Modifier les Infos du Compte
+            </h3>
+            <% var link = '/EspaceAdmin/'+ user[0].NumUtilisateur +'/ModifierInfosPerso'; %>
+            <form action="<%= link %>" method="POST">
+                <% if (test) { %>
+                <div id="al" class="alert alert-success" role="alert">
+                    Informations modifiées avec succès !
+                </div>
+                <% } %>
+                <% if (modifMdp == 4) { %>
+                <div id="al" class="alert alert-success" role="alert">
+                    Mot de passe modifié avec succès !
+                </div>
+                <% } %>
+                <% if (cas == 3) { %>
+                <div id="al" class="alert alert-success" role="alert">
+                    Pseudo assigné avec succès !
+                </div>
+                <% } %>
+                <% if (user[0].PseudoUtilisateur == ''){ %>
+                <h5>
+                    Informations sur le compte :
+                </h5>
+                <div class="form-group">
+                    <label>Pseudo : </label>
+                    <input type="text" class="form-control" name="pseudo">
+                    <small id="info" class="form-text text-muted">15 caractères maximum </small>
+                </div>
+                <% } %>
+                <% if (cas == 2) { %>
+                <div id="al" class="alert alert-danger" role="alert">
+                    Pseudo trop long
+                </div>
+                <% } %>
+                <% if (cas == 1) { %>
+                <div id="al" class="alert alert-danger" role="alert">
+                    Pseudo déjà pris,
+                    <br>
+                    veuillez en choisir un autre
+                </div>
+                <% } %>
+                <h5>
+                    Modifier le mot de passe :
+                </h5>
+                <div class="form-group">
+                    <label>Mot de passe Actuel: </label>
+                    <input type="password" class="form-control" name="mdpAct">
+                </div>
+                <div class="form-group">
+                    <label>Nouveau mot de passe : </label>
+                    <input type="password" class="form-control" name="newMdp">
+                    <small id="info" class="form-text text-muted">4 caractères minimum</small>
+                </div>
+                <div class="form-group">
+                    <label>Confirmation du nouveau mot de passe : </label>
+                    <input type="password" class="form-control" name="newMdpConf">
+                </div>
+                <% if (modifMdp == 1) { %>
+                <div id="al" class="alert alert-danger" role="alert">
+                    Votre mot de passe est incorrect.
+                </div>
+                <% } %>
+                <% if (modifMdp == 2) { %>
+                <div id="al" class="alert alert-danger" role="alert">
+                    Les deux mots de passe doivent être identiques.
+                </div>
+                <% } %>
+                <% if (modifMdp == 3) { %>
+                <div id="al" class="alert alert-danger" role="alert">
+                    Mot de passe trop court.
+                </div>
+                <% } %>
+                <h5>
+                    Informations de facturation :
+                </h5>
+                <div class="form-group">
+                    <label>Numéro de téléphone : </label>
+                    <input type="text" <% if (cas == 10) { %> value="<%= user[0].NumTéléphone %>" <% } %>
+                        class="form-control" name="tel">
+                </div>
+                <div class="form-group">
+                    <label>Ville : </label>
+                    <input type="text" <% if (cas == 10) { %> value="<%= user[0].VilleFacturationClient %>" <% } %>
+                        class="form-control" name="ville">
+                </div>
+                <div class="form-group">
+                    <label>Rue : </label>
+                    <input type="text" <% if (cas == 10) { %> value="<%= user[0].RueFacturationClient %>" <% } %>
+                        class="form-control" name="rue">
+                </div>
+                <div class="form-group">
+                    <label>Code Postal : </label>
+                    <input type="text" <% if (cas == 10) { %> value="<%= user[0].CodePostalFacturationClient %>" <% } %>
+                        class="form-control" name="cp">
+                </div>
+                <div class="form-group">
+                    <label>Pays : </label>
+                    <input type="text" <% if (cas == 10) { %> value="<%= user[0].PaysFacturationClient %>" <% } %>
+                        class="form-control" name="pays">
+                </div>
+                <div class="form-group">
+                    <label>Date de naissance : </label>
+                    <input type="text" <% if (cas == 10) { %> value="<%= user[0].DateNaissanceUtilisateur %>" <% } %>
+                        class="form-control" name="date">
+                    <small id="info" class="form-text text-muted">Format de la date : AAAA-MM-JJ, ex :
+                        2020-11-16</small>
+                </div>
+                <% if (cas != 6) { %>
+                <div id="align">
+                    <button type="submit" class="btn btn-primary">Modifier les infos</button>
+                </div>
+                <% } %>
+            </form>
+        </div>
+        <% if (admin == 0) { %>
+        <div id="retourAccueil">
+            <a href="/EspaceClient">Retour à l'Espace Client</a>
+        </div>
+        <% } %>
+        <% if (admin == 1) { %>
+        <div id="retourAccueil">
+            <a href="/EspaceAdmin">Retour à l'Espace Admin</a>
+        </div>
+        <% } %>
+    </main>
+
+    <%- include('footer') -%>
+</body>
+
+</html>

@@ -31,6 +31,14 @@ class Devis {
         });
     }
 
+    // Fonction permettant de vérifier qu'un devis existe
+    static vérifAvoirDevis(NumDevis, NumUtilisateur, cb) {
+        var query = connection.query('SELECT COUNT(*) as tot FROM avoirdevis WHERE NumDevis = ? AND NumUtilisateur = ?', [NumDevis, NumUtilisateur], (error, results) => {
+            if (error) throw error;
+            cb(results[0].tot);
+        });
+    }
+
     // Fonction permettant de récupérer les devis en attente 
     static avoirDevisClientsAttente(cb) {
         var query = connection.query("SELECT * FROM devis WHERE `LibelléStatutDevis` = 'En attente de validation' ORDER BY DateDevis DESC", (error, results) => {
@@ -56,6 +64,39 @@ class Devis {
     // Fonction permettant de récupérer les factures (devis terminés)
     static avoirFactureClients(cb) {
         var query = connection.query("SELECT * FROM devis WHERE `LibelléStatutDevis` = 'Terminé' ORDER BY DateDevis DESC", (error, results) => {
+            if (error) throw error;
+            for (var i = 0; i < results.length; i++) {
+                results[i].DateDevis = moment(results[i].DateDevis).format("DD MMMM YYYY");
+            }
+            cb(results);
+        });
+    }
+
+    // Fonction permettant de récupérer les devis en attente d'un client 
+    static avoirDevisClientAttente(numUtilisateur, cb) {
+        var query = connection.query("SELECT * FROM devis,avoirdevis WHERE devis.NumDevis = avoirdevis.NumDevis AND `LibelléStatutDevis` = 'En attente de validation' AND NumUtilisateur = ? ORDER BY DateDevis DESC", numUtilisateur, (error, results) => {
+            if (error) throw error;
+            for (var i = 0; i < results.length; i++) {
+                results[i].DateDevis = moment(results[i].DateDevis).format("DD MMMM YYYY");
+            }
+            cb(results);
+        });
+    }
+
+    // Fonction permettant de récupérer les devis en cours d'un client
+    static avoirDevisClientCours(numUtilisateur, cb) {
+        var query = connection.query("SELECT * FROM devis,avoirDevis WHERE devis.NumDevis = avoirdevis.NumDevis AND `LibelléStatutDevis` = 'En cours de traitement' AND NumUtilisateur = ? ORDER BY DateDevis DESC", numUtilisateur, (error, results) => {
+            if (error) throw error;
+            for (var i = 0; i < results.length; i++) {
+                results[i].DateDevis = moment(results[i].DateDevis).format("DD MMMM YYYY");
+            }
+            cb(results);
+        });
+    }
+
+    // Fonction permettant de récupérer les factures (devis terminés) d'un client
+    static avoirFactureClient(numUtilisateur, cb) {
+        var query = connection.query("SELECT * FROM devis,avoirDevis WHERE devis.NumDevis = avoirdevis.NumDevis AND `LibelléStatutDevis` = 'Terminé' AND NumUtilisateur = ? ORDER BY DateDevis DESC", numUtilisateur, (error, results) => {
             if (error) throw error;
             for (var i = 0; i < results.length; i++) {
                 results[i].DateDevis = moment(results[i].DateDevis).format("DD MMMM YYYY");

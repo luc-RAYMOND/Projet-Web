@@ -17,11 +17,15 @@
 </head>
 
 <body>
+    <% if (admin == 1) { %>
     <%- include('headerA') -%>
+    <% } else { %>
+    <%- include('../utilisateur/headerU') -%>
+    <% } %>
     <main id="conteneur" class="well small-lg">
         <div id="content" class="well small-lg">
             <h3>
-                Consultation d'une facture
+                Consultation d'un devis ou d'une facture
             </h3>
             <p>
                 - <a id="lien" href="#Partie1"> Lignes de commandes de la facture.</a>
@@ -63,9 +67,16 @@
                 </tfoot>
             </table>
         </div>
+        <% if (admin == 1){ %>
         <div id="retourAccueil">
             <a href="/EspaceAdmin/GestionDevis">Retour à la Gestion des Devis</a>
         </div>
+        <% } else { %>
+        <% var link = '/EspaceClient/'+NumUtilisateur+'/VoirDevis'; %>
+        <div id="retourAccueil">
+            <a href="<%= link %>">Retour aux Devis</a>
+        </div>
+        <% } %>
     </main>
 
     <%- include('../common/footer') -%>

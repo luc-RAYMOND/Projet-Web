@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html id="HautPage" lang="fr">
+
+<head>
+    <title>L'Atelier d'Alegolas 91 : L'Atelier</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+    <link rel="stylesheet" href="/css/common/header.css" type="text/css">
+    <link rel="stylesheet" href="/css/common/footer.css" type="text/css">
+    <link rel="stylesheet" href="/css/common/general.css" type="text/css">
+    <link rel="stylesheet" href="/css/admin/gestionDevis.css" type="text/css">
+</head>
+
+<body>
+    <%- include('headerU') -%>
+    <main id="conteneur" class="well small-lg">
+        <div id="content" class="well small-lg">
+            <h3>
+                Voir ses Devis
+            </h3>
+            <p>
+                - <a id="lien" href="#Partie1"> Voir ses devis en attente.</a>
+            </p>
+            <p>
+                - <a id="lien" href="#Partie2"> Voir ses devis en cours.</a>
+            </p>
+            <p>
+                - <a id="lien" href="#Partie3"> Consulter ses factures.</a>
+            </p>
+            <br>
+            <p>
+                Les devis en attente de validation correspondent aux premiers jets de devis de vos demandes. Lorsque
+                vous validez ces devis, ceux-ci passent en cours de traitement.
+                Enfin, vous pouvez consulter les factures de vos commandes terminées.
+            </p>
+            <p>
+                Pour faire valider vos devis en attente, ou les faire modifier, vous devez me contacter par mail à cette
+                adresse :
+                <address id="textContact">
+                    <a id="mail" href="mailto:devis@atelier-alegolas91.fr">devis@atelier-alegolas91.fr</a>
+                </address>
+            </p>
+            <br>
+            <h5 id="Partie1">
+                Voir ses devis en attente :
+            </h5>
+            <table class="table-striped">
+                <thead>
+                    <tr>
+                        <th>Date Devis</th>
+                        <th>Client</th>
+                        <th>Statut</th>
+                        <th>Montant total prévisionnel</th>
+                        <th>Consulter</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for (var i=0; i<devisClient.length;i++) { %>
+                    <tr>
+                        <td><%= devisClient[i].DateDevis %></td>
+                        <td>
+                            <%= user[0].NomUtilisateur + ' ' + user[0].PrénomUtilisateur + ', ' + user[0].MailUtilisateur %>
+                        </td>
+                        <td><%= devisClient[i].LibelléStatutDevis %></td>
+                        <td><%= montants[i] %></td>
+                        <% var link3 = 'VoirDevis/'+ devisClient[i].NumDevis+'/ConsulterDevis'; %>
+                        <td><a href=<%= link3 %>><button class="btn btn-success">Consulter</button></a></td>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+            <h5 id="Partie2">
+                Voir ses devis en cours :
+            </h5>
+            <table class="table-striped">
+                <thead>
+                    <tr>
+                        <th>Date Devis</th>
+                        <th>Client</th>
+                        <th>Statut</th>
+                        <th>Montant total prévisionnel</th>
+                        <th>Consulter</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for (var i=0; i<devisClientCours.length;i++) { %>
+                    <tr>
+                        <td><%= devisClientCours[i].DateDevis %></td>
+                        <td>
+                            <%= user[0].NomUtilisateur + ' ' + user[0].PrénomUtilisateur + ', ' + user[0].MailUtilisateur %>
+                        </td>
+                        <td><%= devisClientCours[i].LibelléStatutDevis %></td>
+                        <td><%= montantsCours[i] %></td>
+                        <% var link3 = 'VoirDevis/'+ devisClientCours[i].NumDevis+'/ConsulterDevis'; %>
+                        <td><a href=<%= link3 %>><button class="btn btn-success">Consulter</button></a></td>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+            <h5 id="Partie3">
+                Consulter ses Factures :
+            </h5>
+            <table class="table-striped">
+                <thead>
+                    <tr>
+                        <th>Date Facture</th>
+                        <th>Client</th>
+                        <th>Montant total</th>
+                        <th>Consulter</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for (var i=0; i<factureClients.length;i++) { %>
+                    <tr>
+                        <td><%= factureClients[i].DateDevis %></td>
+                        <td>
+                            <%= user[0].NomUtilisateur + ' ' + user[0].PrénomUtilisateur + ', ' + user[0].MailUtilisateur %>
+                        </td>
+                        <td><%= montantsFactures[i] %></td>
+                        <% var link3 = 'VoirDevis/'+ factureClients[i].NumDevis+'/ConsulterFacture'; %>
+                        <td><a href=<%= link3 %>><button class="btn btn-success">Consulter</button></a></td>
+                    </tr>
+                    <% } %>
+
+                </tbody>
+            </table>
+        </div>
+        <div id="retourEspaceAdmin">
+            <a href="/EspaceClient">Retour à l'Espace Client</a>
+        </div>
+    </main>
+    <%- include('../common/footer') -%>
+</body>
+
+</html>

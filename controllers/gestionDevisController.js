@@ -415,7 +415,7 @@ exports.consulterFacture = (request, response) => {
                 else {
                     // On récupère les lignes de commandes pour les afficher
                     avoirLC.avoirlignesCommandesDevis(numDevis, (LC) => {
-                        response.render('pages/admin/consulterFacture', { numDevis: numDevis, LC: LC });
+                        response.render('pages/admin/consulterFacture', { numDevis: numDevis, LC: LC, admin: admin });
                     });
                 }
             });

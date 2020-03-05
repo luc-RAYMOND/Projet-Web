@@ -23,9 +23,6 @@ class Utilisateur {
     static avoirUtilisateur(NumUtilisateur, cb) {
         var query = connection.query('SELECT * FROM utilisateur WHERE NumUtilisateur = ?', NumUtilisateur, (error, results) => {
             if (error) throw error;
-            if (results[0] != undefined) {
-                results[0].DateNaissanceUtilisateur = moment(results[0].DateNaissanceUtilisateur).format("YYYY-MM-DD");
-            }
             cb(results);
         });
     }

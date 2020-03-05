@@ -28,6 +28,7 @@ var gestionDevis = require('./routes/gestionDevisRoute');
 
 // Tout ce qui est hors connexion
 
+projet.use('/', (request,response) => {response.redirect('/Accueil')});
 projet.use('/', horsConnexionRoute);
 projet.use('/Accueil', accueilPage);
 projet.use('/Services', servicesPage);

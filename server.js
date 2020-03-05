@@ -38,6 +38,12 @@ projet.use('/EspaceAdmin', espaceAdmin);
 projet.use('/EspaceAdmin/GestionArticlesCategories', gestionArticlesCategories);
 projet.use('/EspaceAdmin/GestionDevis', gestionDevis);
 
+// Notre route lorsque l'on n'est pas sur une page existante
+projet.use(function(req, res, next){
+    res.setHeader('Content-Type', 'text/plain');
+    res.status(404).send('Erreur 404 : Page introuvable !');
+});
+
 // On indique le port que l'on va utiliser
-var PORT = process.env.PORT || 8080
+const PORT = process.env.PORT || 8080;
 projet.listen(PORT);

@@ -39,4 +39,5 @@ projet.use('/EspaceAdmin/GestionArticlesCategories', gestionArticlesCategories);
 projet.use('/EspaceAdmin/GestionDevis', gestionDevis);
 
 // On indique le port que l'on va utiliser
-projet.listen(8080);
+var PORT = process.env.PORT || 8080
+projet.listen(PORT);

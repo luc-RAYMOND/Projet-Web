@@ -16,7 +16,7 @@ projet.set('view engine', 'ejs');
 projet.use(express.static('public'));
 
 // On importe les fichiers routes
-var horsConnexionRoute = require('./routes/commonRoute');
+var commonRoute = require('./routes/commonRoute');
 var accueilPage = require('./routes/accueilRoute');
 var servicesPage = require('./routes/servicesRoute');
 var catégoriesPage = require('./routes/catégoriesRoute');
@@ -28,8 +28,7 @@ var gestionDevis = require('./routes/gestionDevisRoute');
 
 // Tout ce qui est hors connexion
 
-projet.use('/', (request,response) => {response.redirect('/Accueil')});
-projet.use('/', horsConnexionRoute);
+projet.use('/', commonRoute);
 projet.use('/Accueil', accueilPage);
 projet.use('/Services', servicesPage);
 projet.use('/Categories', catégoriesPage);

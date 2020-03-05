@@ -5,6 +5,7 @@ var route = express.Router();
 var common = require('../controllers/commonController');
 
 // Les différentes routes hors connexion
+route.get('', (request, response) => {response.redirect('/Accueil')})
 route.get('/Formations', common.formations);
 route.get('/Qui-suis-je', common.contact);
 route.get('/Connexion', common.connexion);

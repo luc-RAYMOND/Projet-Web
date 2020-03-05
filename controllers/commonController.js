@@ -54,7 +54,7 @@ exports.tentativeConnexion = (request, response) => {
     var cas;
     utilisateur.mailExiste(mail, (bonMDP) => {
         // Cas de mail vide
-        if (mail == '') {
+        if (mail == '' || bonMDP[0] == undefined) {
             cas = 0;
             response.render('pages/common/connexion', { cas: cas });
         }

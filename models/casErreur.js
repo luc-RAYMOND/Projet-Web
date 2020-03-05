@@ -116,7 +116,7 @@ exports.casSupprLivreOr = (utilisateur, decoded, next) => {
 exports.casAjoutCatégorie = (libCat, next) => {
     var cas = 10;
     Catégorie.vérifierLibellé(libCat, (result) => {
-        if (libCat == '' || libCat.length > 50) {
+        if (libCat == '' || libCat.length > 50 || libCat.length < 2) {
             // Mauvaise entrée
             cas = 0;
         }
@@ -202,7 +202,7 @@ exports.casErreurModifArticle = (numArticle, titreArticle, texteArticle, catégo
             article.avoirLibelléUnArticle(numArticle, (libCat) => {
                 var length1;
                 // On regarde si l'article a des catégories de base
-                if (catégories != undefined && libCat[0] != undefined) {
+                if (catégories != undefined && libCat != undefined) {
                     // On regarde combien de catégories qu'on veut rajouter
                     if (catégories[0].length == 1) {
                         // S'il y a qu'une catégorie, c'est simplement un String
@@ -352,5 +352,4 @@ exports.casModifPseudo = (pseudo, cb) => {
     else {
         cb(cas);
     }
-
 }

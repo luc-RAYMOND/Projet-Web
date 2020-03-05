@@ -28,7 +28,11 @@
             <h3>
                 Modifier les Infos du Compte
             </h3>
+            <% if (admin == 1) { %>
             <% var link = '/EspaceAdmin/'+ user[0].NumUtilisateur +'/ModifierInfosPerso'; %>
+            <% } else { %>
+            <% var link = '/EspaceClient/'+ user[0].NumUtilisateur +'/ModifierInfosPerso'; %>
+            <% } %>
             <form action="<%= link %>" method="POST">
                 <% if (test) { %>
                 <div id="al" class="alert alert-success" role="alert">

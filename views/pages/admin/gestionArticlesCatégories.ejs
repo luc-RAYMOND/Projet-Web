@@ -63,6 +63,11 @@
                 Modification de la catégorie avec succès !
             </div>
             <% } %>
+            <% if (cas == 9) { %>
+            <div id="align" class="alert alert-danger" role="alert">
+                Vous ne pouvez modifier / Supprimer une catégorie ou un article n'existant pas.
+            </div>
+            <% } %>
             <form action="/EspaceAdmin/GestionArticlesCategories/1" method="POST">
                 <div class="form-group">
                     <label>Libellé de la catégorie :</label>

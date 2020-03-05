@@ -24,7 +24,7 @@ exports.livreOr = (request, response) => {
     var NumUtilisateur;
     var token = request.cookies.token;
     var pageActuelle = 1;
-    affichage.remplirCatégorie(request, response, (next) => {
+    affichage.remplirCatégorie((next) => {
         // On récupère les avis
         livreOr.avoirAvisLO((avis) => {
             // On récupère les pseudos
@@ -38,7 +38,7 @@ exports.livreOr = (request, response) => {
                 verifConnexion.verifConnexion(token, (admin) => {
                     jwt.verify(token, key.key, (err, decoded) => {
                         // On est hors ligne ou le token a expiré
-                        if (decoded == undefined) {
+                        if (err) {
                             NumUtilisateur = -1;
                         }
                         // On récupère le bon numéro
@@ -59,7 +59,7 @@ exports.livreOrPage = (request, response) => {
     var pageActuelle = request.params.numPage;
     var NumUtilisateur;
     var cas = 10;
-    affichage.remplirCatégorie(request, response, (next) => {
+    affichage.remplirCatégorie((next) => {
         // On récupère les avis
         livreOr.avoirAvisLO((avis) => {
             // On récupère les pseudos
@@ -74,7 +74,7 @@ exports.livreOrPage = (request, response) => {
                     verifConnexion.verifConnexion(token, (admin) => {
                         jwt.verify(token, key.key, (err, decoded) => {
                             // On est hors ligne ou le token a expiré
-                            if (decoded == undefined) {
+                            if (err) {
                                 NumUtilisateur = -1;
                             }
                             // On récupère le bon numéro
@@ -99,8 +99,6 @@ exports.envoyerMessageLivreOr = (request, response) => {
     var titre = request.body.titre;
     var texteAvis = request.body.avis;
     var token = request.cookies.token;
-    var NumUtilisateur;
-    var pageActuelle = 1;
     casErreur.casLivreOr(titre, texteAvis, (cas) => {
         jwt.verify(token, key.key, (err, decoded) => {
             // On crée un cookie qui dure 1s, afin que le retour au livre d'or traite le bon cas
@@ -108,7 +106,7 @@ exports.envoyerMessageLivreOr = (request, response) => {
             // On peut insérer dans la BDD et afficher que c'est bon
             if (cas == 2) {
                 // Si le token expire entre temps
-                if (decoded == undefined) {
+                if (err) {
                     response.redirect('/Connexion');
                 }
                 // Sinon on crée le message
@@ -134,9 +132,8 @@ exports.supprimerMessage = (request, response) => {
     var titre;
     var texteAvis;
     var cas = 10;
-    var NumUtilisateur;
     verifConnexion.verifConnexion(token, (admin) => {
-        // On crée un cookie qui dure 1s, afin que le retour au livre d'or traite le bon cas
+        // On crée un cookie qui dure 5s, afin que le retour au livre d'or traite le bon cas
         response.cookie('livreOr', { titre: titre, texteAvis: texteAvis, cas: cas }, { expiresIn: '5s' });
         // On est bien connecté
         if (admin == 1 || admin == 0) {
@@ -152,22 +149,26 @@ exports.supprimerMessage = (request, response) => {
                 // On récupère l'utilisateur qui a créé le message
                 livreOr.utilisateurAvis(numLO, (utilisateur) => {
                     jwt.verify(token, key.key, (err, decoded) => {
-                        // On vérifie que c'est bien le bon utilisateur qui veut supprimer
-                        casErreur.casSupprLivreOr(utilisateur, decoded, (cas) => {
-                            response.cookie('livreOr', { titre: titre, texteAvis: texteAvis, cas: cas }, { expiresIn: '5s' });
-                            if (cas == 3) {
-                                var NumUtilisateur = utilisateur[0].NumUtilisateur;
-                                // Tout est bon, on supprime
-                                livreOr.supprimerAvis(numLO, (cb) => {
+                        if (err) {
+                            response.redirect('/Connexion');
+                        }
+                        else {
+                            // On vérifie que c'est bien le bon utilisateur qui veut supprimer
+                            casErreur.casSupprLivreOr(utilisateur, decoded, (cas) => {
+                                response.cookie('livreOr', { titre: titre, texteAvis: texteAvis, cas: cas }, { expiresIn: '5s' });
+                                if (cas == 3) {
+                                    // Tout est bon, on supprime
+                                    livreOr.supprimerAvis(numLO, (cb) => {
+                                        response.redirect('/LivreOr');
+                                    });
+                                }
+                                else {
+                                    cas == 4
+                                    // Mauvais utilisateur, on envoie une erreur
                                     response.redirect('/LivreOr');
-                                });
-                            }
-                            else {
-                                cas == 4
-                                // Mauvais utilisateur, on envoie une erreur
-                                response.redirect('/LivreOr');
-                            }
-                        });
+                                }
+                            });
+                        }
                     });
                 });
             }
@@ -199,14 +200,15 @@ exports.modifierMessagePage = (request, response) => {
     var NumUtilisateur;
     // On vérifie d'abord qu'on est bien toujours connecté
     verifConnexion.verifConnexion(token, (admin) => {
-        affichage.remplirCatégorie(request, response, (next) => {
+        affichage.remplirCatégorie((next) => {
             // On vérifie que c'est bien un client qui veut modifier son message
             if (admin != 0) {
-                response.redirect('LivreOr');
+                response.redirect('/LivreOr');
             }
             else {
+                // On récupère l'utilisateur qui a créé le message
                 livreOr.utilisateurAvis(numLO, (utilisateur) => {
-                    // On vérifie que le message existe
+                    // S'il n'y en a pas, le message n'existe pas
                     if (utilisateur[0] == undefined) {
                         // Message non existant
                         cas = 4;
@@ -217,20 +219,25 @@ exports.modifierMessagePage = (request, response) => {
                         NumUtilisateur = utilisateur[0].NumUtilisateur;
                         // On vérifie que c'est le bon utilisateur qui veut modifier son message
                         jwt.verify(token, key.key, (err, decoded) => {
-                            if (NumUtilisateur == decoded.NumUtilisateur) {
-                                livreOr.avoirLO(numLO, (avis) => {
-                                    if (cas == 10) {
-                                        titre = avis[0].TitreLO;
-                                        texteAvis = avis[0].AvisLO;
-                                    }
-                                    response.render('pages/common/modifMessageLO', { contient: next, avis: avis, titre: titre, texteAvis: texteAvis, cas: cas });
-                                });
+                            if (err) {
+                                response.redirect('/Connexion');
                             }
-                            // Pas le bon utilisateur
                             else {
-                                cas = 4;
-                                response.cookie('livreOr', { titre: titre, texteAvis: texteAvis, cas: cas }, { expiresIn: '5s' });
-                                response.redirect('/LivreOr')
+                                if (NumUtilisateur == decoded.NumUtilisateur) {
+                                    livreOr.avoirLO(numLO, (avis) => {
+                                        if (cas == 10) {
+                                            titre = avis[0].TitreLO;
+                                            texteAvis = avis[0].AvisLO;
+                                        }
+                                        response.render('pages/common/modifMessageLO', { contient: next, avis: avis, titre: titre, texteAvis: texteAvis, cas: cas });
+                                    });
+                                }
+                                // Pas le bon utilisateur
+                                else {
+                                    cas = 4;
+                                    response.cookie('livreOr', { titre: titre, texteAvis: texteAvis, cas: cas }, { expiresIn: '5s' });
+                                    response.redirect('/LivreOr')
+                                }
                             }
                         });
                     }
@@ -253,10 +260,10 @@ exports.modifierMessage = (request, response) => {
             // On peut insérer dans la BDD et afficher que c'est bon
             if (cas == 2) {
                 // Si le token expire entre temps
-                if (decoded == undefined) {
+                if (err) {
                     response.redirect('/Connexion');
                 }
-                // Sinon on crée le message
+                // Sinon on update le message
                 else {
                     livreOr.modifierAvis(titre, texteAvis, numLO, (cb) => {
                         // Et on retourne sur le livre d'or

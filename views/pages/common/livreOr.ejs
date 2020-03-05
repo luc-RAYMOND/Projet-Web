@@ -54,10 +54,12 @@
             <% } %>
             <% if ((admin == 0 || admin == 1) && pageActuelle == 1) { %>
             <div id="écrireComment">
+                <% if (admin == 0){ %>
                 <p id="info">
                     Vous pouvez écrire un message ci-dessous, avec un court titre (50 caractères maximum) suivi de votre
                     avis (400 caractères maximum) :
                 </p>
+                <% } %>
                 <% if (cas == 3) { %>
                 <div id="al" class="alert alert-success" role="alert">
                     Message supprimé avec succès !

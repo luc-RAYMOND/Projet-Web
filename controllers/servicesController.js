@@ -5,7 +5,7 @@ var verifConnexion = require('../models/verifConnexion');
 // Permet de charger la page des services de peinture
 exports.servicesPeinture = (request, response) => {
     var token = request.cookies.token;
-    affichage.remplirCatégorie(request, response, (next) => {
+    affichage.remplirCatégorie((next) => {
         verifConnexion.verifConnexion(token, (admin) => {
             response.render('pages/common/services/servicesPeinture', { contient: next, admin: admin });
         });
@@ -15,7 +15,7 @@ exports.servicesPeinture = (request, response) => {
 // Permet de charger la page des services de décors
 exports.servicesDécors = (request, response) => {
     var token = request.cookies.token;
-    affichage.remplirCatégorie(request, response, (next) => {
+    affichage.remplirCatégorie((next) => {
         verifConnexion.verifConnexion(token, (admin) => {
             response.render('pages/common/services/servicesDécors', { contient: next, admin: admin });
         });
@@ -25,7 +25,7 @@ exports.servicesDécors = (request, response) => {
 // Permet de charger la page des services annexes
 exports.servicesAnnexes = (request, response) => {
     var token = request.cookies.token;
-    affichage.remplirCatégorie(request, response, (next) => {
+    affichage.remplirCatégorie((next) => {
         verifConnexion.verifConnexion(token, (admin) => {
             response.render('pages/common/services/servicesAnnexes', { contient: next, admin: admin });
         });

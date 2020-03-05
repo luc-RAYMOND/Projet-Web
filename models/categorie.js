@@ -20,11 +20,16 @@ class Categorie {
 
     // Fonction permettant d'avoir le nombre d'articles par catégorie
     static avoirNombresCatégories(results, cb) {
-        for (var i = 0; i < results.length; i++) {
-            var query = connection.query('SELECT count(*) as ite FROM avoircatégorie WHERE NumCatégorie = ?', results[i].NumCatégorie, (error, results2) => {
-                if (error) throw error;
-                cb(results2);
-            });
+        if (results[0] != undefined) {
+            for (var i = 0; i < results.length; i++) {
+                var query = connection.query('SELECT count(*) as ite FROM avoircatégorie WHERE NumCatégorie = ?', results[i].NumCatégorie, (error, results2) => {
+                    if (error) throw error;
+                    cb(results2);
+                });
+            }
+        }
+        else {
+            cb(results);
         }
     }
 
@@ -33,6 +38,14 @@ class Categorie {
         var query = connection.query('SELECT NumCatégorie,LibelléCatégorie FROM catégorie WHERE LibelléCatégorie = ?', lib, (error, results) => {
             if (error) throw error;
             cb(results);
+        });
+    }
+
+    // Fonction permettant de vérifier qu'une catégorie existe avec son numéro
+    static vérifierNumCatégorie(num, cb) {
+        var query = connection.query('SELECT COUNT(*) as tot FROM catégorie WHERE NumCatégorie = ?', num, (error, results) => {
+            if (error) throw error;
+            cb(results[0].tot);
         });
     }
 

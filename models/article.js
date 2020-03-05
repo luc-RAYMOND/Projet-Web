@@ -28,11 +28,16 @@ class Article {
 
     // Fonction permettant de récupérer les catégories d'un article pour plusieurs articles
     static avoirLibellé(num, cb) {
-        for (var i = 0; i < num.length; i++) {
-            var query = connection.query('SELECT Catégorie.NumCatégorie,LibelléCatégorie FROM article,catégorie,avoircatégorie WHERE article.NumArticle = ? AND article.NumArticle = avoircatégorie.NumArticle AND avoircatégorie.NumCatégorie = catégorie.NumCatégorie', num[i].NumArticle, (error, results) => {
-                if (error) throw error;
-                cb(results);
-            });
+        if (num[0] != undefined) {
+            for (var i = 0; i < num.length; i++) {
+                var query = connection.query('SELECT Catégorie.NumCatégorie,LibelléCatégorie FROM article,catégorie,avoircatégorie WHERE article.NumArticle = ? AND article.NumArticle = avoircatégorie.NumArticle AND avoircatégorie.NumCatégorie = catégorie.NumCatégorie', num[i].NumArticle, (error, results) => {
+                    if (error) throw error;
+                    cb(results);
+                });
+            }
+        }
+        else {
+            cb(num);
         }
     }
 
@@ -46,11 +51,16 @@ class Article {
 
     // Fonction permettant de récupérer les images d'un article
     static avoirImage(num, cb) {
-        for (var i = 0; i < num.length; i++) {
-            var query = connection.query('SELECT LienImage FROM article,image,avoirimage WHERE article.NumArticle = ? AND article.NumArticle = avoirimage.NumArticle AND avoirimage.NumImage=image.NumImage', num[i].NumArticle, (error, results) => {
-                if (error) throw error;
-                cb(results);
-            });
+        if (num[0] != undefined) {
+            for (var i = 0; i < num.length; i++) {
+                var query = connection.query('SELECT LienImage FROM article,image,avoirimage WHERE article.NumArticle = ? AND article.NumArticle = avoirimage.NumArticle AND avoirimage.NumImage=image.NumImage', num[i].NumArticle, (error, results) => {
+                    if (error) throw error;
+                    cb(results);
+                });
+            }
+        }
+        else {
+            cb(num);
         }
     }
 

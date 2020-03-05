@@ -8,7 +8,7 @@ exports.accueil = (request, response) => {
     var token = request.cookies.token;
     var pageActuelle = 1;
     var cas = 10;
-    statistiques.avoirStatsMois((cb) => {});
+    statistiques.avoirStatsMois((cb) => { });
     if (request.cookies.infoA != undefined) {
         // On récupère toutes les valeurs
         cas = request.cookies.infoA.cas;
@@ -21,12 +21,12 @@ exports.accueil = (request, response) => {
         // On crée un cookie qui restera 1h
         response.cookie('vue', { expiresIn: '1h' });
         // On ajoute une vue
-        statistiques.gagnerUneVue((cb) => {});
+        statistiques.gagnerUneVue((cb) => { });
     }
-    affichage.remplirCatégorie(request, response, (contient) => {
-        affichage.remplirArticle(request, response, contient, (articles) => {
-            affichage.remplirCatégorieArticle(request, response, contient, articles, (cat) => {
-                affichage.remplirImageArticle(request, response, contient, articles, cat, (img) => {
+    affichage.remplirCatégorie((contient) => {
+        affichage.remplirArticle((articles) => {
+            affichage.remplirCatégorieArticle(articles, (cat) => {
+                affichage.remplirImageArticle(articles, (img) => {
                     var trimStart = (pageActuelle - 1) * 5;
                     var trimEnd = trimStart + 5;
                     // Une version coupée de nos tableaux, pour en afficher au maximum 5 par pages
@@ -49,10 +49,10 @@ exports.accueilPage = (request, response) => {
     var token = request.cookies.token;
     var cas = 10;
     var pageActuelle = request.params.numPage;
-    affichage.remplirCatégorie(request, response, (contient) => {
-        affichage.remplirArticle(request, response, contient, (articles) => {
-            affichage.remplirCatégorieArticle(request, response, contient, articles, (cat) => {
-                affichage.remplirImageArticle(request, response, contient, articles, cat, (img) => {
+    affichage.remplirCatégorie((contient) => {
+        affichage.remplirArticle((articles) => {
+            affichage.remplirCatégorieArticle(articles, (cat) => {
+                affichage.remplirImageArticle(articles, (img) => {
                     var trimStart = (pageActuelle - 1) * 5;
                     var trimEnd = trimStart + 5;
                     // Une version coupée de nos tableaux, pour en afficher au maximum 5 par pages

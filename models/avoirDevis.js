@@ -27,6 +27,14 @@ class AvoirDevis {
         });
     }
 
+    // Fonction permettant de supprimer le lien entre les devis et son utilisateur
+    static supprimerLiensDevisUtilisateur(numUtilisateur, cb) {
+        var query = connection.query('DELETE FROM avoirdevis WHERE NumUtilisateur = ?', numUtilisateur, (error, results) => {
+            if (error) throw error;
+            cb(results);
+        });
+    }
+
     // Fonction permettant de mettre à jour le lien entre un devis et un utilisateur
     static updateLienDevis(numUtilisateur, numDevis, cb) {
         var query = connection.query('UPDATE avoirdevis SET NumUtilisateur = ? WHERE NumDevis = ?', [numUtilisateur, numDevis], (error, results) => {

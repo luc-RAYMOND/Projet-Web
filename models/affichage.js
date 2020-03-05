@@ -66,53 +66,41 @@ moment.locale('fr', {
 
 // On utilise les fonctions faisant appel à la BDD pour afficher les catégories
 // Cette variable permet de remplir les catégories à chaque fois qu'on charge une page
-exports.remplirCatégorie = (req, res, next) => {
+exports.remplirCatégorie = (next) => {
     Catégorie.avoirNomCatégories((nom) => {
         var contient = [];
         var compteur1 = 0;
         Catégorie.avoirNombresCatégories(nom, (num) => {
             // On remplie le tableau des valeurs
-            contient[compteur1] = { nom: nom[compteur1].LibelléCatégorie, num: num[0].ite, numCat: nom[compteur1].NumCatégorie };
-            compteur1++;
-            if (compteur1 == nom.length) {
-                // On fait un tri bulle ici permettant d'avoir en premier les catégories avec le plus d'articles d'abord
-                for (var k = contient.length; k > 0; k--) {
-                    for (var j = 0; j < k - 1; j++) {
-                        if (contient[j + 1].num > contient[j].num) {
-                            var intermediaire = contient[j];
-                            contient[j] = contient[j + 1];
-                            contient[j + 1] = intermediaire;
+            if (num[0] != undefined) {
+                contient[compteur1] = { nom: nom[compteur1].LibelléCatégorie, num: num[0].ite, numCat: nom[compteur1].NumCatégorie };
+                compteur1++;
+                if (compteur1 == nom.length) {
+                    // On fait un tri bulle ici permettant d'avoir en premier les catégories avec le plus d'articles d'abord
+                    for (var k = contient.length; k > 0; k--) {
+                        for (var j = 0; j < k - 1; j++) {
+                            if (contient[j + 1].num > contient[j].num) {
+                                var intermediaire = contient[j];
+                                contient[j] = contient[j + 1];
+                                contient[j + 1] = intermediaire;
+                            }
                         }
                     }
+                    next(contient);
                 }
+            }
+            else {
                 next(contient);
             }
         });
     });
 }
 
-// Nous permet d'avoir les pseudos de ceux ayant posté dans le livre d'or
-exports.avoirPseudos = (avis, next) => {
-    // On stock les avis et le pseudo
-    var avisLO = [];
-    var compteur = 0;
-    // On remplie les valeurs des libellés de catégorie
-    utilisateur.avoirPseudo(avis, (pseudo) => {
-        avisLO[compteur] = pseudo[0].PseudoUtilisateur;
-        compteur++;
-        if (compteur == avis.length) {
-            next(avisLO);
-        }
-    });
-}
-
 // Permet de récupérer les infos des articles
-exports.remplirArticle = (req, res, contient, next) => {
+exports.remplirArticle = (next) => {
     // Va contenir tous les articles
     var articles = [];
     Article.avoirArticles((art) => {
-        var compteur2 = 0;
-        var compteur3 = 0;
         // On rentre les valeurs dans l'article correspondant
         for (var i = 0; i < art.length; i++) {
             articles[i] =
@@ -128,12 +116,10 @@ exports.remplirArticle = (req, res, contient, next) => {
 }
 
 // On remplie les articles faisant partie de la catégorie en paramètre
-exports.remplirArticleCatégorie = (req, res, contient, NumCatégorie, next) => {
+exports.remplirArticleCatégorie = (NumCatégorie, next) => {
     // Va contenir tous les articles
     var articles = [];
     Article.avoirArticlesCatégorie(NumCatégorie, (art) => {
-        var compteur2 = 0;
-        var compteur3 = 0;
         // On rentre les valeurs dans l'article correspondant
         for (var i = 0; i < art.length; i++) {
             articles[i] =
@@ -149,33 +135,68 @@ exports.remplirArticleCatégorie = (req, res, contient, NumCatégorie, next) => 
 }
 
 // Permet d'avoir les catégories de chaque article
-exports.remplirCatégorieArticle = (req, res, contient, articles, next) => {
+exports.remplirCatégorieArticle = (articles, next) => {
     // Va contenir les catégories de chaque article
     var cat = [];
     var compteur2 = 0;
     compteur2 = 0;
     // On remplie les valeurs des libellés de catégorie
     Article.avoirLibellé(articles, (libCat) => {
-        cat[compteur2] = libCat;
-        compteur2++;
-        if (compteur2 == articles.length) {
-            next(cat);
+        if (articles.length == 0) {
+            next(articles);
+        }
+        else {
+            cat[compteur2] = libCat;
+            compteur2++;
+            if (compteur2 == articles.length) {
+                next(cat);
+            }
         }
     });
 }
 
 // Permet d'avoir les images de chaque article
-exports.remplirImageArticle = (req, res, contient, articles, cat, next) => {
+exports.remplirImageArticle = (articles, next) => {
     // Va contenir le lien des images de chaque article
     var img = [];
     var compteur3 = 0;
     compteur3 = 0;
     // On remplie les valeurs des libellés de catégorie
     Article.avoirImage(articles, (lienImg) => {
-        img[compteur3] = lienImg;
-        compteur3++;
-        if (compteur3 == articles.length) {
-            next(img);
+        if (articles.length == 0) {
+            next(articles);
+        }
+        else {
+            img[compteur3] = lienImg;
+            compteur3++;
+            if (compteur3 == articles.length) {
+                next(img);
+            }
+        }
+    });
+}
+
+// Nous permet d'avoir les pseudos de ceux ayant posté dans le livre d'or
+exports.avoirPseudos = (avis, next) => {
+    // On stock les avis et le pseudo
+    var avisLO = [];
+    var compteur = 0;
+    // On remplie les valeurs des libellés de catégorie
+    utilisateur.avoirPseudo(avis, (pseudo) => {
+        if(avis[0] != undefined){
+            if (pseudo[0] != undefined) {
+                avisLO[compteur] = pseudo[0].PseudoUtilisateur;
+            }
+            else {
+                avisLO[compteur] = 'Ancien Client';
+            }
+            compteur++;
+            if (compteur == avis.length) {
+                next(avisLO);
+            }
+        }
+        else{
+            next(avis);
         }
     });
 }
@@ -185,7 +206,6 @@ exports.avoirUtilisateursDevis = (devisClients, next) => {
     // Va contenir les utilisateurs pour chaque devis
     var users = [];
     var compteur4 = 0;
-    compteur4 = 0;
     if (devisClients[0] == undefined) {
         next(users);
     }

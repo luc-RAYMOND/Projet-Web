@@ -80,11 +80,24 @@ exports.supprimerCatégorie = (request, response) => {
     var token = request.cookies.token;
     verifConnexion.verifConnexion(token, (admin) => {
         if (admin == 1) {
-            Catégorie.supprimerCatégorie(numCat, (cb) => {
-                // On le supprime, et on indique qu'on l'a bien supprimé sur la page
-                var cas = 3;
-                response.cookie('gestionAC', { cas: cas }, { expiresIn: '5s' });
-                response.redirect('/EspaceAdmin/GestionArticlesCategories');
+            Catégorie.avoirLibellé(numCat, (libCat) => {
+                // On vérifie que la catégorie existe
+                if (libCat == undefined) {
+                    cas = 9;
+                    response.cookie('gestionAC', { cas: cas }, { expiresIn: '5s' });
+                    response.redirect('/EspaceAdmin/GestionArticlesCategories');
+                }
+                else {
+                    // On supprime les liens entre cette catégorie et les différents articles
+                    avoircategorie.supprimerLienCatégoriesArticle(numCat, (next) => {
+                        Catégorie.supprimerCatégorie(numCat, (cb) => {
+                            // On le supprime, et on indique qu'on l'a bien supprimé sur la page
+                            var cas = 3;
+                            response.cookie('gestionAC', { cas: cas }, { expiresIn: '5s' });
+                            response.redirect('/EspaceAdmin/GestionArticlesCategories');
+                        });
+                    });
+                }
             });
         }
         else {
@@ -109,7 +122,15 @@ exports.modifierCatégoriePage = (request, response) => {
         if (admin == 1) {
             // On rend la page en remplissant le champ et en renvoyant le cas d'erreur s'il y en a
             Catégorie.avoirLibellé(numCat, (libCat) => {
-                response.render('pages/admin/modifierCatégorie', { cas: cas, libCat: libCat, numCat: numCat });
+                // on vérifie que la catégorie existe
+                if (libCat == undefined) {
+                    cas = 9;
+                    response.cookie('gestionAC', { cas: cas }, { expiresIn: '5s' });
+                    response.redirect('/EspaceAdmin/GestionArticlesCategories');
+                }
+                else {
+                    response.render('pages/admin/modifierCatégorie', { cas: cas, libCat: libCat, numCat: numCat });
+                }
             });
         }
         else {
@@ -215,14 +236,22 @@ exports.modifierArticle = (request, response) => {
         if (admin == 1) {
             // On récupère les infos nécessaires à afficher (article, images et catégories)
             article.avoirArticle(numArticle, (art) => {
-                article.avoirLibellé(art, (catégories) => {
-                    avoirImage.avoirLienImagesArticle(numArticle, (Img) => {
-                        // Affiche toutes les catégories existantes
-                        Catégorie.avoirNomCatégories((libCat) => {
-                            response.render('pages/admin/modifierArticle', { article: art, catégories: catégories, cas: cas, Img: Img, libCat: libCat });
+                // On vérifie que l'article existe
+                if (art[0] == undefined) {
+                    cas = 9;
+                    response.cookie('gestionAC', { cas: cas }, { expiresIn: '5s' });
+                    response.redirect('/EspaceAdmin/GestionArticlesCategories');
+                }
+                else {
+                    article.avoirLibellé(art, (catégories) => {
+                        avoirImage.avoirLienImagesArticle(numArticle, (Img) => {
+                            // Affiche toutes les catégories existantes
+                            Catégorie.avoirNomCatégories((libCat) => {
+                                response.render('pages/admin/modifierArticle', { article: art, catégories: catégories, cas: cas, Img: Img, libCat: libCat });
+                            });
                         });
                     });
-                });
+                }
             });
         }
         else {
@@ -239,13 +268,25 @@ exports.supprimerCatégorieArticle = (request, response) => {
     var cas = 10;
     verifConnexion.verifConnexion(token, (admin) => {
         if (admin == 1) {
-            // On enlève le lien avec catégorie en question 
-            avoircategorie.supprimerCatégorieArticle(numArticle, numCatégorie, (nbAffect) => {
-                cas = 1;
-                // On renvoie que c'est bien un succès
-                response.cookie('gestionModifA', { cas: cas }, { expiresIn: '5s' });
-                var link = '/EspaceAdmin/GestionArticlesCategories/' + numArticle + '/ModifierArticle';
-                response.redirect(link);
+            article.avoirArticle(numArticle, (art) => {
+                avoircategorie.vérifArticleCatégorie(numArticle, numCatégorie, (tot) => {
+                    // On vérifie que le lien entre l'article et la catégorie existe
+                    if (art[0] == undefined || tot == 0) {
+                        cas = 9;
+                        response.cookie('gestionAC', { cas: cas }, { expiresIn: '5s' });
+                        response.redirect('/EspaceAdmin/GestionArticlesCategories');
+                    }
+                    else {
+                        // On enlève le lien avec catégorie en question 
+                        avoircategorie.supprimerCatégorieArticle(numArticle, numCatégorie, (nbAffect) => {
+                            cas = 1;
+                            // On renvoie que c'est bien un succès
+                            response.cookie('gestionModifA', { cas: cas }, { expiresIn: '5s' });
+                            var link = '/EspaceAdmin/GestionArticlesCategories/' + numArticle + '/ModifierArticle';
+                            response.redirect(link);
+                        });
+                    }
+                });
             });
         }
         else {
@@ -261,14 +302,27 @@ exports.supprimerImageArticle = (request, response) => {
     var numImage = request.params.numImage;
     verifConnexion.verifConnexion(token, (admin) => {
         if (admin == 1) {
-            // On supprime le lien image article
-            avoirImage.supprimerLienImageArticle(numArticle, numImage, (cb) => {
-                // Puis on supprime l'image du serveur
-                image.supprimerImage(numImage, (cb) => {
-                    cas = 2;
-                    response.cookie('gestionModifA', { cas: cas }, { expiresIn: '5s' });
-                    var link = '/EspaceAdmin/GestionArticlesCategories/' + numArticle + '/ModifierArticle';
-                    response.redirect(link);
+            // On vérifie que l'article existe
+            article.avoirArticle(numArticle, (art) => {
+                avoirImage.vérifArticleImage(numArticle, numImage, (tot) => {
+                    // On vérifie que le lien entre l'article et l'image existe
+                    if (art[0] == undefined || tot == 0) {
+                        cas = 9;
+                        response.cookie('gestionAC', { cas: cas }, { expiresIn: '5s' });
+                        response.redirect('/EspaceAdmin/GestionArticlesCategories');
+                    }
+                    else {
+                        // On supprime le lien image article
+                        avoirImage.supprimerLienImageArticle(numArticle, numImage, (cb) => {
+                            // Puis on supprime l'image du serveur
+                            image.supprimerImage(numImage, (cb) => {
+                                cas = 2;
+                                response.cookie('gestionModifA', { cas: cas }, { expiresIn: '5s' });
+                                var link = '/EspaceAdmin/GestionArticlesCategories/' + numArticle + '/ModifierArticle';
+                                response.redirect(link);
+                            });
+                        });
+                    }
                 });
             });
         }
@@ -284,24 +338,33 @@ exports.supprimerArticle = (request, response) => {
     var numArticle = request.params.numArticle;
     verifConnexion.verifConnexion(token, (admin) => {
         if (admin == 1) {
-            // On supprime également les images du serveur, par contre on garde les catégories intactes
-            avoirImage.avoirImagesArticle(numArticle, (numsImg) => {
-                // On supprime les liens entre images/article
-                avoirImage.supprimerLienImagesArticle(numArticle, (next1) => {
-                    // On supprime les liens catégories/article
-                    avoircategorie.supprimerCatégoriesArticle(numArticle, (next2) => {
-                        // On enlève les images du serveur
-                        image.supprimerImages(numsImg, (next2) => {
-                            // Et enfin on supprime l'article
-                            article.supprimerArticle(numArticle, (next3) => {
-                                var cas = 1;
-                                response.cookie('infoA', { cas: cas }, { expiresIn: '5s' });
-                                response.redirect('/Accueil');
+            article.avoirArticle(numArticle, (art) => {
+                // On vérifie que l'article existe
+                if (art[0] == undefined) {
+                    cas = 9;
+                    response.cookie('gestionAC', { cas: cas }, { expiresIn: '5s' });
+                    response.redirect('/EspaceAdmin/GestionArticlesCategories');
+                }
+                else {
+                    // On supprime également les images du serveur, par contre on garde les catégories intactes
+                    avoirImage.avoirImagesArticle(numArticle, (numsImg) => {
+                        // On supprime les liens entre images/article
+                        avoirImage.supprimerLienImagesArticle(numArticle, (next1) => {
+                            // On supprime les liens catégories/article
+                            avoircategorie.supprimerCatégoriesArticle(numArticle, (next2) => {
+                                // On enlève les images du serveur
+                                image.supprimerImages(numsImg, (next2) => {
+                                    // Et enfin on supprime l'article
+                                    article.supprimerArticle(numArticle, (next3) => {
+                                        var cas = 1;
+                                        response.cookie('infoA', { cas: cas }, { expiresIn: '5s' });
+                                        response.redirect('/Accueil');
+                                    });
+                                });
                             });
                         });
                     });
-
-                });
+                }
             });
         }
         else {
@@ -317,7 +380,9 @@ exports.modifierArticleAction = (request, response) => {
     verifConnexion.verifConnexion(token, (admin) => {
         if (admin == 1) {
             upload(request, response, (err) => {
-                if (err) throw err;
+                if (err) {
+                    response.redirect('/Accueil');
+                }
                 else {
                     var titreArticle = request.body.TitreArticle;
                     var texteArticle = request.body.texteArticle;

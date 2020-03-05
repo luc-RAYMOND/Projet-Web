@@ -134,7 +134,7 @@
             <% var link = '/EspaceAdmin/GestionDevis/' + numDevis + '/ModifierDevis' %>
             <form action="<%= link %>" method="POST">
                 <label id="marg">Contenu de la ligne (400 caractères maximum) :</label>
-                <textarea class="form-control" name="libellé"><% if (cas != 4) { %><%= libellé %> <% } %></textarea>
+                <textarea class="form-control" name="libellé"><% if (cas != 4) { %><%= libellé %><% } %></textarea>
                 <label id="marg">Quantité :</label>
                 <input <% if(cas != 4) { %> value="<%= quantité %>" <% } %> class="form-control" name="quantité">
                 <label id="marg">Prix unitaire (ex: 10.45):</label>

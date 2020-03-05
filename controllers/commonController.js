@@ -14,7 +14,7 @@ var bcrypt = require('bcrypt');
 // Permet de charger la page formations
 exports.formations = (request, response) => {
     var token = request.cookies.token;
-    affichage.remplirCatégorie(request, response, (next) => {
+    affichage.remplirCatégorie((next) => {
         verifConnexion.verifConnexion(token, (admin) => {
             response.render('pages/common/formations', { contient: next, admin: admin });
         });
@@ -24,7 +24,7 @@ exports.formations = (request, response) => {
 // Permet de charger la page qui suis-je ?
 exports.contact = (request, response) => {
     var token = request.cookies.token;
-    affichage.remplirCatégorie(request, response, (next) => {
+    affichage.remplirCatégorie((next) => {
         verifConnexion.verifConnexion(token, (admin) => {
             response.render('pages/common/quiSuisJe', { contient: next, admin: admin });
         });
@@ -127,6 +127,7 @@ exports.tentativeInscription = (request, response) => {
     casErreur.casInscription(pseudo, mail, nom, prenom, mdp, mdpConf, (cas) => {
         if (cas == 6) {
             bcrypt.hash(mdp, saltRounds, (err, mdpHash) => {
+                if (err) throw err;
                 var mdpH = mdpHash
                 utilisateur.newUtilisateur(mail, nom, prenom, pseudo, mdpH, tel, ville, rue, cp, pays, date, (cb) => {
                     response.render('pages/common/inscription', { cas: cas, mail: mail, nom: nom, prenom: prenom, pseudo: pseudo, tel: tel, ville: ville, rue: rue, cp: cp, pays: pays, date: date });

@@ -26,7 +26,7 @@ class avoirImage {
             cb(results);
         });
     }
-    
+
 
     // Fonction permettant de supprimer les lien entre des images et un article
     static supprimerLienImagesArticle(numArt, cb) {
@@ -35,12 +35,20 @@ class avoirImage {
             cb(results);
         });
     }
-    
+
     // Fonction permettant de supprimer le lien entre une image et un article
-    static supprimerLienImageArticle(numArt,numImage, cb) {
-    var query = connection.query('DELETE FROM avoirimage WHERE NumArticle = ? AND NumImage = ?', [numArt,numImage], (error, results) => {
+    static supprimerLienImageArticle(numArt, numImage, cb) {
+        var query = connection.query('DELETE FROM avoirimage WHERE NumArticle = ? AND NumImage = ?', [numArt, numImage], (error, results) => {
             if (error) throw error;
             cb(results);
+        });
+    }
+
+    // Fonction permettant de vérifier le lien entre un article et une image
+    static vérifArticleImage(numArt, NumImage, nb) {
+        var query = connection.query('SELECT COUNT(*) as tot FROM avoirImage WHERE NumArticle = ? AND NumImage = ?', [numArt, NumImage], (error, results) => {
+            if (error) throw error;
+            nb(results[0].tot);
         });
     }
 }

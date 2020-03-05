@@ -319,42 +319,48 @@ exports.associerUtilisateurDevis = (request, response) => {
     var numDevis = request.params.numDevis;
     var user = request.body.utilisateur;
     var i = 1;
-    var numUtilisateur = user[0];
-    var k = user[i];
-    // Permet de récupérer le num Utilisateur dans la choicebox
-    while (k != ':') {
-        numUtilisateur += user[i];
-        i++;
-        k = user[i]
-    }
-    verifConnexion.verifConnexion(token, (admin) => {
-        if (admin == 1) {
-            // On vérifie que le devis demandé existe
-            devis.vérifDevis(numDevis, (vérif) => {
-                if (vérif[0].tot == 0) {
-                    cas = 1;
-                    response.cookie('gestionDevis', { cas: cas }, { expiresIn: '5s' });
-                    response.redirect('/EspaceAdmin/GestionDevis')
-                }
-                else {
-                    // Tout va bien, on met à jour
-                    var link = '/EspaceAdmin/GestionDevis/' + numDevis + '/ModifierDevis#Partie1';
-                    cas = 8;
-                    response.cookie('ajoutLC', { cas: cas }, { expiresIn: '5s' });
-                    // On met le prénom provisoire comme indéfini dans le devis
-                    devis.updateNomPrénomProv(numDevis, (cb) => {
-                        // On crée le lien entre l'utilisateur et le devis
-                        avoirDevis.créerLienDevis(numUtilisateur, numDevis, (cb) => {
-                            response.redirect(link);
+    if (user != undefined) {
+        var numUtilisateur = user[0];
+        var k = user[i];
+        // Permet de récupérer le num Utilisateur dans la choicebox
+        while (k != ':') {
+            numUtilisateur += user[i];
+            i++;
+            k = user[i]
+        }
+        verifConnexion.verifConnexion(token, (admin) => {
+            if (admin == 1) {
+                // On vérifie que le devis demandé existe
+                devis.vérifDevis(numDevis, (vérif) => {
+                    if (vérif[0].tot == 0) {
+                        cas = 1;
+                        response.cookie('gestionDevis', { cas: cas }, { expiresIn: '5s' });
+                        response.redirect('/EspaceAdmin/GestionDevis')
+                    }
+                    else {
+                        // Tout va bien, on met à jour
+                        var link = '/EspaceAdmin/GestionDevis/' + numDevis + '/ModifierDevis#Partie1';
+                        cas = 8;
+                        response.cookie('ajoutLC', { cas: cas }, { expiresIn: '5s' });
+                        // On met le prénom provisoire comme indéfini dans le devis
+                        devis.updateNomPrénomProv(numDevis, (cb) => {
+                            // On crée le lien entre l'utilisateur et le devis
+                            avoirDevis.créerLienDevis(numUtilisateur, numDevis, (cb) => {
+                                response.redirect(link);
+                            });
                         });
-                    });
-                }
-            });
-        }
-        else {
-            response.redirect('/Connexion');
-        }
-    });
+                    }
+                });
+            }
+            else {
+                response.redirect('/Connexion');
+            }
+        });
+    }
+    else {
+        var link = '/EspaceAdmin/GestionDevis/' + numDevis + '/ModifierDevis#Partie4';
+        response.redirect(link)
+    }
 }
 
 // Fonction permettant de modifier l'utilisateur d'un devis 
@@ -385,7 +391,6 @@ exports.modifierUtilisateurDevis = (request, response) => {
                     var link = '/EspaceAdmin/GestionDevis/' + numDevis + '/ModifierDevis#Partie1';
                     cas = 9;
                     response.cookie('ajoutLC', { cas: cas }, { expiresIn: '5s' });
-                    // On met le prénom provisoire comme indéfini dans le devis
                     // On update le lien entre l'utilisateur et le devis
                     avoirDevis.updateLienDevis(numUtilisateur, numDevis, (cb) => {
                         response.redirect(link);

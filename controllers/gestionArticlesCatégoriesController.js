@@ -10,7 +10,6 @@ var avoircategorie = require('../models/avoirCatégorie');
 // Va nous permettre de gérer l'upload d'image
 const multer = require('multer');
 const multerGoogleStorage = require('multer-google-storage');
-const fs = require('fs');
 
 // Nous permet d'upload les images sur le cloud
 var uploadHandler = multer({
@@ -60,9 +59,12 @@ exports.ajoutCatégorie = (request, response) => {
                 // On peut l'insérer dans la BDD
                 if (cas == 2) {
                     Catégorie.ajouterCatégorie(libCat, (cb) => {
+                        response.redirect('/EspaceAdmin/GestionArticlesCategories');
                     });
                 }
-                response.redirect('/EspaceAdmin/GestionArticlesCategories');
+                else {
+                    response.redirect('/EspaceAdmin/GestionArticlesCategories');
+                }
             });
         }
         else {
@@ -409,10 +411,6 @@ exports.modifierArticleAction = (request, response) => {
                             // On supprime les images qui viennent d'être upload
                             if (images != undefined) {
                                 for (var i = 0; i < images.length; i++) {
-                                    var link = 'public/images/articles/' + images[i].filename;
-                                    fs.unlink(link, (err) => {
-                                        if (err) throw err;
-                                    });
                                 }
                             }
                             var link = '/EspaceAdmin/GestionArticlesCategories/' + numArticle + '/ModifierArticle';

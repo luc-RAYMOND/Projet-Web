@@ -35,36 +35,24 @@ class Image {
         else {
             for (var i = 0; i < images.length; i++) {
                 var num = images[i].NumImage;
-                this.lienUneImage(num, (lien) => {
-                    var link = 'public/images/articles/' + lien[0].LienImage;
-                    // On supprime l'immage du serveur
-                    fs.unlink(link, (err) => {
-                        if (err) throw err;
-                        // Puis le lien de l'image avec l'article
-                        var query = connection.query('DELETE FROM image WHERE NumImage = ?', num, (error, results) => {
-                            if (error) throw error;
-                            cb(results);
-                        });
-                    });
-                })
+                // On supprime l'immage du cloud
+                // Puis le lien de l'image avec l'article
+                var query = connection.query('DELETE FROM image WHERE NumImage = ?', num, (error, results) => {
+                    if (error) throw error;
+                    cb(results);
+                });
             }
         }
     }
 
     // Fonction permettant de supprimer une image en paramètres
     static supprimerImage(num, cb) {
-        this.lienUneImage(num, (lien) => {
-            var link = 'public/images/articles/' + lien[0].LienImage;
-            // On supprime l'immage du serveur
-            fs.unlink(link, (err) => {
-                if (err) throw err;
-                // Puis le lien de l'image avec l'article
-                var query = connection.query('DELETE FROM image WHERE NumImage = ?', num, (error, results) => {
-                    if (error) throw error;
-                    cb(results);
-                });
-            });
-        })
+        // On supprime l'immage du cloud
+        // Puis le lien de l'image avec l'article
+        var query = connection.query('DELETE FROM image WHERE NumImage = ?', num, (error, results) => {
+            if (error) throw error;
+            cb(results);
+        });
     }
 }
 

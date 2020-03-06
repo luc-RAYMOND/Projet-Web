@@ -116,10 +116,8 @@
             <% for(var k = 0; k < Img.length; k++) { %>
             <% var link= 'supprimer'+Img[k].NumImage %>
             <figure>
-                <% var link1 = 'href=/images/articles/'+Img[k].LienImage %>
-                <a <%= link1 %> data-fancybox data-caption="">
-                    <% var link2 = 'src=/images/articles/'+Img[k].LienImage %>
-                    <img id="imgAte" <%= link2 %> alt="Photo de l'article">
+                <a href="<%= Img[k].LienImage %>" data-fancybox data-caption="">
+                    <img id="imgAte" src="<%= Img[k].LienImage %>" alt="Photo de l'article">
                 </a>
             </figure>
             <div id="al">

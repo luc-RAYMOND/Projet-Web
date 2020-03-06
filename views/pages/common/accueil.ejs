@@ -84,10 +84,8 @@
             <br>
             <% for(var k = 0; k < img[i].length; k++) { %>
             <figure>
-                <% var link1 = 'href=/images/articles/'+img[i][k].LienImage %>
-                <a <%= link1 %> data-fancybox data-caption="">
-                    <% var link2 = 'src=/images/articles/'+img[i][k].LienImage %>
-                    <img id="imgAte" <%= link2 %> alt="Photo de l'article">
+                <a href="<%= img[i][k].LienImage %>" data-fancybox data-caption="">
+                    <img id="imgAte" src="<%= img[i][k].LienImage %>" alt="Photo de l'article">
                 </a>
             </figure>
             <% } %>

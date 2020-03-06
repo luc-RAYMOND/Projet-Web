@@ -31,8 +31,8 @@ exports.catégoriesPage = (request, response) => {
                         });
                     }
                     else {
-                        affichage.remplirCatégorieArticle(request, response, contient, articles, (cat) => {
-                            affichage.remplirImageArticle(request, response, contient, articles, cat, (img) => {
+                        affichage.remplirCatégorieArticle(articles, (cat) => {
+                            affichage.remplirImageArticle(articles, (img) => {
                                 var trimStart = (pageActuelle - 1) * 5;
                                 var trimEnd = trimStart + 5;
                                 // Une version coupée de nos tableaux, pour en afficher au maximum 5 par pages

@@ -9,19 +9,16 @@ var avoircategorie = require('../models/avoirCatégorie');
 
 // Va nous permettre de gérer l'upload d'image
 const multer = require('multer');
+const multerGoogleStorage = require('multer-google-storage');
 const fs = require('fs');
 
-// Espace de stockage des images
-const storage = multer.diskStorage({
-    destination: './public/images/articles/',
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + file.originalname);
-    }
-})
-
-// Va nous permettre de récupérer et stocker les images
-const upload = multer({
-    storage: storage,
+// Nous permet d'upload les images sur le cloud
+var uploadHandler = multer({
+    storage: multerGoogleStorage.storageEngine({
+        keyFilename: "./sonic-ego-270221-523d55cbcddb.json",
+        projectId: 'sonic-ego-270221',
+        bucket: 'atelier-alegolas91'
+    })
 }).array('images', 10);
 
 // Permet d'accéder à la page de gestion des articles et catégories
@@ -173,13 +170,14 @@ exports.ajoutArticle = (request, response) => {
     var token = request.cookies.token;
     verifConnexion.verifConnexion(token, (admin) => {
         if (admin == 1) {
-            upload(request, response, (err) => {
+            uploadHandler(request, response, (err) => {
                 if (err) throw err;
                 else {
                     var titreArticle = request.body.TitreArticle;
                     var texteArticle = request.body.texteArticle;
                     var catégories = request.body.Categories;
                     var images = request.files
+                    console.log(request.files)
                     // On récupère le cas d'erreur s'il y en a un
                     casErreur.casErreurAjoutArticle(titreArticle, texteArticle, catégories, (cas) => {
                         // Tout va bien, on crée l'article
@@ -190,7 +188,7 @@ exports.ajoutArticle = (request, response) => {
                                 avoircategorie.ajoutUnLienArticleCatégorie(catégories, numArticle, (next) => { });
                                 // Ajout des liens des images en BDD avec les lien image/article
                                 for (var i = 0; i < images.length; i++) {
-                                    image.ajoutImage(images[i].filename, (numImg) => {
+                                    image.ajoutImage(images[i].path, (numImg) => {
                                         avoirImage.ajoutAvoirImage(numImg, numArticle, (cb) => { });
                                     });
                                 }
@@ -201,10 +199,7 @@ exports.ajoutArticle = (request, response) => {
                         else {
                             // On supprime les images qui viennent d'être upload
                             for (var i = 0; i < images.length; i++) {
-                                var link = 'public/images/articles/' + images[i].filename;
-                                fs.unlink(link, (err) => {
-                                    if (err) throw err;
-                                });
+                                // Il faudra supprimer du cloud
                             }
                             // Sinon on affiche le cas d'erreur
                             response.cookie('gestionAC', { titreArticle: titreArticle, texteArticle: texteArticle, cas: cas }, { expiresIn: '5s' });
@@ -379,7 +374,7 @@ exports.modifierArticleAction = (request, response) => {
     var numArticle = request.params.numArticle;
     verifConnexion.verifConnexion(token, (admin) => {
         if (admin == 1) {
-            upload(request, response, (err) => {
+            uploadHandler(request, response, (err) => {
                 if (err) {
                     response.redirect('/Accueil');
                 }
@@ -401,7 +396,7 @@ exports.modifierArticleAction = (request, response) => {
                                 }
                                 // Ajout des liens des images en BDD avec les lien image/article s'il y en a
                                 for (var i = 0; i < images.length; i++) {
-                                    image.ajoutImage(images[i].filename, (numImg) => {
+                                    image.ajoutImage(images[i].path, (numImg) => {
                                         avoirImage.ajoutAvoirImage(numImg, numArticle, (cb) => { });
                                     });
                                 }

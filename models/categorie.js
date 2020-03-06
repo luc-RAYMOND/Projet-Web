@@ -19,18 +19,17 @@ class Categorie {
     }
 
     // Fonction permettant d'avoir le nombre d'articles par catégorie
-    static avoirNombresCatégories(results, cb) {
-        if (results[0] != undefined) {
-            for (var i = 0; i < results.length; i++) {
-                var query = connection.query('SELECT count(*) as ite FROM avoircatégorie WHERE NumCatégorie = ?', results[i].NumCatégorie, (error, results2) => {
-                    if (error) throw error;
-                    cb(results2);
-                });
-            }
-        }
-        else {
-            cb(results);
-        }
+    static avoirNombresCatégories(numCaté) {
+        return new Promise((resolve, reject) => {
+            connection.query('SELECT count(*) as ite, LibelléCatégorie,catégorie.NumCatégorie FROM avoircatégorie,catégorie WHERE avoircatégorie.NumCatégorie = ? AND avoircatégorie.NumCatégorie = catégorie.NumCatégorie', numCaté, (err, result) => {
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    resolve(result);
+                }
+            });
+        });
     }
 
     // Fonction permettant de vérifier s'il existe une catégorie avec le libellé en paramètre

@@ -10,7 +10,7 @@ exports.verifConnexion = (token, admin) => {
         ad = 10;
     }
     else {
-        jwt.verify(token, key.key, (err,decoded) => {
+        jwt.verify(token, key.key, (err, decoded) => {
             // On regarde si le token est expiré ou non
             if (err) {
                 ad = 10;

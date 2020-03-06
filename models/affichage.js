@@ -68,30 +68,27 @@ moment.locale('fr', {
 // Cette variable permet de remplir les catégories à chaque fois qu'on charge une page
 exports.remplirCatégorie = (next) => {
     Catégorie.avoirNomCatégories((nom) => {
+        // Va contenir les id des différentes catégories
+        var cat = [];
         var contient = [];
-        var compteur1 = 0;
-        Catégorie.avoirNombresCatégories(nom, (num) => {
-            // On remplie le tableau des valeurs
-            if (num[0] != undefined) {
-                contient[compteur1] = { nom: nom[compteur1].LibelléCatégorie, num: num[0].ite, numCat: nom[compteur1].NumCatégorie };
-                compteur1++;
-                if (compteur1 == nom.length) {
-                    // On fait un tri bulle ici permettant d'avoir en premier les catégories avec le plus d'articles d'abord
-                    for (var k = contient.length; k > 0; k--) {
-                        for (var j = 0; j < k - 1; j++) {
-                            if (contient[j + 1].num > contient[j].num) {
-                                var intermediaire = contient[j];
-                                contient[j] = contient[j + 1];
-                                contient[j + 1] = intermediaire;
-                            }
-                        }
+        for (var i = 0; i < nom.length; i++) {
+            cat[i] = nom[i].NumCatégorie;
+        }
+        // On récupère pour chaque article les catégories
+        const promises = cat.map((num) => Catégorie.avoirNombresCatégories([num]));
+        Promise.all(promises).then((num) => {
+            contient = num;
+            // On fait un tri bulle ici permettant d'avoir en premier les catégories avec le plus d'articles d'abord
+            for (var k = num.length; k > 0; k--) {
+                for (var j = 0; j < k - 1; j++) {
+                    if (contient[j + 1][0].ite > contient[j][0].ite) {
+                        var intermediaire = contient[j];
+                        contient[j] = contient[j + 1];
+                        contient[j + 1] = intermediaire;
                     }
-                    next(contient);
                 }
             }
-            else {
-                next(contient);
-            }
+            next(contient);
         });
     });
 }
@@ -136,114 +133,84 @@ exports.remplirArticleCatégorie = (NumCatégorie, next) => {
 
 // Permet d'avoir les catégories de chaque article
 exports.remplirCatégorieArticle = (articles, next) => {
-    // Va contenir les catégories de chaque article
-    var cat = [];
-    var compteur2 = 0;
-    compteur2 = 0;
-    // On remplie les valeurs des libellés de catégorie
-    Article.avoirLibellé(articles, (libCat) => {
-        if (articles.length == 0) {
-            next(articles);
-        }
-        else {
-            cat[compteur2] = libCat;
-            compteur2++;
-            if (compteur2 == articles.length) {
-                next(cat);
-            }
-        }
+    // Va contenir les id des différents articles
+    var art = [];
+    for (var i = 0; i < articles.length; i++) {
+        art[i] = articles[i].NumArticle;
+    }
+    // On récupère pour chaque article les catégories
+    const promises = art.map((libCat) => Article.avoirLibellé([libCat]));
+    Promise.all(promises).then((libCat) => {
+        next(libCat);
     });
 }
 
 // Permet d'avoir les images de chaque article
 exports.remplirImageArticle = (articles, next) => {
-    // Va contenir le lien des images de chaque article
-    var img = [];
-    var compteur3 = 0;
-    compteur3 = 0;
-    // On remplie les valeurs des libellés de catégorie
-    Article.avoirImage(articles, (lienImg) => {
-        if (articles.length == 0) {
-            next(articles);
-        }
-        else {
-            img[compteur3] = lienImg;
-            compteur3++;
-            if (compteur3 == articles.length) {
-                next(img);
-            }
-        }
+    // Va contenir les id des articles
+    var art = [];
+    for (var i = 0; i < articles.length; i++) {
+        art[i] = articles[i].NumArticle;
+    }
+    // On récupère pour chaque article les images
+    const promises = art.map((lienImg) => Article.avoirImage([lienImg]));
+    Promise.all(promises).then((lienImg) => {
+        next(lienImg);
     });
 }
 
 // Nous permet d'avoir les pseudos de ceux ayant posté dans le livre d'or
 exports.avoirPseudos = (avis, next) => {
-    // On stock les avis et le pseudo
+    // Va contenir les id des utilisateurs ayant posté
     var avisLO = [];
-    var compteur = 0;
-    // On remplie les valeurs des libellés de catégorie
-    utilisateur.avoirPseudo(avis, (pseudo) => {
-        if(avis[0] != undefined){
-            if (pseudo[0] != undefined) {
-                avisLO[compteur] = pseudo[0].PseudoUtilisateur;
-            }
-            else {
-                avisLO[compteur] = 'Ancien Client';
-            }
-            compteur++;
-            if (compteur == avis.length) {
-                next(avisLO);
-            }
-        }
-        else{
-            next(avis);
-        }
+    for (var i = 0; i < avis.length; i++) {
+        avisLO[i] = avis[i].NumUtilisateur;
+    }
+    // On récupère pour chaque article les images
+    const promises = avisLO.map((pseudos) => utilisateur.avoirPseudo([pseudos]));
+    Promise.all(promises).then((pseudos) => {
+        next(pseudos)
     });
 }
 
 // Permet d'avoir les utilisateurs des devis
 exports.avoirUtilisateursDevis = (devisClients, next) => {
     // Va contenir les utilisateurs pour chaque devis
-    var users = [];
-    var compteur4 = 0;
-    if (devisClients[0] == undefined) {
-        next(users);
+    var devis = [];
+    for (var i = 0; i < devisClients.length; i++) {
+        devis[i] = devisClients[i].NumDevis;
     }
-    else {
-        for (var i = 0; i < devisClients.length; i++) {
-            avoirDevis.avoirUtilisateurDevis(devisClients[i].NumDevis, (utilisateur) => {
-                users[compteur4] = utilisateur;
-                compteur4++;
-                if (compteur4 == devisClients.length) {
-                    next(users);
-                }
-            });
-        }
-    }
+    const promises = devis.map((utilisateur) => avoirDevis.avoirUtilisateurDevis([utilisateur]));
+    Promise.all(promises).then((utilisateur) => {
+        next(utilisateur);
+    });
 }
 
 // Fonction permettant de calculer les montants des devis
 exports.montantDevis = (devisClients, next) => {
-    var montantDevis = [];
-    var compteur5 = 0;
-    compteur5 = 0;
     if (devisClients[0] == undefined) {
-        next(montantDevis);
+        next(devisClients);
     }
     else {
+        // Va contenir les lignes de commande de chaque devis
+        var LC = [];
+        // Va contenir le montant de chaque devis
+        var montant = [];
         for (var i = 0; i < devisClients.length; i++) {
-            avoirLC.avoirlignesCommandesDevis(devisClients[i].NumDevis, (LC) => {
-                var montant = 0;
-                // On récupère les montants du devis
-                for (var j = 0; j < LC.length; j++) {
-                    montant += LC[j].PrixTarifUnitaire * LC[j].Quantité;
-                }
-                montantDevis[compteur5] = montant.toFixed(2);
-                compteur5++;
-                if (compteur5 == devisClients.length) {
-                    next(montantDevis);
-                }
-            });
+            LC[i] = devisClients[i].NumDevis;
         }
+        // On récupère toutes les lignes de commande
+        const promises = LC.map((lignesCommande) => avoirLC.avoirlignesCommandesDevis([lignesCommande]));
+        Promise.all(promises).then((lignesCommande) => {
+            // On calcule le montant de chaque devis
+            for (var i = 0; i < devisClients.length; i++) {
+                var montantDevis = 0;
+                for (var j = 0; j < lignesCommande[i].length; j++) {
+                    montantDevis += lignesCommande[i][j].PrixTarifUnitaire * lignesCommande[i][j].Quantité;
+                }
+                montant[i] = montantDevis.toFixed(2);
+            }
+            next(montant)
+        });
     }
 }

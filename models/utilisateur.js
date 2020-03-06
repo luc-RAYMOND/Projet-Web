@@ -28,18 +28,22 @@ class Utilisateur {
     }
 
     // Fonction permettant de récupérer un pseudo en ayant le numéro Utilisateur
-    static avoirPseudo(results, cb) {
-        if (results[0] != undefined) {
-            for (var i = 0; i < results.length; i++) {
-                var query = connection.query('SELECT PseudoUtilisateur FROM utilisateur WHERE NumUtilisateur = ?', results[i].NumUtilisateur, (error, results) => {
-                    if (error) throw error;
-                    cb(results);
-                });
-            }
-        }
-        else {
-            cb(results);
-        }
+    static avoirPseudo(NumUtilisateur) {
+        return new Promise((resolve, reject) => {
+            connection.query('SELECT PseudoUtilisateur FROM utilisateur WHERE NumUtilisateur = ?', NumUtilisateur, (err, result) => {
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    if (result[0] != undefined) {
+                        resolve(result[0].PseudoUtilisateur);
+                    }
+                    else {
+                        resolve('Ancien Client');
+                    }
+                }
+            });
+        });
     }
 
     // Fonction permettant de créer un nouvel utilisateur

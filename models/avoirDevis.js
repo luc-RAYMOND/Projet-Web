@@ -12,10 +12,16 @@ class AvoirDevis {
     }
 
     // Fonction permettant de récupérer les infos d'un client à partir d'un devis
-    static avoirUtilisateurDevis(numDevis, cb) {
-        var query = connection.query('SELECT NomUtilisateur,PrénomUtilisateur, MailUtilisateur FROM utilisateur,avoirDevis WHERE avoirDevis.NumUtilisateur = utilisateur.NumUtilisateur AND NumDevis = ?', numDevis, (error, results) => {
-            if (error) throw error;
-            cb(results);
+    static avoirUtilisateurDevis(NumDevis) {
+        return new Promise((resolve, reject) => {
+            connection.query('SELECT NomUtilisateur,PrénomUtilisateur, MailUtilisateur FROM utilisateur,avoirDevis WHERE avoirDevis.NumUtilisateur = utilisateur.NumUtilisateur AND NumDevis = ?', NumDevis, (err, result) => {
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    resolve(result);
+                }
+            });
         });
     }
 

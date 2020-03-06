@@ -177,7 +177,6 @@ exports.ajoutArticle = (request, response) => {
                     var texteArticle = request.body.texteArticle;
                     var catégories = request.body.Categories;
                     var images = request.files
-                    console.log(request.files)
                     // On récupère le cas d'erreur s'il y en a un
                     casErreur.casErreurAjoutArticle(titreArticle, texteArticle, catégories, (cas) => {
                         // Tout va bien, on crée l'article
@@ -238,7 +237,7 @@ exports.modifierArticle = (request, response) => {
                     response.redirect('/EspaceAdmin/GestionArticlesCategories');
                 }
                 else {
-                    article.avoirLibellé(art, (catégories) => {
+                    article.avoirLibelléUnArticle(art[0].NumArticle, (catégories) => {
                         avoirImage.avoirLienImagesArticle(numArticle, (Img) => {
                             // Affiche toutes les catégories existantes
                             Catégorie.avoirNomCatégories((libCat) => {

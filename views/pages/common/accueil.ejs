@@ -69,7 +69,10 @@
             <h6>
                 <%= articles[i].DateArticle %>, Rédigé par Alexandre Raymond
                 <br>
-                Catégories :
+                Catégorie<% if (cat[i].length > 1) { %>s<% } %> :
+                <% if (cat[i].length == 0) { %>
+                Non définie
+                <% } %>
                 <% for (var j = 0; j < cat[i].length ; j++) {%>
                 <%= cat[i][j].LibelléCatégorie %>
                 <% if (j < cat[i].length-1) { %>

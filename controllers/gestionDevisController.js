@@ -72,6 +72,7 @@ exports.ajoutDevis = (request, response) => {
     var i = 1;
     var numUtilisateur = user[0];
     var k = user[i];
+    // Si on ne prend pas la case non inscrit
     if (user[0] != "N") {
         // Permet de récupérer le num Utilisateur dans la choicebox
         while (k != ':') {
@@ -144,7 +145,7 @@ exports.modifDevisPage = (request, response) => {
                 else {
                     // On récupère les utilisateurs validés pour les mettre dans la choice box d'association d'utilisateur
                     utilisateur.avoirUtilisateurV((utilisateurs) => {
-                        avoirLC.avoirlignesCommandesDevis(numDevis, (LC) => {
+                        avoirLC.avoirlignesCommandes(numDevis, (LC) => {
                             statutDevis.avoirStatutsDevis((statutDevis) => {
                                 // on regarde si le client est enregistré ou non
                                 var test = (vérif[0].NomPrénomProv == '-');
@@ -419,7 +420,7 @@ exports.consulterFacture = (request, response) => {
                 }
                 else {
                     // On récupère les lignes de commandes pour les afficher
-                    avoirLC.avoirlignesCommandesDevis(numDevis, (LC) => {
+                    avoirLC.avoirlignesCommandes(numDevis, (LC) => {
                         response.render('pages/admin/consulterFacture', { numDevis: numDevis, LC: LC, admin: admin });
                     });
                 }

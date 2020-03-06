@@ -12,10 +12,24 @@ class avoirLC {
     }
 
     // Fonction permettant d'afficher les lignes de commandes d'un devis
-    static avoirlignesCommandesDevis(numDevis, cb) {
+    static avoirlignesCommandes(numDevis, cb) {
         var query = connection.query('SELECT lignecommande.NumLigneCommande,LibelléLigneCommande,PrixTarifUnitaire,Quantité FROM lignecommande,avoirlc WHERE lignecommande.NumLigneCommande = avoirlc.NumLigneCommande AND avoirlc.NumDevis = ?', numDevis, (error, results) => {
             if (error) throw error;
             cb(results);
+        });
+    }
+
+    // Fonction permettant d'afficher les lignes de commandes d'un devis, en promesse pour faire tous les devis
+    static avoirlignesCommandesDevis(NumDevis) {
+        return new Promise((resolve, reject) => {
+            connection.query('SELECT lignecommande.NumLigneCommande,LibelléLigneCommande,PrixTarifUnitaire,Quantité FROM lignecommande,avoirlc WHERE lignecommande.NumLigneCommande = avoirlc.NumLigneCommande AND avoirlc.NumDevis = ?', NumDevis, (err, result) => {
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    resolve(result);
+                }
+            });
         });
     }
 

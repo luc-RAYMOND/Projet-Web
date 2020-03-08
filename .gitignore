@@ -1,2 +1,4 @@
 # Ce qu'on ne met pas sur git
 /node_modules/
+/config/
+sonic-ego-270221-523d55cbcddb.json

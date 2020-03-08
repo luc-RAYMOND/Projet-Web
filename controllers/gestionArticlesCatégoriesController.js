@@ -17,7 +17,8 @@ let uploadHandler = multer({
         keyFilename: "./sonic-ego-270221-523d55cbcddb.json",
         projectId: 'sonic-ego-270221',
         bucket: 'atelier-alegolas91'
-    })
+    }),
+    limits: { fileSize: 1000000000 }
 }).array('images', 10);
 
 // Permet d'accéder à la page de gestion des articles et catégories
@@ -459,7 +460,7 @@ exports.modifierArticleAction = (request, response) => {
         if (admin == 1) {
             uploadHandler(request, response, (err) => {
                 if (err) {
-                    response.redirect('/Accueil');
+                    response.status(500).render('pages/common/errServ');
                 }
                 else {
                     let titreArticle = request.body.TitreArticle;

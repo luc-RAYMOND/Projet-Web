@@ -1,8 +1,8 @@
-var express = require('express');
-var route = express.Router();
+const express = require('express');
+const route = express.Router();
 
 // On importe le controller
-var serv = require('../controllers/servicesController');
+const serv = require('../controllers/servicesController');
 
 route.get('/ServicesPeinture', serv.servicesPeinture);
 route.get('/ServicesDecors', serv.servicesDécors);

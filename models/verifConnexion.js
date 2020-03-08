@@ -1,10 +1,10 @@
 // Pour les tokens
-var jwt = require('jsonwebtoken');
-var key = require('../config/tokenKey');
+const jwt = require('jsonwebtoken');
+const key = require('../config/tokenKey');
 
 // Cette fonction permet de vérifier si l'on est connecté ou non
 exports.verifConnexion = (token, admin) => {
-    var ad = 10;
+    let ad = 10;
     // On regarde si le token existe ou non
     if (token == undefined) {
         ad = 10;

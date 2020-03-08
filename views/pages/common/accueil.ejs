@@ -34,6 +34,11 @@
             <h3>
                 Articles Récents
             </h3>
+            <% if (cas == 20) { %>
+            <div id="al" class="alert alert-danger" role="alert">
+                Vous n'avez pas les droits d'accès à cette page.
+            </div>
+            <% } %>
             <% } else { %>
             <h3>
                 Articles plus Anciens

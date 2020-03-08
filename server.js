@@ -1,8 +1,8 @@
 // On importe la librairie express et on crée le serveur projet
-var express = require('express');
-var projet = express();
-var bodyParser = require('body-parser');
-var cookieParser = require('cookie-parser');
+const express = require('express');
+const projet = express();
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 
 // Pour pouvoir récupérer le contenu body des requêtes POST et les cookies
 projet.use(bodyParser.urlencoded({ extended: false }));
@@ -16,15 +16,15 @@ projet.set('view engine', 'ejs');
 projet.use(express.static('public'));
 
 // On importe les fichiers routes
-var commonRoute = require('./routes/commonRoute');
-var accueilPage = require('./routes/accueilRoute');
-var servicesPage = require('./routes/servicesRoute');
-var catégoriesPage = require('./routes/catégoriesRoute');
-var livreOr = require('./routes/livreOrRoute');
-var espaceClient = require('./routes/espaceClientRoute');
-var espaceAdmin = require('./routes/espaceAdminRoute');
-var gestionArticlesCategories = require('./routes/gestionArticlesCategoriesRoute');
-var gestionDevis = require('./routes/gestionDevisRoute');
+const commonRoute = require('./routes/commonRoute');
+const accueilPage = require('./routes/accueilRoute');
+const servicesPage = require('./routes/servicesRoute');
+const catégoriesPage = require('./routes/catégoriesRoute');
+const livreOr = require('./routes/livreOrRoute');
+const espaceClient = require('./routes/espaceClientRoute');
+const espaceAdmin = require('./routes/espaceAdminRoute');
+const gestionArticlesCategories = require('./routes/gestionArticlesCategoriesRoute');
+const gestionDevis = require('./routes/gestionDevisRoute');
 
 // Tout ce qui est hors connexion
 
@@ -40,8 +40,7 @@ projet.use('/EspaceAdmin/GestionDevis', gestionDevis);
 
 // Notre route lorsque l'on n'est pas sur une page existante
 projet.use(function (req, res, next) {
-    res.setHeader('Content-Type', 'text/plain');
-    res.status(404).send('Erreur 404 : Page introuvable !');
+    res.status(404).render('pages/common/404notfound');
 });
 
 // On indique le port que l'on va utiliser

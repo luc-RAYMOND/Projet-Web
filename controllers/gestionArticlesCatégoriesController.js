@@ -1,18 +1,18 @@
 // Les models d'où viennent les fonctions sur la BDD
-var verifConnexion = require('../models/verifConnexion');
-var casErreur = require('../models/casErreur');
-var Catégorie = require('../models/categorie')
-var article = require('../models/article');
-var image = require('../models/image');
-var avoirImage = require('../models/avoirImage');
-var avoircategorie = require('../models/avoirCatégorie');
+const verifConnexion = require('../models/verifConnexion');
+const casErreur = require('../models/casErreur');
+const Catégorie = require('../models/categorie')
+const article = require('../models/article');
+const image = require('../models/image');
+const avoirImage = require('../models/avoirImage');
+const avoircategorie = require('../models/avoirCatégorie');
 
 // Va nous permettre de gérer l'upload d'image
 const multer = require('multer');
 const multerGoogleStorage = require('multer-google-storage');
 
 // Nous permet d'upload les images sur le cloud
-var uploadHandler = multer({
+let uploadHandler = multer({
     storage: multerGoogleStorage.storageEngine({
         keyFilename: "./sonic-ego-270221-523d55cbcddb.json",
         projectId: 'sonic-ego-270221',
@@ -22,10 +22,10 @@ var uploadHandler = multer({
 
 // Permet d'accéder à la page de gestion des articles et catégories
 exports.gestionArticlesCatégories = (request, response) => {
-    var token = request.cookies.token;
-    var cas = 10;
-    var titreArticle = '';
-    var texteArticle = '';
+    let token = request.cookies.token;
+    let cas = 10;
+    let titreArticle = '';
+    let texteArticle = '';
     if (request.cookies.gestionAC != undefined) {
         // On récupère toutes les valeurs
         cas = request.cookies.gestionAC.cas;
@@ -41,16 +41,24 @@ exports.gestionArticlesCatégories = (request, response) => {
                 response.render('pages/admin/gestionArticlesCatégories', { catégories: catégories, cas: cas, titreArticle: titreArticle, texteArticle: texteArticle });
             }
             else {
-                response.redirect('/Connexion');
+                // On indique que l'accès est interdit
+                if (admin == 10) {
+                    response.cookie('access', { err: true }, { expiresIn: '5s' });
+                    response.redirect('/Connexion');
+                }
+                else {
+                    response.cookie('access', { err: true }, { expiresIn: '5s' })
+                    response.redirect('/Accueil');
+                }
             }
         });
     });
 }
 
 exports.ajoutCatégorie = (request, response) => {
-    var token = request.cookies.token;
+    let token = request.cookies.token;
     // On récupère le libellé entré
-    var libCat = request.body.libCat;
+    let libCat = request.body.libCat;
     verifConnexion.verifConnexion(token, (admin) => {
         if (admin == 1) {
             // On récupère le cas d'erreur ou de succès
@@ -59,24 +67,32 @@ exports.ajoutCatégorie = (request, response) => {
                 // On peut l'insérer dans la BDD
                 if (cas == 2) {
                     Catégorie.ajouterCatégorie(libCat, (cb) => {
-                        response.redirect('/EspaceAdmin/GestionArticlesCategories');
+                        response.redirect('/EspaceAdmin/GestionArticlesCategories#Partie1');
                     });
                 }
                 else {
-                    response.redirect('/EspaceAdmin/GestionArticlesCategories');
+                    response.redirect('/EspaceAdmin/GestionArticlesCategories#Partie1');
                 }
             });
         }
         else {
-            response.redirect('/Connexion');
+            // On indique que l'accès est interdit
+            if (admin == 10) {
+                response.cookie('access', { err: true }, { expiresIn: '5s' });
+                response.redirect('/Connexion');
+            }
+            else {
+                response.cookie('access', { err: true }, { expiresIn: '5s' })
+                response.redirect('/Accueil');
+            }
         }
     });
 }
 
 // Permet de supprimer une catégorie
 exports.supprimerCatégorie = (request, response) => {
-    var numCat = request.params.numCat;
-    var token = request.cookies.token;
+    let numCat = request.params.numCat;
+    let token = request.cookies.token;
     verifConnexion.verifConnexion(token, (admin) => {
         if (admin == 1) {
             Catégorie.avoirLibellé(numCat, (libCat) => {
@@ -91,7 +107,7 @@ exports.supprimerCatégorie = (request, response) => {
                     avoircategorie.supprimerLienCatégoriesArticle(numCat, (next) => {
                         Catégorie.supprimerCatégorie(numCat, (cb) => {
                             // On le supprime, et on indique qu'on l'a bien supprimé sur la page
-                            var cas = 3;
+                            let cas = 3;
                             response.cookie('gestionAC', { cas: cas }, { expiresIn: '5s' });
                             response.redirect('/EspaceAdmin/GestionArticlesCategories');
                         });
@@ -100,16 +116,24 @@ exports.supprimerCatégorie = (request, response) => {
             });
         }
         else {
-            response.redirect('/Connexion');
+            // On indique que l'accès est interdit
+            if (admin == 10) {
+                response.cookie('access', { err: true }, { expiresIn: '5s' });
+                response.redirect('/Connexion');
+            }
+            else {
+                response.cookie('access', { err: true }, { expiresIn: '5s' })
+                response.redirect('/Accueil');
+            }
         }
     });
 }
 
 // Permet d'accéder à la page de modification d'une catégorie
 exports.modifierCatégoriePage = (request, response) => {
-    var numCat = request.params.numCat;
-    var token = request.cookies.token;
-    var cas = 10;
+    let numCat = request.params.numCat;
+    let token = request.cookies.token;
+    let cas = 10;
     if (request.cookies.gestionAC != undefined) {
         // On récupère toutes les valeurs
         cas = request.cookies.gestionAC.cas;
@@ -133,16 +157,24 @@ exports.modifierCatégoriePage = (request, response) => {
             });
         }
         else {
-            response.redirect('/Connexion');
+            // On indique que l'accès est interdit
+            if (admin == 10) {
+                response.cookie('access', { err: true }, { expiresIn: '5s' });
+                response.redirect('/Connexion');
+            }
+            else {
+                response.cookie('access', { err: true }, { expiresIn: '5s' })
+                response.redirect('/Accueil');
+            }
         }
     });
 }
 
 // Permet de modifier la catégorie
 exports.modifierCatégorie = (request, response) => {
-    var numCat = request.params.numCat;
-    var libCat = request.body.libCat;
-    var token = request.cookies.token;
+    let numCat = request.params.numCat;
+    let libCat = request.body.libCat;
+    let token = request.cookies.token;
     verifConnexion.verifConnexion(token, (admin) => {
         if (admin == 1) {
             // On recupère le libellé de base, pour qu'on sache dans quel cas on est
@@ -156,29 +188,39 @@ exports.modifierCatégorie = (request, response) => {
                 }
                 // Sinon on renvoie l'erreur dans le cookie et on redirige
                 else {
-                    var link = '/EspaceAdmin/GestionArticlesCategories/' + numCat + '/ModifierCategorie';
+                    let link = '/EspaceAdmin/GestionArticlesCategories/' + numCat + '/ModifierCategorie';
                     response.redirect(link)
                 }
             });
         }
         else {
-            response.redirect('/Connexion');
+            // On indique que l'accès est interdit
+            if (admin == 10) {
+                response.cookie('access', { err: true }, { expiresIn: '5s' });
+                response.redirect('/Connexion');
+            }
+            else {
+                response.cookie('access', { err: true }, { expiresIn: '5s' })
+                response.redirect('/Accueil');
+            }
         }
     });
 }
 
 // Permet d'ajouter un article
 exports.ajoutArticle = (request, response) => {
-    var token = request.cookies.token;
+    let token = request.cookies.token;
     verifConnexion.verifConnexion(token, (admin) => {
         if (admin == 1) {
             uploadHandler(request, response, (err) => {
-                if (err) throw err;
+                if (err) {
+                    response.status(500).render('pages/common/errServ');
+                }
                 else {
-                    var titreArticle = request.body.TitreArticle;
-                    var texteArticle = request.body.texteArticle;
-                    var catégories = request.body.Categories;
-                    var images = request.files
+                    let titreArticle = request.body.TitreArticle;
+                    let texteArticle = request.body.texteArticle;
+                    let catégories = request.body.Categories;
+                    let images = request.files
                     // On récupère le cas d'erreur s'il y en a un
                     casErreur.casErreurAjoutArticle(titreArticle, texteArticle, catégories, (cas) => {
                         // Tout va bien, on crée l'article
@@ -188,7 +230,7 @@ exports.ajoutArticle = (request, response) => {
                                 // Ainsi que les liens avec les catégories
                                 avoircategorie.ajoutUnLienArticleCatégorie(catégories, numArticle, (next) => { });
                                 // Ajout des liens des images en BDD avec les lien image/article
-                                for (var i = 0; i < images.length; i++) {
+                                for (let i = 0; i < images.length; i++) {
                                     image.ajoutImage(images[i].path, (numImg) => {
                                         avoirImage.ajoutAvoirImage(numImg, numArticle, (cb) => { });
                                     });
@@ -199,7 +241,7 @@ exports.ajoutArticle = (request, response) => {
                         }
                         else {
                             // On supprime les images qui viennent d'être upload
-                            for (var i = 0; i < images.length; i++) {
+                            for (let i = 0; i < images.length; i++) {
                                 // Il faudra supprimer du cloud
                             }
                             // Sinon on affiche le cas d'erreur
@@ -211,16 +253,24 @@ exports.ajoutArticle = (request, response) => {
             });
         }
         else {
-            response.redirect('/Connexion');
+            // On indique que l'accès est interdit
+            if (admin == 10) {
+                response.cookie('access', { err: true }, { expiresIn: '5s' });
+                response.redirect('/Connexion');
+            }
+            else {
+                response.cookie('access', { err: true }, { expiresIn: '5s' })
+                response.redirect('/Accueil');
+            }
         }
     });
 }
 
 // Permet de charger la page contenant l'article que l'on veut modifier
 exports.modifierArticle = (request, response) => {
-    var token = request.cookies.token;
-    var numArticle = request.params.numArticle;
-    var cas = 8;
+    let token = request.cookies.token;
+    let numArticle = request.params.numArticle;
+    let cas = 8;
     if (request.cookies.gestionModifA != undefined) {
         // On récupère toutes les valeurs
         cas = request.cookies.gestionModifA.cas;
@@ -251,17 +301,25 @@ exports.modifierArticle = (request, response) => {
             });
         }
         else {
-            response.redirect('/Connexion');
+            // On indique que l'accès est interdit
+            if (admin == 10) {
+                response.cookie('access', { err: true }, { expiresIn: '5s' });
+                response.redirect('/Connexion');
+            }
+            else {
+                response.cookie('access', { err: true }, { expiresIn: '5s' })
+                response.redirect('/Accueil');
+            }
         }
     });
 }
 
 // Permet de supprimer la catégorie d'un article
 exports.supprimerCatégorieArticle = (request, response) => {
-    var token = request.cookies.token;
-    var numArticle = request.params.numArticle;
-    var numCatégorie = request.params.numCategorie;
-    var cas = 10;
+    let token = request.cookies.token;
+    let numArticle = request.params.numArticle;
+    let numCatégorie = request.params.numCategorie;
+    let cas = 10;
     verifConnexion.verifConnexion(token, (admin) => {
         if (admin == 1) {
             article.avoirArticle(numArticle, (art) => {
@@ -278,7 +336,7 @@ exports.supprimerCatégorieArticle = (request, response) => {
                             cas = 1;
                             // On renvoie que c'est bien un succès
                             response.cookie('gestionModifA', { cas: cas }, { expiresIn: '5s' });
-                            var link = '/EspaceAdmin/GestionArticlesCategories/' + numArticle + '/ModifierArticle';
+                            let link = '/EspaceAdmin/GestionArticlesCategories/' + numArticle + '/ModifierArticle';
                             response.redirect(link);
                         });
                     }
@@ -286,16 +344,24 @@ exports.supprimerCatégorieArticle = (request, response) => {
             });
         }
         else {
-            response.redirect('/Connexion');
+            // On indique que l'accès est interdit
+            if (admin == 10) {
+                response.cookie('access', { err: true }, { expiresIn: '5s' });
+                response.redirect('/Connexion');
+            }
+            else {
+                response.cookie('access', { err: true }, { expiresIn: '5s' })
+                response.redirect('/Accueil');
+            }
         }
     });
 }
 
 // Permet de supprimer une image d'un article
 exports.supprimerImageArticle = (request, response) => {
-    var token = request.cookies.token;
-    var numArticle = request.params.numArticle;
-    var numImage = request.params.numImage;
+    let token = request.cookies.token;
+    let numArticle = request.params.numArticle;
+    let numImage = request.params.numImage;
     verifConnexion.verifConnexion(token, (admin) => {
         if (admin == 1) {
             // On vérifie que l'article existe
@@ -314,7 +380,7 @@ exports.supprimerImageArticle = (request, response) => {
                             image.supprimerImage(numImage, (cb) => {
                                 cas = 2;
                                 response.cookie('gestionModifA', { cas: cas }, { expiresIn: '5s' });
-                                var link = '/EspaceAdmin/GestionArticlesCategories/' + numArticle + '/ModifierArticle';
+                                let link = '/EspaceAdmin/GestionArticlesCategories/' + numArticle + '/ModifierArticle';
                                 response.redirect(link);
                             });
                         });
@@ -323,15 +389,23 @@ exports.supprimerImageArticle = (request, response) => {
             });
         }
         else {
-            response.redirect('/Connexion');
+            // On indique que l'accès est interdit
+            if (admin == 10) {
+                response.cookie('access', { err: true }, { expiresIn: '5s' });
+                response.redirect('/Connexion');
+            }
+            else {
+                response.cookie('access', { err: true }, { expiresIn: '5s' })
+                response.redirect('/Accueil');
+            }
         }
     });
 }
 
 // Permet de supprimer un article (et avec, ses images)
 exports.supprimerArticle = (request, response) => {
-    var token = request.cookies.token;
-    var numArticle = request.params.numArticle;
+    let token = request.cookies.token;
+    let numArticle = request.params.numArticle;
     verifConnexion.verifConnexion(token, (admin) => {
         if (admin == 1) {
             article.avoirArticle(numArticle, (art) => {
@@ -352,7 +426,7 @@ exports.supprimerArticle = (request, response) => {
                                 image.supprimerImages(numsImg, (next2) => {
                                     // Et enfin on supprime l'article
                                     article.supprimerArticle(numArticle, (next3) => {
-                                        var cas = 1;
+                                        let cas = 1;
                                         response.cookie('infoA', { cas: cas }, { expiresIn: '5s' });
                                         response.redirect('/Accueil');
                                     });
@@ -364,15 +438,23 @@ exports.supprimerArticle = (request, response) => {
             });
         }
         else {
-            response.redirect('/Connexion');
+            // On indique que l'accès est interdit
+            if (admin == 10) {
+                response.cookie('access', { err: true }, { expiresIn: '5s' });
+                response.redirect('/Connexion');
+            }
+            else {
+                response.cookie('access', { err: true }, { expiresIn: '5s' })
+                response.redirect('/Accueil');
+            }
         }
     });
 }
 
 // Permet de modifier un article
 exports.modifierArticleAction = (request, response) => {
-    var token = request.cookies.token;
-    var numArticle = request.params.numArticle;
+    let token = request.cookies.token;
+    let numArticle = request.params.numArticle;
     verifConnexion.verifConnexion(token, (admin) => {
         if (admin == 1) {
             uploadHandler(request, response, (err) => {
@@ -380,10 +462,10 @@ exports.modifierArticleAction = (request, response) => {
                     response.redirect('/Accueil');
                 }
                 else {
-                    var titreArticle = request.body.TitreArticle;
-                    var texteArticle = request.body.texteArticle;
-                    var catégories = request.body.Categories;
-                    var images = request.files
+                    let titreArticle = request.body.TitreArticle;
+                    let texteArticle = request.body.texteArticle;
+                    let catégories = request.body.Categories;
+                    let images = request.files
                     // On récupère le cas d'erreur s'il y en a un
                     casErreur.casErreurModifArticle(numArticle, titreArticle, texteArticle, catégories, (cas) => {
                         // Tout va bien, on modifie l'article
@@ -396,7 +478,7 @@ exports.modifierArticleAction = (request, response) => {
                                     avoircategorie.ajoutUnLienArticleCatégorie(catégories, numArticle, (next) => { });
                                 }
                                 // Ajout des liens des images en BDD avec les lien image/article s'il y en a
-                                for (var i = 0; i < images.length; i++) {
+                                for (let i = 0; i < images.length; i++) {
                                     image.ajoutImage(images[i].path, (numImg) => {
                                         avoirImage.ajoutAvoirImage(numImg, numArticle, (cb) => { });
                                     });
@@ -410,10 +492,10 @@ exports.modifierArticleAction = (request, response) => {
                             response.cookie('gestionModifA', { titreArticle: titreArticle, texteArticle: texteArticle, cas: cas }, { expiresIn: '5s' });
                             // On supprime les images qui viennent d'être upload
                             if (images != undefined) {
-                                for (var i = 0; i < images.length; i++) {
+                                for (let i = 0; i < images.length; i++) {
                                 }
                             }
-                            var link = '/EspaceAdmin/GestionArticlesCategories/' + numArticle + '/ModifierArticle';
+                            let link = '/EspaceAdmin/GestionArticlesCategories/' + numArticle + '/ModifierArticle';
                             response.redirect(link);
                         }
                     });
@@ -421,7 +503,15 @@ exports.modifierArticleAction = (request, response) => {
             });
         }
         else {
-            response.redirect('/Connexion');
+            // On indique que l'accès est interdit
+            if (admin == 10) {
+                response.cookie('access', { err: true }, { expiresIn: '5s' });
+                response.redirect('/Connexion');
+            }
+            else {
+                response.cookie('access', { err: true }, { expiresIn: '5s' })
+                response.redirect('/Accueil');
+            }
         }
     });
 }

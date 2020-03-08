@@ -1,8 +1,8 @@
-var express = require('express');
-var route = express.Router();
+const express = require('express');
+const route = express.Router();
 
 // On importe le controller
-var EC = require('../controllers/espaceClientController');
+const EC = require('../controllers/espaceClientController');
 
 // Les différentes routes du livre d'or
 route.get('/', EC.espaceClient);

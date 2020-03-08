@@ -1,8 +1,8 @@
-var express = require('express');
-var route = express.Router();
+const express = require('express');
+const route = express.Router();
 
 // On importe le controller
-var catégories = require('../controllers/catégoriesController');
+const catégories = require('../controllers/catégoriesController');
 
 // Les différentes routes hors connexion
 route.get('/:numcategorie/Page/:numPage', catégories.catégoriesPage);

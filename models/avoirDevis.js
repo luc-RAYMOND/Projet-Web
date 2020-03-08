@@ -1,11 +1,11 @@
-var connection = require('../config/db');
+const connection = require('../config/db');
 
 class AvoirDevis {
 
     // Fonction permettant de créer un lien entre un devis et un utilisateur
     static créerLienDevis(numUtilisateur, numDevis, cb) {
-        var avoirDevis = { numUtilisateur: numUtilisateur, numDevis: numDevis };
-        var query = connection.query('INSERT INTO avoirDevis SET ?', avoirDevis, (error, results) => {
+        let avoirDevis = { numUtilisateur: numUtilisateur, numDevis: numDevis };
+        let query = connection.query('INSERT INTO avoirDevis SET ?', avoirDevis, (error, results) => {
             if (error) throw error;
             cb(results);
         });
@@ -27,7 +27,7 @@ class AvoirDevis {
 
     // Fonction permettant de supprimer le lien entre un devis et un utilisateur
     static supprimerLienDevisUtilisateur(numDevis, cb) {
-        var query = connection.query('DELETE FROM avoirdevis WHERE NumDevis = ?', numDevis, (error, results) => {
+        let query = connection.query('DELETE FROM avoirdevis WHERE NumDevis = ?', numDevis, (error, results) => {
             if (error) throw error;
             cb(results);
         });
@@ -35,7 +35,7 @@ class AvoirDevis {
 
     // Fonction permettant de supprimer le lien entre les devis et son utilisateur
     static supprimerLiensDevisUtilisateur(numUtilisateur, cb) {
-        var query = connection.query('DELETE FROM avoirdevis WHERE NumUtilisateur = ?', numUtilisateur, (error, results) => {
+        let query = connection.query('DELETE FROM avoirdevis WHERE NumUtilisateur = ?', numUtilisateur, (error, results) => {
             if (error) throw error;
             cb(results);
         });
@@ -43,7 +43,7 @@ class AvoirDevis {
 
     // Fonction permettant de mettre à jour le lien entre un devis et un utilisateur
     static updateLienDevis(numUtilisateur, numDevis, cb) {
-        var query = connection.query('UPDATE avoirdevis SET NumUtilisateur = ? WHERE NumDevis = ?', [numUtilisateur, numDevis], (error, results) => {
+        let query = connection.query('UPDATE avoirdevis SET NumUtilisateur = ? WHERE NumDevis = ?', [numUtilisateur, numDevis], (error, results) => {
             if (error) throw error;
             cb(results);
         });

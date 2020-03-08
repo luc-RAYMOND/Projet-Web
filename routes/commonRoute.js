@@ -1,8 +1,8 @@
-var express = require('express');
-var route = express.Router();
+const express = require('express');
+const route = express.Router();
 
 // On importe le controller
-var common = require('../controllers/commonController');
+const common = require('../controllers/commonController');
 
 // Les différentes routes hors connexion
 route.get('', (request, response) => {response.redirect('/Accueil')})

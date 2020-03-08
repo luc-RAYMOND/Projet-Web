@@ -1,16 +1,17 @@
 // Les models d'où viennent les fonctions sur la BDD
-var affichage = require('../models/affichage');
-var casErreur = require('../models/casErreur');
-var verifConnexion = require('../models/verifConnexion');
-var livreOr = require('../models/livreOr');
-var jwt = require('jsonwebtoken');
-var key = require('../config/tokenKey');
+const affichage = require('../models/affichage');
+const casErreur = require('../models/casErreur');
+const verifConnexion = require('../models/verifConnexion');
+const livreOr = require('../models/livreOr');
+const jwt = require('jsonwebtoken');
+const key = require('../config/tokenKey');
 
 // Permet d'afficher la page du livre d'or
 exports.livreOr = (request, response) => {
-    var cas = 10;
-    var titre;
-    var texteAvis;
+    let cas = 10;
+    let titre;
+    let texteAvis;
+    var status = 200;
     // On regarde s'il y a des cookies pour le livre d'or
     if (request.cookies.livreOr != undefined) {
         // On récupère toutes les valeurs
@@ -18,23 +19,30 @@ exports.livreOr = (request, response) => {
         titre = request.cookies.livreOr.titre;
         texteAvis = request.cookies.livreOr.texteAvis
     }
-    // Puis on le supprime
-    // Il s'expirera par lui même sinon
+    if (request.cookies.access != undefined) {
+        cas = 4;
+    }
+    // On regarde s'il a essayé de modifier un message n'étant pas le sien
+    if (cas == 4) {
+        status = 403;
+    }
+    // Puis on les supprime
     response.clearCookie('livreOr', request.cookies.livreOr);
-    var NumUtilisateur;
-    var token = request.cookies.token;
-    var pageActuelle = 1;
+    response.clearCookie('access', request.cookies.access);
+    let NumUtilisateur;
+    let token = request.cookies.token;
+    let pageActuelle = 1;
     affichage.remplirCatégorie((next) => {
         // On récupère les avis
         livreOr.avoirAvisLO((avis) => {
             // On récupère les pseudos
             affichage.avoirPseudos(avis, (pseudos) => {
-                var trimStart = (pageActuelle - 1) * 10;
-                var trimEnd = trimStart + 10;
+                let trimStart = (pageActuelle - 1) * 10;
+                let trimEnd = trimStart + 10;
                 // Une version coupée de nos tableaux, pour en afficher au maximum 10 par pages
-                var slicedAvis = avis.slice(trimStart, trimEnd);
-                var slicedPseudos = pseudos.slice(trimStart, trimEnd);
-                var pageMax = Math.ceil(avis.length / 10);
+                let slicedAvis = avis.slice(trimStart, trimEnd);
+                let slicedPseudos = pseudos.slice(trimStart, trimEnd);
+                let pageMax = Math.ceil(avis.length / 10);
                 verifConnexion.verifConnexion(token, (admin) => {
                     jwt.verify(token, key.key, (err, decoded) => {
                         // On est hors ligne ou le token a expiré
@@ -45,7 +53,7 @@ exports.livreOr = (request, response) => {
                         else {
                             NumUtilisateur = decoded.NumUtilisateur;
                         }
-                        response.render('pages/common/livreOr', { contient: next, admin: admin, avis: slicedAvis, pseudos: slicedPseudos, pageActuelle: pageActuelle, pageMax: pageMax, NumUtilisateur: NumUtilisateur, titre: titre, texteAvis: texteAvis, cas: cas });
+                        response.status(status).render('pages/common/livreOr', { contient: next, admin: admin, avis: slicedAvis, pseudos: slicedPseudos, pageActuelle: pageActuelle, pageMax: pageMax, NumUtilisateur: NumUtilisateur, titre: titre, texteAvis: texteAvis, cas: cas });
                     });
                 });
             })
@@ -55,21 +63,21 @@ exports.livreOr = (request, response) => {
 
 // Permet d'afficher les autres pages du livre d'or
 exports.livreOrPage = (request, response) => {
-    var token = request.cookies.token;
-    var pageActuelle = request.params.numPage;
-    var NumUtilisateur;
-    var cas = 10;
+    let token = request.cookies.token;
+    let pageActuelle = request.params.numPage;
+    let NumUtilisateur;
+    let cas = 10;
     affichage.remplirCatégorie((next) => {
         // On récupère les avis
         livreOr.avoirAvisLO((avis) => {
             // On récupère les pseudos
             affichage.avoirPseudos(avis, (pseudos) => {
-                var trimStart = (pageActuelle - 1) * 10;
-                var trimEnd = trimStart + 10;
+                let trimStart = (pageActuelle - 1) * 10;
+                let trimEnd = trimStart + 10;
                 // Une version coupée de nos tableaux, pour en afficher au maximum 10 par pages
-                var slicedAvis = avis.slice(trimStart, trimEnd);
-                var slicedPseudos = pseudos.slice(trimStart, trimEnd);
-                var pageMax = Math.ceil(avis.length / 10);
+                let slicedAvis = avis.slice(trimStart, trimEnd);
+                let slicedPseudos = pseudos.slice(trimStart, trimEnd);
+                let pageMax = Math.ceil(avis.length / 10);
                 if (parseInt(pageActuelle) == parseFloat(pageActuelle) && (pageActuelle >= 2 && pageActuelle <= pageMax)) {
                     verifConnexion.verifConnexion(token, (admin) => {
                         jwt.verify(token, key.key, (err, decoded) => {
@@ -87,7 +95,7 @@ exports.livreOrPage = (request, response) => {
                 }
                 else {
                     // Si URL non valide
-                    response.send("404 not found");
+                    response.status(404).render('pages/common/404notfound');
                 }
             })
         });
@@ -96,9 +104,9 @@ exports.livreOrPage = (request, response) => {
 
 // Permet d'envoyer un message
 exports.envoyerMessageLivreOr = (request, response) => {
-    var titre = request.body.titre;
-    var texteAvis = request.body.avis;
-    var token = request.cookies.token;
+    let titre = request.body.titre;
+    let texteAvis = request.body.avis;
+    let token = request.cookies.token;
     casErreur.casLivreOr(titre, texteAvis, (cas) => {
         jwt.verify(token, key.key, (err, decoded) => {
             // On crée un cookie qui dure 1s, afin que le retour au livre d'or traite le bon cas
@@ -107,6 +115,7 @@ exports.envoyerMessageLivreOr = (request, response) => {
             if (cas == 2) {
                 // Si le token expire entre temps
                 if (err) {
+                    response.cookie('access', { err: true }, { expiresIn: '5s' });
                     response.redirect('/Connexion');
                 }
                 // Sinon on crée le message
@@ -127,11 +136,11 @@ exports.envoyerMessageLivreOr = (request, response) => {
 
 //Permet de supprimer un message
 exports.supprimerMessage = (request, response) => {
-    var numLO = request.params.numLO;
-    var token = request.cookies.token;
-    var titre;
-    var texteAvis;
-    var cas = 10;
+    let numLO = request.params.numLO;
+    let token = request.cookies.token;
+    let titre;
+    let texteAvis;
+    let cas = 10;
     verifConnexion.verifConnexion(token, (admin) => {
         // On crée un cookie qui dure 5s, afin que le retour au livre d'or traite le bon cas
         response.cookie('livreOr', { titre: titre, texteAvis: texteAvis, cas: cas }, { expiresIn: '5s' });
@@ -150,6 +159,7 @@ exports.supprimerMessage = (request, response) => {
                 livreOr.utilisateurAvis(numLO, (utilisateur) => {
                     jwt.verify(token, key.key, (err, decoded) => {
                         if (err) {
+                            response.cookie('access', { err: true }, { expiresIn: '5s' });
                             response.redirect('/Connexion');
                         }
                         else {
@@ -163,7 +173,6 @@ exports.supprimerMessage = (request, response) => {
                                     });
                                 }
                                 else {
-                                    cas == 4
                                     // Mauvais utilisateur, on envoie une erreur
                                     response.redirect('/LivreOr');
                                 }
@@ -175,16 +184,17 @@ exports.supprimerMessage = (request, response) => {
         }
         // Pas connecté, on est redirigé sur le livre d'or
         else {
-            response.redirect('/LivreOr');
+            response.cookie('access', { err: true }, { expiresIn: '5s' });
+            response.redirect('/Connexion');
         }
     });
 }
 
 // Permet d'afficher la page permettant de modifier un message posté
 exports.modifierMessagePage = (request, response) => {
-    var numLO = request.params.numLO;
-    var token = request.cookies.token;
-    var cas = 10;
+    let numLO = request.params.numLO;
+    let token = request.cookies.token;
+    let cas = 10;
     // On regarde s'il y a des cookies pour le livre d'or
     if (request.cookies.livreOr != undefined) {
         // On récupère toutes les valeurs
@@ -195,14 +205,15 @@ exports.modifierMessagePage = (request, response) => {
     // Puis on le supprime
     // Il s'expirera par lui même sinon
     response.clearCookie('livreOr', request.cookies.livreOr);
-    var titre;
-    var texteAvis;
-    var NumUtilisateur;
+    let titre;
+    let texteAvis;
+    let NumUtilisateur;
     // On vérifie d'abord qu'on est bien toujours connecté
     verifConnexion.verifConnexion(token, (admin) => {
         affichage.remplirCatégorie((next) => {
             // On vérifie que c'est bien un client qui veut modifier son message
             if (admin != 0) {
+                response.cookie('access', { err: true }, { expiresIn: '5s' });
                 response.redirect('/LivreOr');
             }
             else {
@@ -220,6 +231,7 @@ exports.modifierMessagePage = (request, response) => {
                         // On vérifie que c'est le bon utilisateur qui veut modifier son message
                         jwt.verify(token, key.key, (err, decoded) => {
                             if (err) {
+                                response.cookie('access', { err: true }, { expiresIn: '5s' });
                                 response.redirect('/Connexion');
                             }
                             else {
@@ -234,7 +246,6 @@ exports.modifierMessagePage = (request, response) => {
                                 }
                                 // Pas le bon utilisateur
                                 else {
-                                    cas = 4;
                                     response.cookie('livreOr', { titre: titre, texteAvis: texteAvis, cas: cas }, { expiresIn: '5s' });
                                     response.redirect('/LivreOr')
                                 }
@@ -249,10 +260,10 @@ exports.modifierMessagePage = (request, response) => {
 
 // Permet de modifier un message existant du livre d'or
 exports.modifierMessage = (request, response) => {
-    var numLO = request.params.numLO;
-    var token = request.cookies.token;
-    var titre = request.body.titre;
-    var texteAvis = request.body.avis;
+    let numLO = request.params.numLO;
+    let token = request.cookies.token;
+    let titre = request.body.titre;
+    let texteAvis = request.body.avis;
     casErreur.casLivreOr(titre, texteAvis, (cas) => {
         jwt.verify(token, key.key, (err, decoded) => {
             // On crée un cookie qui dure 1s, afin que le retour au livre d'or traite le bon cas
@@ -261,6 +272,7 @@ exports.modifierMessage = (request, response) => {
             if (cas == 2) {
                 // Si le token expire entre temps
                 if (err) {
+                    response.cookie('access', { err: true }, { expiresIn: '5s' });
                     response.redirect('/Connexion');
                 }
                 // Sinon on update le message
@@ -273,7 +285,7 @@ exports.modifierMessage = (request, response) => {
             }
             // Il y a un soucis, on le fait remarquer sur la page de modification
             else {
-                var url = '/LivreOr/' + numLO + '/ModifierMessage'
+                let url = '/LivreOr/' + numLO + '/ModifierMessage'
                 response.redirect(url);
             }
         });

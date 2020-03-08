@@ -1,22 +1,23 @@
 // Les models d'où viennent les fonctions sur la BDD
-var affichage = require('../models/affichage.js');
-var Catégorie = require('../models/categorie');
-var verifConnexion = require('../models/verifConnexion');
+const affichage = require('../models/affichage.js');
+const Catégorie = require('../models/categorie');
+const verifConnexion = require('../models/verifConnexion');
 
 // Permet d'avoir les pages selon les catégories
 exports.catégoriesPage = (request, response) => {
-    var token = request.cookies.token;
-    var pageActuelle = request.params.numPage;
-    var numcategorie = request.params.numcategorie;
-    var data = true;
+    let token = request.cookies.token;
+    let pageActuelle = request.params.numPage;
+    let numcategorie = request.params.numcategorie;
+    let data = true;
     affichage.remplirCatégorie((contient) => {
         // On vérifie qu'il y a bien une catégorie avec ce numéro
         Catégorie.vérifierNumCatégorie(numcategorie, (tot) => {
             if (tot == 0) {
-                response.send("404 not found");
+                response.status(404).render('pages/common/404notfound');
             }
             else {
                 affichage.remplirArticleCatégorie(numcategorie, (articles) => {
+                    // S'il n'y a pas d'articles pour cette catégorie
                     if (articles[0] == undefined) {
                         data = false;
                         Catégorie.avoirLibellé(numcategorie, (Lib) => {
@@ -25,21 +26,22 @@ exports.catégoriesPage = (request, response) => {
                                     response.render('pages/common/catégories', { contient: contient, data: data, Lib: Lib, admin: admin });
                                 }
                                 else {
-                                    response.send("404 not found");
+                                    response.status(404).render('pages/common/404notfound');
                                 }
                             });
                         });
                     }
                     else {
+                        // S'il y en a
                         affichage.remplirCatégorieArticle(articles, (cat) => {
                             affichage.remplirImageArticle(articles, (img) => {
-                                var trimStart = (pageActuelle - 1) * 5;
-                                var trimEnd = trimStart + 5;
+                                let trimStart = (pageActuelle - 1) * 5;
+                                let trimEnd = trimStart + 5;
                                 // Une version coupée de nos tableaux, pour en afficher au maximum 5 par pages
-                                var slicedArticles = articles.slice(trimStart, trimEnd);
-                                var slicedCat = cat.slice(trimStart, trimEnd);
-                                var slicedImg = img.slice(trimStart, trimEnd);
-                                var pageMax = Math.ceil(articles.length / 5);
+                                let slicedArticles = articles.slice(trimStart, trimEnd);
+                                let slicedCat = cat.slice(trimStart, trimEnd);
+                                let slicedImg = img.slice(trimStart, trimEnd);
+                                let pageMax = Math.ceil(articles.length / 5);
                                 // data nous permet de modifier l'affichage selon si il n'y a pas d'articles dans une catégorie
                                 // On récupère le nom de la catégorie pour l'afficher
                                 Catégorie.avoirLibellé(numcategorie, (Lib) => {
@@ -51,7 +53,7 @@ exports.catégoriesPage = (request, response) => {
                                     }
                                     else {
                                         // Si URL non valide
-                                        response.send("404 not found");
+                                        response.status(404).render('pages/common/404notfound');
                                     }
                                 });
                             });

@@ -1,13 +1,13 @@
 // Ce model permet d'utiliser les fonctions des autres models pour gérer les différents cas d'erreur
-var Catégorie = require('../models/categorie');
-var utilisateur = require('../models/utilisateur');
-var article = require('../models/article');
-var bcrypt = require('bcrypt');
+const Catégorie = require('../models/categorie');
+const utilisateur = require('../models/utilisateur');
+const article = require('../models/article');
+const bcrypt = require('bcrypt');
 
 // Cette fonction permet de renvoyer le cas d'inscription
 // On ne vérifie pas tout ce qui est données de facturation (taille immense dans la BDD)
 exports.casInscription = (pseudo, mail, nom, prenom, mdp, mdpConf, cb) => {
-    var cas = 10;
+    let cas = 10;
     // On vérifie qu'il n'y a pas déjà de compte avec cette adresse mail
     utilisateur.mailExiste(mail, (test) => {
         utilisateur.pseudoExiste(pseudo, (result) => {
@@ -73,7 +73,7 @@ exports.casInscription = (pseudo, mail, nom, prenom, mdp, mdpConf, cb) => {
 // Nous permet de déterminer quel sera le cas à afficher sur la page
 exports.casLivreOr = (titre, avis, next) => {
     // Cas par défaut
-    var cas = 10;
+    let cas = 10;
     // On vérifie que le titre est ok
     if (titre == '' || titre.length > 40) {
         cas = 0;
@@ -93,9 +93,9 @@ exports.casLivreOr = (titre, avis, next) => {
 
 // Cas de suppression dans le livre d'or
 exports.casSupprLivreOr = (utilisateur, decoded, next) => {
-    var cas = 10;
+    let cas = 10;
     if (utilisateur[0] != undefined) {
-        var NumUtilisateur = utilisateur[0].NumUtilisateur;
+        let NumUtilisateur = utilisateur[0].NumUtilisateur;
         // Tout est bon, on supprime
         if (NumUtilisateur == decoded.NumUtilisateur) {
             cas = 3
@@ -114,7 +114,7 @@ exports.casSupprLivreOr = (utilisateur, decoded, next) => {
 
 // Cas d'ajout d'une catégorie 
 exports.casAjoutCatégorie = (libCat, next) => {
-    var cas = 10;
+    let cas = 10;
     Catégorie.vérifierLibellé(libCat, (result) => {
         if (libCat == '' || libCat.length > 50 || libCat.length < 2) {
             // Mauvaise entrée
@@ -136,7 +136,7 @@ exports.casAjoutCatégorie = (libCat, next) => {
 
 // Cas de modification d'une catégorie 
 exports.casModifCatégorie = (numCat, libCat, next) => {
-    var cas = 10;
+    let cas = 10;
     Catégorie.avoirLibellé(numCat, (lib) => {
         Catégorie.vérifierLibellé(libCat, (result) => {
             if (libCat == '' || libCat.length > 50) {
@@ -160,7 +160,7 @@ exports.casModifCatégorie = (numCat, libCat, next) => {
 
 // Cas d'erreur d'ajout d'article
 exports.casErreurAjoutArticle = (titreArticle, texteArticle, catégories, next) => {
-    var cas = 10;
+    let cas = 10;
     if (titreArticle == '' || titreArticle > 255) {
         // Le titre est incorrect
         cas = 5;
@@ -186,7 +186,7 @@ exports.casErreurAjoutArticle = (titreArticle, texteArticle, catégories, next) 
 }
 
 exports.casErreurModifArticle = (numArticle, titreArticle, texteArticle, catégories, next) => {
-    var cas = 10;
+    let cas = 10;
     if (titreArticle == '' || titreArticle > 255) {
         // Le titre est incorrect
         cas = 3;
@@ -200,7 +200,7 @@ exports.casErreurModifArticle = (numArticle, titreArticle, texteArticle, catégo
         }
         else {
             article.avoirLibelléUnArticle(numArticle, (libCat) => {
-                var length1;
+                let length1;
                 // On regarde si l'article a des catégories de base
                 if (catégories != undefined && libCat != undefined) {
                     // On regarde combien de catégories qu'on veut rajouter
@@ -212,8 +212,8 @@ exports.casErreurModifArticle = (numArticle, titreArticle, texteArticle, catégo
                         // Sinon c'est un tableau
                         length1 = catégories.length;
                     }
-                    var k = 0
-                    var length2 = libCat.length;
+                    let k = 0
+                    let length2 = libCat.length;
                     // On vérifie qu'il n'y ait pas de doublon de catégorie
                     while (cas != 5 && k != length2) {
                         if (length1 == 1) {
@@ -222,7 +222,7 @@ exports.casErreurModifArticle = (numArticle, titreArticle, texteArticle, catégo
                             }
                         }
                         else {
-                            for (var i = 0; i < length1; i++) {
+                            for (let i = 0; i < length1; i++) {
                                 if (catégories[i] == libCat[k].LibelléCatégorie) {
                                     cas = 5;
                                 }
@@ -266,7 +266,7 @@ exports.casErreurAjoutDevis = (numUtilisateur, prenomNom, cb) => {
 }
 
 exports.casErreurAjoutLC = (libellé, quantité, prixU, cb) => {
-    var cas = 10;
+    let cas = 10;
     // On regarde si le libellé a une entrée correcte
     if (libellé == '' || libellé.length > 400) {
         cas = 1;
@@ -292,7 +292,7 @@ exports.casErreurAjoutLC = (libellé, quantité, prixU, cb) => {
 
 // Permet de voir les cas d'erreurs de changement de mot de passe
 exports.casModifMDP = (numUtiliateur, mdpAct, newMdp, newMdpConf, cb) => {
-    var modifMDP = 10;
+    let modifMDP = 10;
     // On récupère le mdp du user
     utilisateur.avoirUtilisateur(numUtiliateur, (user) => {
         // On le compare avec ce qu'il a rentré
@@ -328,7 +328,7 @@ exports.casModifMDP = (numUtiliateur, mdpAct, newMdp, newMdpConf, cb) => {
 
 // Permet de vérifier le pseudo
 exports.casModifPseudo = (pseudo, cb) => {
-    var cas = 10;
+    let cas = 10;
     if (pseudo != undefined) {
         utilisateur.pseudoExiste(pseudo, (result) => {
             if (pseudo != '' && pseudo != undefined) {

@@ -1,11 +1,11 @@
 // Ce model permet d'utiliser les fonctions des autres models pour envoyer des données
 // qu'on affiche dans l'html
-var Catégorie = require('../models/categorie');
-var Article = require('../models/article');
-var utilisateur = require('../models/utilisateur');
-var avoirDevis = require('../models/avoirDevis');
-var avoirLC = require('../models/avoirLC');
-var moment = require('moment');
+const Catégorie = require('../models/categorie');
+const Article = require('../models/article');
+const utilisateur = require('../models/utilisateur');
+const avoirDevis = require('../models/avoirDevis');
+const avoirLC = require('../models/avoirLC');
+const moment = require('moment');
 
 // Fonction qui permet de définir la langue locale de la date en français (provenant du module 'moment')
 moment.locale('fr', {
@@ -69,9 +69,9 @@ moment.locale('fr', {
 exports.remplirCatégorie = (next) => {
     Catégorie.avoirNomCatégories((nom) => {
         // Va contenir les id des différentes catégories
-        var cat = [];
-        var contient = [];
-        for (var i = 0; i < nom.length; i++) {
+        let cat = [];
+        let contient = [];
+        for (let i = 0; i < nom.length; i++) {
             cat[i] = nom[i].NumCatégorie;
         }
         // On récupère pour chaque article les catégories
@@ -79,10 +79,10 @@ exports.remplirCatégorie = (next) => {
         Promise.all(promises).then((num) => {
             contient = num;
             // On fait un tri bulle ici permettant d'avoir en premier les catégories avec le plus d'articles d'abord
-            for (var k = num.length; k > 0; k--) {
-                for (var j = 0; j < k - 1; j++) {
+            for (let k = num.length; k > 0; k--) {
+                for (let j = 0; j < k - 1; j++) {
                     if (contient[j + 1][0].ite > contient[j][0].ite) {
-                        var intermediaire = contient[j];
+                        let intermediaire = contient[j];
                         contient[j] = contient[j + 1];
                         contient[j + 1] = intermediaire;
                     }
@@ -96,10 +96,10 @@ exports.remplirCatégorie = (next) => {
 // Permet de récupérer les infos des articles
 exports.remplirArticle = (next) => {
     // Va contenir tous les articles
-    var articles = [];
+    let articles = [];
     Article.avoirArticles((art) => {
         // On rentre les valeurs dans l'article correspondant
-        for (var i = 0; i < art.length; i++) {
+        for (let i = 0; i < art.length; i++) {
             articles[i] =
             {
                 NumArticle: art[i].NumArticle,
@@ -115,10 +115,10 @@ exports.remplirArticle = (next) => {
 // On remplie les articles faisant partie de la catégorie en paramètre
 exports.remplirArticleCatégorie = (NumCatégorie, next) => {
     // Va contenir tous les articles
-    var articles = [];
+    let articles = [];
     Article.avoirArticlesCatégorie(NumCatégorie, (art) => {
         // On rentre les valeurs dans l'article correspondant
-        for (var i = 0; i < art.length; i++) {
+        for (let i = 0; i < art.length; i++) {
             articles[i] =
             {
                 NumArticle: art[i].NumArticle,
@@ -134,8 +134,8 @@ exports.remplirArticleCatégorie = (NumCatégorie, next) => {
 // Permet d'avoir les catégories de chaque article
 exports.remplirCatégorieArticle = (articles, next) => {
     // Va contenir les id des différents articles
-    var art = [];
-    for (var i = 0; i < articles.length; i++) {
+    let art = [];
+    for (let i = 0; i < articles.length; i++) {
         art[i] = articles[i].NumArticle;
     }
     // On récupère pour chaque article les catégories
@@ -148,8 +148,8 @@ exports.remplirCatégorieArticle = (articles, next) => {
 // Permet d'avoir les images de chaque article
 exports.remplirImageArticle = (articles, next) => {
     // Va contenir les id des articles
-    var art = [];
-    for (var i = 0; i < articles.length; i++) {
+    let art = [];
+    for (let i = 0; i < articles.length; i++) {
         art[i] = articles[i].NumArticle;
     }
     // On récupère pour chaque article les images
@@ -162,8 +162,8 @@ exports.remplirImageArticle = (articles, next) => {
 // Nous permet d'avoir les pseudos de ceux ayant posté dans le livre d'or
 exports.avoirPseudos = (avis, next) => {
     // Va contenir les id des utilisateurs ayant posté
-    var avisLO = [];
-    for (var i = 0; i < avis.length; i++) {
+    let avisLO = [];
+    for (let i = 0; i < avis.length; i++) {
         avisLO[i] = avis[i].NumUtilisateur;
     }
     // On récupère pour chaque article les images
@@ -176,8 +176,8 @@ exports.avoirPseudos = (avis, next) => {
 // Permet d'avoir les utilisateurs des devis
 exports.avoirUtilisateursDevis = (devisClients, next) => {
     // Va contenir les utilisateurs pour chaque devis
-    var devis = [];
-    for (var i = 0; i < devisClients.length; i++) {
+    let devis = [];
+    for (let i = 0; i < devisClients.length; i++) {
         devis[i] = devisClients[i].NumDevis;
     }
     const promises = devis.map((utilisateur) => avoirDevis.avoirUtilisateurDevis([utilisateur]));
@@ -193,19 +193,19 @@ exports.montantDevis = (devisClients, next) => {
     }
     else {
         // Va contenir les lignes de commande de chaque devis
-        var LC = [];
+        let LC = [];
         // Va contenir le montant de chaque devis
-        var montant = [];
-        for (var i = 0; i < devisClients.length; i++) {
+        let montant = [];
+        for (let i = 0; i < devisClients.length; i++) {
             LC[i] = devisClients[i].NumDevis;
         }
         // On récupère toutes les lignes de commande
         const promises = LC.map((lignesCommande) => avoirLC.avoirlignesCommandesDevis([lignesCommande]));
         Promise.all(promises).then((lignesCommande) => {
             // On calcule le montant de chaque devis
-            for (var i = 0; i < devisClients.length; i++) {
-                var montantDevis = 0;
-                for (var j = 0; j < lignesCommande[i].length; j++) {
+            for (let i = 0; i < devisClients.length; i++) {
+                let montantDevis = 0;
+                for (let j = 0; j < lignesCommande[i].length; j++) {
                     montantDevis += lignesCommande[i][j].PrixTarifUnitaire * lignesCommande[i][j].Quantité;
                 }
                 montant[i] = montantDevis.toFixed(2);

@@ -1,18 +1,18 @@
 // Les models d'où viennent les fonctions sur la BDD
-var verifConnexion = require('../models/verifConnexion');
-var affichage = require('../models/affichage');
-var utilisateur = require('../models/utilisateur')
-var devis = require('../models/devis');
-var avoirDevis = require('../models/avoirDevis');
-var ligneCommande = require('../models/ligneCommande');
-var avoirLC = require('../models/avoirLC');
-var statutDevis = require('../models/statutDevis');
-var casErreur = require('../models/casErreur');
+const verifConnexion = require('../models/verifConnexion');
+const affichage = require('../models/affichage');
+const utilisateur = require('../models/utilisateur')
+const devis = require('../models/devis');
+const avoirDevis = require('../models/avoirDevis');
+const ligneCommande = require('../models/ligneCommande');
+const avoirLC = require('../models/avoirLC');
+const statutDevis = require('../models/statutDevis');
+const casErreur = require('../models/casErreur');
 
 // Permet d'accéder à la page de gestion des devis
 exports.gestionDevis = (request, response) => {
-    var token = request.cookies.token;
-    var cas = 10;
+    let token = request.cookies.token;
+    let cas = 10;
     if (request.cookies.gestionDevis != undefined) {
         // On récupère toutes les valeurs
         cas = request.cookies.gestionDevis.cas;
@@ -59,19 +59,27 @@ exports.gestionDevis = (request, response) => {
             });
         }
         else {
-            response.redirect('/Connexion');
+            // On indique que l'accès est interdit
+            if (admin == 10) {
+                response.cookie('access', { err: true }, { expiresIn: '5s' });
+                response.redirect('/Connexion');
+            }
+            else {
+                response.cookie('access', { err: true }, { expiresIn: '5s' })
+                response.redirect('/Accueil');
+            }
         }
     });
 }
 
 // Permet de créer un devis
 exports.ajoutDevis = (request, response) => {
-    var user = request.body.utilisateurs;
-    var prenomNom = request.body.prenomNom;
-    var token = request.cookies.token;
-    var i = 1;
-    var numUtilisateur = user[0];
-    var k = user[i];
+    let user = request.body.utilisateurs;
+    let prenomNom = request.body.prenomNom;
+    let token = request.cookies.token;
+    let i = 1;
+    let numUtilisateur = user[0];
+    let k = user[i];
     // Si on ne prend pas la case non inscrit
     if (user[0] != "N") {
         // Permet de récupérer le num Utilisateur dans la choicebox
@@ -93,7 +101,7 @@ exports.ajoutDevis = (request, response) => {
                 if (cas == 3) {
                     devis.créerDevisAnonyme(prenomNom, (numDevis) => {
                         // Et on redirige vers l'ajout des lignes de commande
-                        var link = '/EspaceAdmin/GestionDevis/' + numDevis + '/ModifierDevis';
+                        let link = '/EspaceAdmin/GestionDevis/' + numDevis + '/ModifierDevis';
                         response.redirect(link);
                     });
                 }
@@ -101,7 +109,7 @@ exports.ajoutDevis = (request, response) => {
                 if (cas == 4) {
                     devis.créerDevis((numDevis) => {
                         avoirDevis.créerLienDevis(numUtilisateur, numDevis, (cb) => {
-                            var link = '/EspaceAdmin/GestionDevis/' + numDevis + '/ModifierDevis';
+                            let link = '/EspaceAdmin/GestionDevis/' + numDevis + '/ModifierDevis';
                             response.redirect(link);
                         });
                     });
@@ -109,19 +117,27 @@ exports.ajoutDevis = (request, response) => {
             });
         }
         else {
-            response.redirect('/Connexion');
+            // On indique que l'accès est interdit
+            if (admin == 10) {
+                response.cookie('access', { err: true }, { expiresIn: '5s' });
+                response.redirect('/Connexion');
+            }
+            else {
+                response.cookie('access', { err: true }, { expiresIn: '5s' })
+                response.redirect('/Accueil');
+            }
         }
     });
 }
 
 // Fonction permettant d'accéder à la page de modif d'un devis
 exports.modifDevisPage = (request, response) => {
-    var numDevis = request.params.numDevis;
-    var token = request.cookies.token;
-    var libellé;
-    var quantité;
-    var prixU;
-    var cas = 10;
+    let numDevis = request.params.numDevis;
+    let token = request.cookies.token;
+    let libellé;
+    let quantité;
+    let prixU;
+    let cas = 10;
     if (request.cookies.ajoutLC != undefined) {
         // On récupère toutes les valeurs
         cas = request.cookies.ajoutLC.cas;
@@ -148,7 +164,7 @@ exports.modifDevisPage = (request, response) => {
                         avoirLC.avoirlignesCommandes(numDevis, (LC) => {
                             statutDevis.avoirStatutsDevis((statutDevis) => {
                                 // on regarde si le client est enregistré ou non
-                                var test = (vérif[0].NomPrénomProv == '-');
+                                let test = (vérif[0].NomPrénomProv == '-');
                                 response.render('pages/admin/modifierDevis', { numDevis: numDevis, cas: cas, libellé: libellé, quantité: quantité, prixU: prixU, LC: LC, statutDevis: statutDevis, test: test, utilisateurs: utilisateurs });
                             });
                         });
@@ -157,24 +173,32 @@ exports.modifDevisPage = (request, response) => {
             });
         }
         else {
-            response.redirect('/Connexion');
+            // On indique que l'accès est interdit
+            if (admin == 10) {
+                response.cookie('access', { err: true }, { expiresIn: '5s' });
+                response.redirect('/Connexion');
+            }
+            else {
+                response.cookie('access', { err: true }, { expiresIn: '5s' })
+                response.redirect('/Accueil');
+            }
         }
     });
 }
 
 // Fonction permettant d'ajouter une ligne de commande
 exports.ajoutLigneCommande = (request, response) => {
-    var numDevis = request.params.numDevis;
-    var libellé = request.body.libellé;
-    var quantité = request.body.quantité;
-    var prixU = request.body.prixU;
-    var token = request.cookies.token;
+    let numDevis = request.params.numDevis;
+    let libellé = request.body.libellé;
+    let quantité = request.body.quantité;
+    let prixU = request.body.prixU;
+    let token = request.cookies.token;
     verifConnexion.verifConnexion(token, (admin) => {
         if (admin == 1) {
             // On regarde s'il y a des erreurs
             casErreur.casErreurAjoutLC(libellé, quantité, prixU, (cas) => {
                 response.cookie('ajoutLC', { cas: cas, libellé: libellé, quantité: quantité, prixU: prixU }, { expiresIn: '5s' });
-                var link = '/EspaceAdmin/GestionDevis/' + numDevis + '/ModifierDevis#Partie2';
+                let link = '/EspaceAdmin/GestionDevis/' + numDevis + '/ModifierDevis#Partie2';
                 // Il y a un problème, on le signale
                 if (cas != 4) {
                     response.redirect(link);
@@ -192,22 +216,30 @@ exports.ajoutLigneCommande = (request, response) => {
             });
         }
         else {
-            response.redirect('/Connexion');
+            // On indique que l'accès est interdit
+            if (admin == 10) {
+                response.cookie('access', { err: true }, { expiresIn: '5s' });
+                response.redirect('/Connexion');
+            }
+            else {
+                response.cookie('access', { err: true }, { expiresIn: '5s' })
+                response.redirect('/Accueil');
+            }
         }
     });
 }
 
 // Fonction permettant de supprimer une ligne de commande d'un devis
 exports.supprimerLigneCommandeDevis = (request, response) => {
-    var token = request.cookies.token;
-    var numDevis = request.params.numDevis;
-    var numLC = request.params.numLC;
+    let token = request.cookies.token;
+    let numDevis = request.params.numDevis;
+    let numLC = request.params.numLC;
     verifConnexion.verifConnexion(token, (admin) => {
         if (admin == 1) {
             // On vérifie que le lien entre ce devis et cette LC existe
             avoirLC.vérifDevisLigneCommande(numDevis, numLC, (vérif) => {
                 // Il n'y en a pas, on redirige
-                var link = '/EspaceAdmin/GestionDevis/' + numDevis + '/ModifierDevis#Partie1';
+                let link = '/EspaceAdmin/GestionDevis/' + numDevis + '/ModifierDevis#Partie1';
                 if (vérif == 0) {
                     cas = 5;
                     response.cookie('ajoutLC', { cas: cas }, { expiresIn: '5s' });
@@ -227,16 +259,24 @@ exports.supprimerLigneCommandeDevis = (request, response) => {
             });
         }
         else {
-            response.redirect('/Connexion');
+            // On indique que l'accès est interdit
+            if (admin == 10) {
+                response.cookie('access', { err: true }, { expiresIn: '5s' });
+                response.redirect('/Connexion');
+            }
+            else {
+                response.cookie('access', { err: true }, { expiresIn: '5s' })
+                response.redirect('/Accueil');
+            }
         }
     });
 }
 
 // Fonction permettant de changer le statut d'un devis
 exports.modifierStatutDevis = (request, response) => {
-    var token = request.cookies.token;
-    var numDevis = request.params.numDevis;
-    var statut = request.body.statut;
+    let token = request.cookies.token;
+    let numDevis = request.params.numDevis;
+    let statut = request.body.statut;
     verifConnexion.verifConnexion(token, (admin) => {
         if (admin == 1) {
             devis.vérifDevis(numDevis, (vérif) => {
@@ -255,7 +295,7 @@ exports.modifierStatutDevis = (request, response) => {
                         });
                     }
                     else {
-                        var link = '/EspaceAdmin/GestionDevis/' + numDevis + '/ModifierDevis#Partie3';
+                        let link = '/EspaceAdmin/GestionDevis/' + numDevis + '/ModifierDevis#Partie3';
                         cas = 7;
                         response.cookie('ajoutLC', { cas: cas }, { expiresIn: '5s' });
                         devis.updateStatutDevis(statut, numDevis, (cb) => {
@@ -266,15 +306,23 @@ exports.modifierStatutDevis = (request, response) => {
             });
         }
         else {
-            response.redirect('/Connexion');
+            // On indique que l'accès est interdit
+            if (admin == 10) {
+                response.cookie('access', { err: true }, { expiresIn: '5s' });
+                response.redirect('/Connexion');
+            }
+            else {
+                response.cookie('access', { err: true }, { expiresIn: '5s' })
+                response.redirect('/Accueil');
+            }
         }
     });
 }
 
 // Permet de supprimer un devis (et donc ses lignes de commande)
 exports.supprimerDevis = (request, response) => {
-    var token = request.cookies.token;
-    var numDevis = request.params.numDevis;
+    let token = request.cookies.token;
+    let numDevis = request.params.numDevis;
     verifConnexion.verifConnexion(token, (admin) => {
         if (admin == 1) {
             // On vérifie que le devis demandé existe
@@ -286,7 +334,7 @@ exports.supprimerDevis = (request, response) => {
                 }
                 // Il existe, on peut continuer
                 else {
-                    var link = '/EspaceAdmin/GestionDevis/' + numDevis + '/ModifierDevis#Partie3';
+                    let link = '/EspaceAdmin/GestionDevis/' + numDevis + '/ModifierDevis#Partie3';
                     cas = 3;
                     response.cookie('gestionDevis', { cas: cas }, { expiresIn: '5s' });
                     // On récupère toutes les lignes de commandes qu'à le devis
@@ -296,7 +344,7 @@ exports.supprimerDevis = (request, response) => {
                             // On supprime d'abord les liens avec ses lignes de commandes
                             avoirLC.supprimerLiensDevisLC(numDevis, (cb) => {
                                 // On supprime maintenant toutes les lignes de commandes
-                                for (var i = 0; i < LC.length; i++) {
+                                for (let i = 0; i < LC.length; i++) {
                                     ligneCommande.supprimerLigneCommande(LC[i].NumLigneCommande, (cb) => { });
                                 }
                                 // Et on supprime le devis en parralèle
@@ -309,20 +357,28 @@ exports.supprimerDevis = (request, response) => {
             });
         }
         else {
-            response.redirect('/Connexion');
+            // On indique que l'accès est interdit
+            if (admin == 10) {
+                response.cookie('access', { err: true }, { expiresIn: '5s' });
+                response.redirect('/Connexion');
+            }
+            else {
+                response.cookie('access', { err: true }, { expiresIn: '5s' })
+                response.redirect('/Accueil');
+            }
         }
     });
 }
 
 // Fonction permettant d'associer un utilisateur à un devis
 exports.associerUtilisateurDevis = (request, response) => {
-    var token = request.cookies.token;
-    var numDevis = request.params.numDevis;
-    var user = request.body.utilisateur;
-    var i = 1;
+    let token = request.cookies.token;
+    let numDevis = request.params.numDevis;
+    let user = request.body.utilisateur;
+    let i = 1;
     if (user != undefined) {
-        var numUtilisateur = user[0];
-        var k = user[i];
+        let numUtilisateur = user[0];
+        let k = user[i];
         // Permet de récupérer le num Utilisateur dans la choicebox
         while (k != ':') {
             numUtilisateur += user[i];
@@ -340,7 +396,7 @@ exports.associerUtilisateurDevis = (request, response) => {
                     }
                     else {
                         // Tout va bien, on met à jour
-                        var link = '/EspaceAdmin/GestionDevis/' + numDevis + '/ModifierDevis#Partie1';
+                        let link = '/EspaceAdmin/GestionDevis/' + numDevis + '/ModifierDevis#Partie1';
                         cas = 8;
                         response.cookie('ajoutLC', { cas: cas }, { expiresIn: '5s' });
                         // On met le prénom provisoire comme indéfini dans le devis
@@ -354,24 +410,32 @@ exports.associerUtilisateurDevis = (request, response) => {
                 });
             }
             else {
-                response.redirect('/Connexion');
+                // On indique que l'accès est interdit
+                if (admin == 10) {
+                    response.cookie('access', { err: true }, { expiresIn: '5s' });
+                    response.redirect('/Connexion');
+                }
+                else {
+                    response.cookie('access', { err: true }, { expiresIn: '5s' })
+                    response.redirect('/Accueil');
+                }
             }
         });
     }
     else {
-        var link = '/EspaceAdmin/GestionDevis/' + numDevis + '/ModifierDevis#Partie4';
+        let link = '/EspaceAdmin/GestionDevis/' + numDevis + '/ModifierDevis#Partie4';
         response.redirect(link)
     }
 }
 
 // Fonction permettant de modifier l'utilisateur d'un devis 
 exports.modifierUtilisateurDevis = (request, response) => {
-    var token = request.cookies.token;
-    var numDevis = request.params.numDevis;
-    var user = request.body.utilisateur;
-    var i = 1;
-    var numUtilisateur = user[0];
-    var k = user[i];
+    let token = request.cookies.token;
+    let numDevis = request.params.numDevis;
+    let user = request.body.utilisateur;
+    let i = 1;
+    let numUtilisateur = user[0];
+    let k = user[i];
     // Permet de récupérer le num Utilisateur dans la choicebox
     while (k != ':') {
         numUtilisateur += user[i];
@@ -389,7 +453,7 @@ exports.modifierUtilisateurDevis = (request, response) => {
                 }
                 else {
                     // Tout est bon, on peut update l'utilisateur
-                    var link = '/EspaceAdmin/GestionDevis/' + numDevis + '/ModifierDevis#Partie1';
+                    let link = '/EspaceAdmin/GestionDevis/' + numDevis + '/ModifierDevis#Partie1';
                     cas = 9;
                     response.cookie('ajoutLC', { cas: cas }, { expiresIn: '5s' });
                     // On update le lien entre l'utilisateur et le devis
@@ -400,15 +464,23 @@ exports.modifierUtilisateurDevis = (request, response) => {
             });
         }
         else {
-            response.redirect('/Connexion');
+            // On indique que l'accès est interdit
+            if (admin == 10) {
+                response.cookie('access', { err: true }, { expiresIn: '5s' });
+                response.redirect('/Connexion');
+            }
+            else {
+                response.cookie('access', { err: true }, { expiresIn: '5s' })
+                response.redirect('/Accueil');
+            }
         }
     });
 }
 
 // Permet de consulter le détail d'une facture
 exports.consulterFacture = (request, response) => {
-    var token = request.cookies.token;
-    var numDevis = request.params.numDevis;
+    let token = request.cookies.token;
+    let numDevis = request.params.numDevis;
     verifConnexion.verifConnexion(token, (admin) => {
         if (admin == 1) {
             // On vérifie que le devis demandé existe
@@ -427,7 +499,15 @@ exports.consulterFacture = (request, response) => {
             });
         }
         else {
-            response.redirect('/Connexion');
+            // On indique que l'accès est interdit
+            if (admin == 10) {
+                response.cookie('access', { err: true }, { expiresIn: '5s' });
+                response.redirect('/Connexion');
+            }
+            else {
+                response.cookie('access', { err: true }, { expiresIn: '5s' })
+                response.redirect('/Accueil');
+            }
         }
     });
 }

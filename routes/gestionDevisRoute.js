@@ -1,8 +1,8 @@
-var express = require('express');
-var route = express.Router();
+const express = require('express');
+const route = express.Router();
 
 // On importe le controller
-var gestionDevis = require('../controllers/gestionDevisController');
+const gestionDevis = require('../controllers/gestionDevisController');
 
 // Les différentes routes du livre d'or
 route.get('/', gestionDevis.gestionDevis);

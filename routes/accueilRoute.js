@@ -1,8 +1,8 @@
-var express = require('express');
-var route = express.Router();
+const express = require('express');
+const route = express.Router();
 
 // On importe le controller
-var accueil = require('../controllers/accueilController');
+const accueil = require('../controllers/accueilController');
 
 // Les différentes routes hors connexion
 route.get('/', accueil.accueil);

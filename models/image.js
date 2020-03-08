@@ -1,11 +1,10 @@
-var connection = require('../config/db');
-var fs = require('fs');
+const connection = require('../config/db');
 
 class Image {
 
     // Fonction permettant de récupérer les noms des images
     static liensImage(cb) {
-        var query = connection.query('SELECT LienImage FROM image', (error, results) => {
+        let query = connection.query('SELECT LienImage FROM image', (error, results) => {
             if (error) throw error;
             cb(results);
         });
@@ -13,7 +12,7 @@ class Image {
 
     // Fonction permettant de récupérer le nom d'une image
     static lienUneImage(NumImage, cb) {
-        var query = connection.query('SELECT LienImage FROM image WHERE NumImage =  ?', NumImage, (error, results) => {
+        let query = connection.query('SELECT LienImage FROM image WHERE NumImage =  ?', NumImage, (error, results) => {
             if (error) throw error;
             cb(results);
         });
@@ -21,7 +20,7 @@ class Image {
 
     // Fonction permettant d'ajouter le lien d'une image dans la BDD
     static ajoutImage(LienImage, cb) {
-        var query = connection.query('INSERT INTO image SET LienImage = ?', LienImage, (error, results) => {
+        let query = connection.query('INSERT INTO image SET LienImage = ?', LienImage, (error, results) => {
             if (error) throw error;
             cb(results.insertId);
         });
@@ -33,11 +32,11 @@ class Image {
             cb("Done !")
         }
         else {
-            for (var i = 0; i < images.length; i++) {
-                var num = images[i].NumImage;
+            for (let i = 0; i < images.length; i++) {
+                let num = images[i].NumImage;
                 // On supprime l'immage du cloud
                 // Puis le lien de l'image avec l'article
-                var query = connection.query('DELETE FROM image WHERE NumImage = ?', num, (error, results) => {
+                let query = connection.query('DELETE FROM image WHERE NumImage = ?', num, (error, results) => {
                     if (error) throw error;
                     cb(results);
                 });
@@ -49,7 +48,7 @@ class Image {
     static supprimerImage(num, cb) {
         // On supprime l'immage du cloud
         // Puis le lien de l'image avec l'article
-        var query = connection.query('DELETE FROM image WHERE NumImage = ?', num, (error, results) => {
+        let query = connection.query('DELETE FROM image WHERE NumImage = ?', num, (error, results) => {
             if (error) throw error;
             cb(results);
         });

@@ -1,0 +1,36 @@
+/* Style du main */
+
+#conteneur{
+    overflow: auto;
+    border-color: darkgray;
+}
+#content{
+    overflow: hidden;
+    background-color: lightgray;
+    border-color: darkgray;
+    text-align: center;
+}
+h3{
+    font-size: 400%;
+    font-family: "SDA";
+    margin-bottom: 5%;
+    font-style: italic;
+    color: black;
+    text-decoration: underline;
+    text-align: center;
+}
+#retourAccueil{
+    color: lightblue;
+    text-align: center;
+    font-weight: bolder;
+    font-size: 200%;
+    text-decoration: underline;
+}
+p{
+    font-size: larger;
+    color: black;
+    text-align: center;
+}
+img{
+    width: 70%;
+}

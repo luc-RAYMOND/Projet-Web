@@ -1,8 +1,8 @@
-var express = require('express');
-var route = express.Router();
+const express = require('express');
+const route = express.Router();
 
 // On importe le controller
-var GAC = require('../controllers/gestionArticlesCatégoriesController');
+const GAC = require('../controllers/gestionArticlesCatégoriesController');
 
 // Les différentes routes de la gestion des articles et des catégories
 route.get('/', GAC.gestionArticlesCatégories);

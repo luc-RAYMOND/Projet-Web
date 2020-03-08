@@ -1,8 +1,8 @@
-var express = require('express');
-var route = express.Router();
+const express = require('express');
+const route = express.Router();
 
 // On importe le controller
-var EA = require('../controllers/espaceAdminController');
+const EA = require('../controllers/espaceAdminController');
 
 // Les différentes routes du livre d'or
 route.get('/', EA.espaceAdmin);
